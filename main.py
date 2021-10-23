@@ -7,7 +7,6 @@ import re
 def get_urls(my_node, my_days):
   urls_for_all_nodes = []
   urls_for_each_node = []
-
   match = []
 
   try:
@@ -37,13 +36,13 @@ def get_urls(my_node, my_days):
   for node in match:
     for day in range(days):
       if day == 0:
-        url_built(node, today, duration_today)
+        url_built(node, today_utc, duration_today)
       else:
-        url_built(node, today-dt.timedelta(days=day), duration_day)
+        url_built(node, today_utc-dt.timedelta(days=day-1, hours=today.hour, minutes= today_utc.minute), duration_day)
     urls_for_all_nodes.append({node['name']:urls_for_each_node})
     urls_for_each_node = []
   
-  return urls_for_all_nodes, today
+  return [urls_for_all_nodes, (today).strftime("%d/%m/%y")]
 
 # ONE OR MORE NODES ANALITIC
 def sumary(urls):
@@ -53,6 +52,7 @@ def sumary(urls):
   urls_for_all_nodes = urls[0]
   today = urls[1]
   hours_nodes = []
+  min_qoe = 80
 
   for node in urls_for_all_nodes:
     name_node = list(node.keys())[0]
@@ -60,7 +60,6 @@ def sumary(urls):
     hours_node = []
 
     for i in url_node:
-      min_qoe = 80
       data = requests.get(i)
 
       if data.status_code == 200:
@@ -75,9 +74,8 @@ def sumary(urls):
         hours_day = (counter*15)/60
         hours_node.append(hours_day)
 
-    hours_nodes.append({name_node : hours_node})
-  
-  print(hours_nodes)
+    hours_nodes.append({name_node : hours_node})  
+  return [hours_nodes, today]
 
 # ONE NODE ANALITIC
 def details(urls):
@@ -90,9 +88,9 @@ def details(urls):
   name_node = list(urls_node[0].keys())[0]
   urls_node = (urls_node[0])[name_node]
   days_report = []
+  min_qoe = 80
 
   for i in urls_node:
-    min_qoe = 80
     data = requests.get(i)
 
     if data.status_code == 200:
@@ -113,29 +111,28 @@ def details(urls):
 
           if data.index(j) == len(data) - 1:
             time = (counter * 15)/60
-            end = datetime.strptime(j["timestamp"], '%Y-%m-%dT%H:%M:%SZ') + dt.timedelta(hours=-5, minutes=15)
-            start = end - dt.timedelta(minutes = counter * 15)
+            start = datetime.strptime(j["timestamp"], '%Y-%m-%dT%H:%M:%SZ') - dt.timedelta(hours=5, minutes=-15)
+            end = start + dt.timedelta(minutes = counter * 15)
             average = round(sum(qoe_consecutives)/len(qoe_consecutives))
             day_report.append([time, average, start.strftime("%H:%M"), end.strftime("%H:%M")])
 
             counter = 0
             qoe_consecutives = []
 
-        
         else:
           if counter != 0:
             time = (counter * 15)/60
-            end = datetime.strptime(j["timestamp"], '%Y-%m-%dT%H:%M:%SZ') + dt.timedelta(hours=-5, minutes=15)
-            start = end - dt.timedelta(minutes = counter * 15)
+            start = datetime.strptime(j["timestamp"], '%Y-%m-%dT%H:%M:%SZ') - dt.timedelta(hours=5, minutes=-15)
+            end = start + dt.timedelta(minutes = counter * 15)
             average = round(sum(qoe_consecutives)/len(qoe_consecutives))
-            #day_report.append([time, average, str(start), str(end)])
             day_report.append([time, average, start.strftime("%H:%M"), end.strftime("%H:%M")])
 
             counter = 0
             qoe_consecutives = []
       
       days_report.append(day_report)
-  return days_report
+  return [days_report, today]
 
-#sumary(get_urls('lmlo092', 1))
-print(details(get_urls('lmlo066', 3)))
+#print(sumary(get_urls('lamo015', 3)))
+#print(details(get_urls('lamo015', 3)))
+#print(get_urls('lmlo00', 1)[1])
