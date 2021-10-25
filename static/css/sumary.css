@@ -1,0 +1,12 @@
+div.scrollmenu {
+    overflow: auto;
+    white-space: nowrap;
+}
+
+div.scrollmenu td {
+    text-align: center;
+}
+
+td.header {
+    cursor: pointer;
+}

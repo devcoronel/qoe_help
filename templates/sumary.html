@@ -1,11 +1,12 @@
 {% extends 'layout.html' %}
 {% block content %}
 	<script src="../static/js/table2excel.js"></script>
+	<link rel="stylesheet" href="../static/css/sumary.css">
 	<div style="background-image: radial-gradient(farthest-corner at 45px 45px , #334b6f 0%, #273145 100%);">
 		<div class="container-fluid pb-3" style="padding-top: 4.5rem;">
 			<div class="container bg-light rounded pt-2" style="padding-bottom: 20.2rem;">
 				<div class="p-3">
-					<h1 class="fw-bold"> <img src="../static/images/aboutme/i.png" width="35" class="pb-2">&nbspSumary</h1>
+					<h1 class="fw-bold"> <img src="{{ url_for('static', filename='images/aboutme/i.png') }}" width="35" class="pb-2">&nbspSumario</h1>
 					
 					<form id="form_sumary" class="needs-validation" novalidate>
 						<div class="row ">
@@ -32,39 +33,16 @@
 								<div class="row"><p>&nbsp</p></div>
 								<div class="row"><button type="submit" class="btn btn-primary" style="padding-top: 0.2rem;">Analizar</button></div>
 							</div>
-							<div id="msg">	
-							</div>
+							
 						</div>
 					</form>
 
 					<hr>
-					<table id="hourstable" data-excel-name="Horas_QoE_afectado">
-						<thead>
-							<tr>
-								<td>Nombre</td>
-								<td>Apellido</td>
-								<td>Celular</td>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>Diego</td>
-								<td>Coronel</td>
-								<td>993763327</td>
-							</tr>
-							<tr>
-								<td>Diego</td>
-								<td>Coronel</td>
-								<td>993763327</td>
-							</tr>
-							<tr>
-								<td>Diego</td>
-								<td>Coronel</td>
-								<td>993763327</td>	
-							</tr>
-						</tbody>
-					</table>
-					<button id="hoursbutton">Export</button>
+					<div id="loading" ></div>
+					<div id="my_table" class="scrollmenu"></div>
+					<br>
+					<button id="hoursbutton" class="btn btn-success">Exportar</button>
+					
 					<hr>
 					
 				</div>
@@ -77,6 +55,7 @@
   			table2excel.export(document.querySelectorAll("#hourstable"), "Horas_QoE_afectado");
 		});
 	</script>
-	<script src="../static/js/sumary.js"></script>		
+	<script src="../static/js/sumary.js"></script>
+	<script src="../static/js/order.js"></script>	
 
 {% endblock %}

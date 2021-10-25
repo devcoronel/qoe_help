@@ -2,15 +2,15 @@
 
 <head>
 	<title>QoE Help</title>
-	<link rel="stylesheet" href="../static/css/bootstrap.css">
-	<link rel="shortcut icon" href="../static/images/icon.svg">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+	<link rel="shortcut icon" href="{{ url_for('static', filename='images/icon.svg') }}">
 </head>
 
 <body>
 	<nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
 		<div class="container-fluid">
 			
-			<a class="navbar-brand" href="#">QoE Help</a>
+			<a class="navbar-brand">QoE Help</a>
 			<button class="navbar-toggler" 
 					type="button" 
 					data-bs-toggle="collapse" 
@@ -47,8 +47,8 @@
 
 	{% endblock %}
 	
-	<script src="../static/js/bold_title.js"></script>
-	<script src="../static/js/bootstrap.js"></script>
+	<script src="{{ url_for('static', filename='js/bold_title.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
 </body>
 
 </html>

@@ -1,6 +1,6 @@
 import json, requests
 import datetime as dt
-from datetime import datetime, timedelta
+from datetime import datetime
 from nodes import nodes
 import re
 
@@ -14,18 +14,22 @@ def get_urls(my_node, my_days):
     my_days = int(my_days)
     days = my_days
     if my_node == '' or my_days == 0:
-        return "Dato(s) incorrectos"
+        return {"msg": "Dato(s) incorrectos"}
     regex = re.escape(my_node) + r"\w*"
     for node in nodes:
       if re.search(regex, node["name"], re.IGNORECASE):
         match.append(node)    
     if match == []:
-      return "Plano(s) no encontrado(s)"
+      return {"msg": "Plano(s) no encontrado(s)"}
   except:
-    return "Dato(s) incorrectos"
+    return {"msg": "Dato(s) incorrectos"}
   
   today_utc = dt.datetime.utcnow()
   today = today_utc - dt.timedelta(hours=5)
+
+  dates = []
+  for i in range(days):
+    dates.append((today - dt.timedelta(days = i)).strftime("%d/%m/20%y"))
 
   duration_day = 1440 #minutes: máximo 1440 (24 horas)
   duration_today = (today.hour)*60 + today.minute
@@ -41,16 +45,15 @@ def get_urls(my_node, my_days):
         url_built(node, today_utc-dt.timedelta(days=day-1, hours=today.hour, minutes= today_utc.minute), duration_day)
     urls_for_all_nodes.append({node['name']:urls_for_each_node})
     urls_for_each_node = []
-  
-  return [urls_for_all_nodes, (today).strftime("%d/%m/%y")]
+  return [urls_for_all_nodes, dates, days]
 
 # ONE OR MORE NODES ANALITIC
 def sumary(urls):
-  if isinstance(urls, str):
+  if isinstance(urls, dict):
     return urls
 
   urls_for_all_nodes = urls[0]
-  today = urls[1]
+  dates = urls[1]
   hours_nodes = []
   min_qoe = 80
 
@@ -75,15 +78,15 @@ def sumary(urls):
         hours_node.append(hours_day)
 
     hours_nodes.append({name_node : hours_node})  
-  return [hours_nodes, today]
+  return {"data": [hours_nodes, dates, urls[2]]}
 
 # ONE NODE ANALITIC
 def details(urls):
-  if isinstance(urls, str):
+  if isinstance(urls, dict):
     return urls
 
   urls_node = urls[0]
-  today = urls[1]
+  dates = urls[1]
 
   name_node = list(urls_node[0].keys())[0]
   urls_node = (urls_node[0])[name_node]
@@ -99,9 +102,6 @@ def details(urls):
       counter = 0
       qoe_consecutives = []
       day_report = []
-
-      # Dia por iteración
-      #print((today - dt.timedelta(days = urls_node.index(i))).strftime("%d/%m/%y"))
 
       for j in data:
 
@@ -131,8 +131,7 @@ def details(urls):
             qoe_consecutives = []
       
       days_report.append(day_report)
-  return [days_report, today]
+  return {"data": [days_report, dates, urls[2]]}
 
-#print(sumary(get_urls('lamo015', 3)))
-#print(details(get_urls('lamo015', 3)))
-#print(get_urls('lmlo00', 1)[1])
+# Falta solucionar cuando el xpertrack bota error 500 y no recopila data
+# Esto ocasiona que al momento de ordenar en la tabla html ocurran errores
