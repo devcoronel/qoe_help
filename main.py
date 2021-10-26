@@ -135,3 +135,4 @@ def details(urls):
 
 # Falta solucionar cuando el xpertrack bota error 500 y no recopila data
 # Esto ocasiona que al momento de ordenar en la tabla html ocurran errores
+# SOLUCIÓN: Algunos IDs de los planos han cambiado, en xpertrack verificar
