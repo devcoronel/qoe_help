@@ -18,19 +18,40 @@ function sortTable(n) {
             x = rows[i].getElementsByTagName("TD")[n];
             y = rows[i + 1].getElementsByTagName("TD")[n];
             /* Check if the two rows should switch place, based on the direction, asc or desc: */
-            if (dir == "desc") {
-                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                    // If so, mark as a switch and break the loop:
-                    shouldSwitch = true;
-                    break;
-                    }
-                } else if (dir == "asc") {
-                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+
+            if (n == 0){
+                if (dir == "desc") {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
                         // If so, mark as a switch and break the loop:
                         shouldSwitch = true;
                         break;
                         }
-                    }
+                    } else if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            // If so, mark as a switch and break the loop:
+                            shouldSwitch = true;
+                            break;
+                            }
+                        }
+
+            } else{
+                if (dir == "desc") {
+                    if (parseFloat(x.innerHTML.toLowerCase()) > parseFloat(y.innerHTML.toLowerCase())) {
+                        // If so, mark as a switch and break the loop:
+                        shouldSwitch = true;
+                        break;
+                        }
+                    } else if (dir == "asc") {
+                        if (parseFloat(x.innerHTML.toLowerCase()) < parseFloat(y.innerHTML.toLowerCase())) {
+                            // If so, mark as a switch and break the loop:
+                            shouldSwitch = true;
+                            break;
+                            }
+                        }
+                
+            }
+
+            
             }
         if (shouldSwitch) {
             /* If a switch has been marked, make the switch and mark that a switch has been done: */

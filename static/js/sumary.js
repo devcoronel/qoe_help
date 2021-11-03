@@ -25,7 +25,7 @@ myform.addEventListener("submit", function (e) {
 				let elements = data.data[0]
 				let dates = data.data[1]
 				let days = data.data[2]
-				console.log(elements, dates, days)
+				//console.log(elements, dates, days)
 
 				let tablehtml = '<table class="table table-hover" id="hourstable" data-excel-name="Horas_QoE_afectado" ><thead class="table-dark"><td onclick="sortTable(0)" class="header"><strong>Plano</strong></td>'
 							
