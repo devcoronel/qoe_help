@@ -1,7 +1,7 @@
 import json, requests
 import datetime as dt
 from datetime import datetime
-from nodes import nodes
+from lima_nodes import lima_nodes
 import re
 
 def get_urls(my_node, my_days):
@@ -13,10 +13,10 @@ def get_urls(my_node, my_days):
     my_node = str(my_node).upper()
     my_days = int(my_days)
     days = my_days
-    if my_node == '' or my_days == 0:
+    if my_days == 0: #or my_node == '':
         return {"msg": "Dato(s) incorrectos"}
     regex = re.escape(my_node) + r"\w*"
-    for node in nodes:
+    for node in lima_nodes:
       if re.search(regex, node["name"], re.IGNORECASE):
         match.append(node)    
     if match == []:

@@ -1059,10 +1059,10 @@ nodes = [
       "nodeId":668955,
       "name":"TCNA098"
    },
-   {
-      "nodeId":668956,
-      "name":"LMMF079"
-   },
+   # {
+   #    "nodeId":668956, No lee bien Xpertrak
+   #    "name":"LMMF079"
+   # },
    {
       "nodeId":668959,
       "name":"CHI030"
@@ -1768,7 +1768,7 @@ nodes = [
       "name":"LMSM021"
    },
    {
-      "nodeId":669211,
+      "nodeId":1289027,#669211,
       "name":"LMLM144"
    },
    {
@@ -3388,7 +3388,7 @@ nodes = [
       "name":"LMRC018"
    },
    {
-      "nodeId":669753,
+      "nodeId":1282144,#669753,
       "name":"LMRC005"
    },
    {
@@ -3920,7 +3920,7 @@ nodes = [
       "name":"LMJL019"
    },
    {
-      "nodeId":669959,
+      "nodeId":1290487,#669959,
       "name":"LMJL020"
    },
    {
@@ -5332,7 +5332,7 @@ nodes = [
       "name":"LMJL168"
    },
    {
-      "nodeId":670422,
+      "nodeId":1282938,#670422,
       "name":"LMJL169"
    },
    {
@@ -7612,7 +7612,7 @@ nodes = [
       "name":"LMMP029"
    },
    {
-      "nodeId":671255,
+      "nodeId":1285974,#671255,
       "name":"LMMP040"
    },
    {
@@ -9072,7 +9072,7 @@ nodes = [
       "name":"LMBV017"
    },
    {
-      "nodeId":671799,
+      "nodeId":1289029,#671799,
       "name":"LMBV018"
    },
    {
@@ -12456,7 +12456,7 @@ nodes = [
       "name":"LMAT007"
    },
    {
-      "nodeId":1127184,
+      "nodeId":1285287,#1127184,
       "name":"LMAT009"
    },
    {
@@ -12812,7 +12812,7 @@ nodes = [
       "name":"LMLO017"
    },
    {
-      "nodeId":1172965,
+      "nodeId":1279284,#1172965,
       "name":"LMMG004"
    },
    # {
@@ -13824,7 +13824,7 @@ nodes = [
       "name":"LMIN019"
    },
    {
-      "nodeId":1282145,#1234004,
+      "nodeId":1290141,#1282145,#1234004,
       "name":"LMCA115"
    },
    {
@@ -13860,7 +13860,7 @@ nodes = [
       "name":"LMMP017"
    },
    {
-      "nodeId":1235700,
+      "nodeId":1285973,#1235700,
       "name":"LMCO031"
    },
    {
@@ -14064,7 +14064,7 @@ nodes = [
       "name":"CHI072"
    },
    {
-      "nodeId":1250080,
+      "nodeId":1282167,#1250080,
       "name":"LMMP111"
    },
    {
@@ -14660,7 +14660,7 @@ nodes = [
       "name":"CZSS034"
    },
    {
-      "nodeId":1259864,
+      "nodeId":1283598,#1259864,
       "name":"LMSQ044"
    },
    {

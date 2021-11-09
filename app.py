@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify, url_for, redirect
-import requests
 from main import get_urls, sumary, details
+import requests
 
 app = Flask(__name__)
 
