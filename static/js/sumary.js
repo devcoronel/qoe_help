@@ -1,7 +1,9 @@
 let mynode = document.getElementById("id-node");
 let mydays = document.getElementById("id-days");
-let load = document.getElementById("loading")
-let table = document.getElementById("my_table")
+let load = document.getElementById("loading");
+let table = document.getElementById("my_table");
+let x = document.getElementById("x").innerHTML;
+let value_x = "";
 
 const myform = document.getElementById("form_sumary");
 
@@ -14,8 +16,16 @@ myform.addEventListener("submit", function (e) {
 		</div>
 	`
 	const formData = new FormData(this);
+	if(x == 'HOURS') {
+		value_x = "/hours"
+	} else {
+		value_x = "/qoe"
+	}
+	console.log(x)
+	console.log(value_x)
+	console.log(typeof(value_x))
 
-	fetch("/sumario", {
+	fetch(value_x , {
 		method: 'POST',
 		body: formData
 	})
@@ -40,7 +50,7 @@ myform.addEventListener("submit", function (e) {
 					let key = Object.keys(elements[i])
 					let values = elements[i][key]
 
-					tablehtml += '</td><td><a href="/detalle/'+ key + '/'+ days +'">'+ key +'</a></td>'
+					tablehtml += '</td><td><a href="/detail/'+ key +'">'+ key +'</a></td>'
 
 					for(let j in values) {
 						tablehtml += '<td>'+ values[j] +'</td>'

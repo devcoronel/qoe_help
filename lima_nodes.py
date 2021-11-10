@@ -4,6 +4,10 @@ lima_nodes = [
       "name":"LMCH071"
    },
    {
+      "nodeId":1290487,
+      "name":"LMJL020"
+   },
+   {
       "nodeId":668586,
       "name":"LMCH072"
    },
@@ -2166,10 +2170,6 @@ lima_nodes = [
    {
       "nodeId":669958,
       "name":"LMJL019"
-   },
-   {
-      "nodeId":1290487,
-      "name":"LMJL020"
    },
    {
       "nodeId":669963,

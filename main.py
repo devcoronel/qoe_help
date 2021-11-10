@@ -78,7 +78,7 @@ def sumary(urls):
         hours_node.append(hours_day)
 
     hours_nodes.append({name_node : hours_node})  
-  return {"data": [hours_nodes, dates, urls[2]]}
+  return {"data": [hours_nodes, dates]}#, urls[2]]}
 
 # ONE NODE ANALITIC
 def details(urls):
@@ -136,3 +136,5 @@ def details(urls):
 # Falta solucionar cuando el xpertrack bota error 500 y no recopila data
 # Esto ocasiona que al momento de ordenar en la tabla html ocurran errores
 # SOLUCIÓN: Algunos IDs de los planos han cambiado, en xpertrack verificar
+
+#print(sumary(get_urls("LMLO069",2)))
