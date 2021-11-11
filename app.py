@@ -15,7 +15,15 @@ def qoe():
 
 @app.route('/detail/<string:node>')
 def detail(node):
-    return render_template('detail.html', node = node)
+    days = 2
+    # Deben ser cambiados por True
+    data_hours = algorithm(node, days, 'HOURS', False)
+    values_hours = (((data_hours["data"])[0])[0])[node]
+
+    data_qoe = algorithm(node, days, 'QOE', False)
+    values_qoe = (((data_qoe["data"])[0])[0])[node]
+
+    return render_template('detail.html', node = node, data_values = [values_hours, values_qoe], dates = (data_hours["data"])[1])
 
 @app.route('/info')
 def indexe():
@@ -25,14 +33,14 @@ def indexe():
 def data_hours():
     node = request.form['node']
     days = request.form['days']
-    data = algorithm(node, days, 'HOURS')
+    data = algorithm(node, days, 'HOURS', False)
     return data
 
 @app.route('/qoe', methods=['POST'])
 def data_qoe():
     node = request.form['node']
     days = request.form['days']
-    data = algorithm(node, days, 'QOE')
+    data = algorithm(node, days, 'QOE', False)
     return data
 
 if __name__ == '__main__':

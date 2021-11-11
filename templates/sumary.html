@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% block content %}
 	<script src="../static/js/table2excel.js"></script>
-	<link rel="stylesheet" href="../static/css/sumary.css">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/sumary.css') }}">
 	<div style="background-image: radial-gradient(farthest-corner at 45px 45px , #334b6f 0%, #273145 100%);">
 		<div class="container-fluid pb-3" style="padding-top: 4.5rem;">
 			<div class="container bg-light rounded pt-2" style="padding-bottom: 20.2rem;">

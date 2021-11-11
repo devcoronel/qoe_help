@@ -8,10 +8,10 @@ if (route == "hours") {
 } else if (route == "qoe") {
     let qoe = document.getElementById("qoe");
     qoe.innerHTML = `<a class="nav-link fw-bold" href="/qoe">QoE</a>`;
-} else if (route == "detail") {
-    let detail = document.getElementById("detail");
-    detail.innerHTML = `<a class="nav-link fw-bold" href="/detail">Detail</a>`;
-} else {
+} else if (route == "info") {
     let info = document.getElementById("info");
     info.innerHTML = `<a class="nav-link fw-bold" href="/info">Info</a>`;
+} else {
+    let detail = document.getElementById("detail");
+    detail.innerHTML = `<a class="nav-link fw-bold" href="/detail">Detail</a>`;
 };
