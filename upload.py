@@ -51,6 +51,14 @@ def upload(x):  # x puede ser 'HOURS', 'QOE' o 'BOTH'
 
         if result[0][0] == 1:
             return print("Column {} already exists".format(ytd))
+        
+        print("Creating column {}".format(ytd))
+        query1 = "ALTER TABLE {} ADD COLUMN `{}` FLOAT AFTER PLANO;".format(x, ytd)
+        cursor = mydb.cursor()
+        cursor.execute(query1)
+        mydb.commit()
+        print("¡Column created!")
+        print("")
     
     elif x == 'BOTH':
 
@@ -67,17 +75,18 @@ def upload(x):  # x puede ser 'HOURS', 'QOE' o 'BOTH'
             result = cursor.fetchall()
             
             if result[0][0] == 1:
-                return print("Column {} already exists in {} table".format(ytd, bool)) 
+                return print("Column {} already exists in {} table".format(ytd, bool))
+            
+            print("Creating column {}".format(ytd))
+            query1 = "ALTER TABLE {} ADD COLUMN `{}` FLOAT AFTER PLANO;".format(bool, ytd)
+            cursor = mydb.cursor()
+            cursor.execute(query1)
+            mydb.commit()
+            print("¡Column created!")
+            print("")
     else:
        return print("Error typing HOURS, QOE or BOTH")
 
-    print("Creating column {}".format(ytd))
-    query1 = "ALTER TABLE {} ADD COLUMN `{}` FLOAT AFTER PLANO;".format(x, ytd)
-    cursor = mydb.cursor()
-    cursor.execute(query1)
-    mydb.commit()
-    print("¡Column created!")
-    print("")
 
     for node in lima_nodes:
         link = 'http://190.117.108.84:1380/pathtrak/api/node/{}/qoe/metric/history?duration=1440&sampleResponse=false&startdatetime={}-{}-{}T{}:{}:00.000Z'.format(str(node["nodeId"]), ytd_utc.year, str(ytd_utc.month).zfill(2), str(ytd_utc.day).zfill(2), str(ytd_utc.hour).zfill(2), str(ytd_utc.minute).zfill(2))
@@ -92,6 +101,24 @@ def upload(x):  # x puede ser 'HOURS', 'QOE' o 'BOTH'
                 print(link)
                 value = -1
 
+                if x == 'QOE' or x == 'HOURS':
+
+                    cursor = mydb.cursor()
+                    query2 = "UPDATE {} SET `{}` = {} WHERE PLANO = '{}';".format(x, ytd, value, node["name"])
+                    cursor.execute(query2)
+                    mydb.commit()
+
+                elif x == 'BOTH':
+
+                    for i in ['HOURS', 'QOE']:
+                        cursor = mydb.cursor()
+                        query2 = "UPDATE {} SET `{}` = {} WHERE PLANO = '{}';".format(i, ytd, value, node["name"])
+                        cursor.execute(query2)
+                        mydb.commit()
+                
+                else:
+                    return print("Error typing HOURS, QOE or BOTH")
+
             elif x == 'HOURS':
                 counter = 0
                 for i in mydata:
@@ -100,6 +127,11 @@ def upload(x):  # x puede ser 'HOURS', 'QOE' o 'BOTH'
                 print(node["name"], "200 - OK")
                 print(link)             
                 value = (counter*15)/60
+
+                cursor = mydb.cursor()
+                query2 = "UPDATE {} SET `{}` = {} WHERE PLANO = '{}';".format(x, ytd, value, node["name"])
+                cursor.execute(query2)
+                mydb.commit()
             
             elif x == 'QOE':
                 scores = []
@@ -108,6 +140,11 @@ def upload(x):  # x puede ser 'HOURS', 'QOE' o 'BOTH'
                 print(node["name"], "200 - OK")
                 print(link)
                 value = round(sum(scores)/len(scores), 0)
+
+                cursor = mydb.cursor()
+                query2 = "UPDATE {} SET `{}` = {} WHERE PLANO = '{}';".format(x, ytd, value, node["name"])
+                cursor.execute(query2)
+                mydb.commit()
 
             elif x == 'BOTH':
                 print(node["name"], "200 - OK")
@@ -134,19 +171,12 @@ def upload(x):  # x puede ser 'HOURS', 'QOE' o 'BOTH'
                 cursor.execute(query4)
                 mydb.commit()
 
-                break
-
             else:
                 return print("Error typing HOURS, QOE or BOTH")
             
-            cursor = mydb.cursor()
-            query2 = "UPDATE {} SET `{}` = {} WHERE PLANO = '{}';".format(x, ytd, value, node["name"])
-            cursor.execute(query2)
-            mydb.commit()
-
         elif mydata.status_code == 500:
 
-            if x == 'HOURS' or 'QOE':
+            if x == 'HOURS' or x == 'QOE':
                 print(node["name"], "500 - Internal Error Server")
                 print(link)
                 value = -1
