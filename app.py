@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, jsonify, url_for, redirect
-from main import get_urls, sumary, details
 from maindb import algorithm
 import requests
 

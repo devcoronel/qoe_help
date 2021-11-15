@@ -1,10 +1,11 @@
 import json, requests
 import datetime as dt
-from lima_nodes import lima_nodes
+from built_nodes import get_nodes
 from upload import mydb, min_qoe
 import re
 
 def algorithm(my_node, my_days, x, also_today): # x only can be 'HOURS' or 'QOE'
+    lima_nodes = get_nodes()
     match = []
 
     try:

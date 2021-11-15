@@ -3,7 +3,7 @@ import datetime as dt
 import json
 import requests
 from requests.exceptions import RetryError
-from lima_nodes import lima_nodes
+from built_nodes import get_nodes
 
 mydb = mysql.connector.connect(
     host="192.168.0.32",
@@ -20,7 +20,9 @@ min_qoe = 80
 
 def init(x): # x puede ser 'HOURS', 'QOE'
     try:
+        lima_nodes = get_nodes()
         for node in lima_nodes:
+            print(node["name"])
             query = "INSERT INTO {} (PLANO) VALUES ('{}');".format(x, node["name"])
             cursor = mydb.cursor()
             cursor.execute(query)
@@ -31,10 +33,14 @@ def init(x): # x puede ser 'HOURS', 'QOE'
 
 def upload(x):  # x puede ser 'HOURS', 'QOE' o 'BOTH'
 
+    lima_nodes = get_nodes()
+
     today_utc = dt.datetime.utcnow()
     today_local = today_utc - dt.timedelta(hours= 5)
     yesterday_local = today_local - dt.timedelta(days=1)
     ytd = yesterday_local.strftime("%d/%m/20%y")
+    # ytd = '12/11/2021'
+
     ytd_utc = today_local - dt.timedelta(hours=today_local.hour - 5, minutes=today_local.minute)
 
     if x == 'HOURS' or x == 'QOE':

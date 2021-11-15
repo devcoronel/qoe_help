@@ -5,9 +5,11 @@ colorama==0.4.4
 Flask==2.0.2
 Flask-MySQLdb==0.2.0
 idna==3.3
+iteration-utilities==0.11.0
 itsdangerous==2.0.1
 Jinja2==3.0.2
 MarkupSafe==2.0.1
+mysql-connector==2.2.9
 mysqlclient==2.0.3
 requests==2.26.0
 urllib3==1.26.7

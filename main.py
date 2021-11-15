@@ -133,8 +133,4 @@ def details(urls):
       days_report.append(day_report)
   return {"data": [days_report, dates, urls[2]]}
 
-# Falta solucionar cuando el xpertrack bota error 500 y no recopila data
-# Esto ocasiona que al momento de ordenar en la tabla html ocurran errores
-# SOLUCIÓN: Algunos IDs de los planos han cambiado, en xpertrack verificar
-
 #print(sumary(get_urls("LMLO069",2)))

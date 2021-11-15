@@ -1,3 +1,4 @@
-from upload import upload
-
-upload('BOTH')
+from upload import upload, init
+# init('HOURS')
+# init('QOE')
+# upload('BOTH')
