@@ -11,12 +11,11 @@
                     <br>
                     <div class="row">
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                            {% for data in data_values %}
                                 <div class="scrollmenu">
                                     <table class="table table-hover" id="hourstable" data-excel-name="Horas_QoE_afectado" >
                                         <thead class="table-dark">
                                             <tr>
-                                                <td class="header"><strong>Plano</strong></td>
+                                                <td class="header"><strong>{{node}}</strong></td>
                                                 {% for td in dates %}
                                                     <td class="header"><strong>{{td}}</strong></td>
                                                 {% endfor %}
@@ -24,15 +23,20 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>{{node}}</td>
-                                                {% for value in data %}
-                                                    <td>{{value}}</td>
+                                                <td>Horas</td>
+                                                {% for data in data_values[0] %}
+                                                    <td>{{data}}</td>
+                                                {% endfor %}
+                                            </tr>
+                                            <tr>
+                                                <td>QoE</td>
+                                                {% for data in data_values[1] %}
+                                                    <td>{{data}}</td>
                                                 {% endfor %}
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
-                            {% endfor %}
                         </div>
                     </div>
                     

@@ -18,16 +18,32 @@ mydb = mysql.connector.connect(
 # fetchall para obtener la salida del comando
 min_qoe = 80
 
-def init(x): # x puede ser 'HOURS', 'QOE'
+def init(x): # x puede ser 'HOURS', 'QOE' o 'BOTH'
     try:
         lima_nodes = get_nodes()
-        for node in lima_nodes:
-            print(node["name"])
-            query = "INSERT INTO {} (PLANO) VALUES ('{}');".format(x, node["name"])
-            cursor = mydb.cursor()
-            cursor.execute(query)
-            mydb.commit()
-        return print("======== ¡SUCCESS! ========")
+        if x == 'HOURS' or x == 'QOE':
+            for node in lima_nodes:
+                print(node["name"])
+                query = "INSERT INTO {} (PLANO) VALUES ('{}');".format(x, node["name"])
+                cursor = mydb.cursor()
+                cursor.execute(query)
+                mydb.commit()
+            return print("======== ¡SUCCESS! ========")
+
+        elif x == 'BOTH':
+            for node in lima_nodes:
+                print(node["name"])
+
+                for i in ['HOURS', 'QOE']:
+                    query = "INSERT INTO {} (PLANO) VALUES ('{}');".format(i, node["name"])
+                    cursor = mydb.cursor()
+                    cursor.execute(query)
+                    mydb.commit()
+            return print("======== ¡SUCCESS! ========")
+            
+        else:
+            return print("Error typing HOURS, QOE or BOTH")
+
     except:
         return print("Error")
 

@@ -14,15 +14,28 @@ def qoe():
 
 @app.route('/detail/<string:node>')
 def detail(node):
-    days = 2
-    # Deben ser cambiados por True
-    data_hours = algorithm(node, days, 'HOURS', False)
+    days = 1
+
+    data_hours = algorithm(node, days, 'HOURS', True)
     values_hours = (((data_hours["data"])[0])[0])[node]
 
-    data_qoe = algorithm(node, days, 'QOE', False)
+    data_qoe = algorithm(node, days, 'QOE', True)
     values_qoe = (((data_qoe["data"])[0])[0])[node]
 
     return render_template('detail.html', node = node, data_values = [values_hours, values_qoe], dates = (data_hours["data"])[1])
+
+@app.route('/upload', methods=['POST', 'GET'])
+def upload():
+    if request.method == 'GET':
+        return render_template('upload.html', title = "Carga de data")
+    elif request.method == 'POST':
+        type = request.form["type"]
+        date = request.form["date"]
+        # FALTA LLAMAR A LA FUNCIÓN
+        
+        if date == "":
+            return {"data": "no date"}
+        return {"data": "Data subida exitosamente"}
 
 @app.route('/info')
 def indexe():

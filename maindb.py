@@ -1,11 +1,10 @@
 import json, requests
 import datetime as dt
-from built_nodes import get_nodes
+from lima_nodes import lima_nodes
 from upload import mydb, min_qoe
 import re
 
 def algorithm(my_node, my_days, x, also_today): # x only can be 'HOURS' or 'QOE'
-    lima_nodes = get_nodes()
     match = []
 
     try:
@@ -43,7 +42,6 @@ def algorithm(my_node, my_days, x, also_today): # x only can be 'HOURS' or 'QOE'
         value_node = []
         if also_today:
             link = create_link(node["nodeId"], duration_today, today_utc)
-            dates.insert(0, today.strftime("%d/%m/20%y"))
             
             data = requests.get(link)
             if data.status_code == 200:
@@ -84,5 +82,9 @@ def algorithm(my_node, my_days, x, also_today): # x only can be 'HOURS' or 'QOE'
             value_node.append(value)
 
         value_nodes.append({node["name"] : value_node})
+
+        if also_today:    
+            dates.insert(0, today.strftime("%d/%m/20%y"))
+
     
     return {"data": [value_nodes, dates]}

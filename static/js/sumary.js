@@ -21,9 +21,6 @@ myform.addEventListener("submit", function (e) {
 	} else {
 		value_x = "/qoe"
 	}
-	console.log(x)
-	console.log(value_x)
-	console.log(typeof(value_x))
 
 	fetch(value_x , {
 		method: 'POST',
@@ -50,7 +47,7 @@ myform.addEventListener("submit", function (e) {
 					let key = Object.keys(elements[i])
 					let values = elements[i][key]
 
-					tablehtml += '</td><td><a href="/detail/'+ key +'">'+ key +'</a></td>'
+					tablehtml += '</td><td><a href="/detail/'+ key +'" target= "_blank">'+ key +'</a></td>'
 
 					for(let j in values) {
 						tablehtml += '<td>'+ values[j] +'</td>'
