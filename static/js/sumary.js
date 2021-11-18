@@ -28,10 +28,9 @@ myform.addEventListener("submit", function (e) {
 	})
 		.then(response => response.json())
 		.then(data => {
-			if(data.msg) {
+			if(typeof(data.msg) === 'object') {
 				let elements = data.msg[0]
 				let dates = data.msg[1]
-				let days = data.msg[2]
 				//console.log(elements, dates, days)
 
 				let tablehtml = '<table class="table table-hover" id="hourstable" data-excel-name="Horas_QoE_afectado" ><thead class="table-dark"><td onclick="sortTable(0)" class="header"><strong>Plano</strong></td>'
