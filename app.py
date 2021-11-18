@@ -1,5 +1,7 @@
+from datetime import date
 from flask import Flask, render_template, request, jsonify, url_for, redirect
 from maindb import algorithm
+from upload import upload
 import requests
 
 app = Flask(__name__)
@@ -12,30 +14,63 @@ def hours():
 def qoe():
     return render_template('sumary.html', title = "Estado diario QoE", x = 'QOE')
 
-@app.route('/detail/<string:node>')
-def detail(node):
-    days = 1
+@app.route(r'/detail', methods = ['GET', 'POST'])
+@app.route(r'/detail/<string:node>', methods = ['GET'])
+def detail(node = None):
+    if request.method == 'GET':
+        if node:
+            with_search = False
+            days = 14
 
-    data_hours = algorithm(node, days, 'HOURS', True)
-    values_hours = (((data_hours["data"])[0])[0])[node]
+            data_hours = algorithm(node, days, 'HOURS', True)
+            values_hours = (((data_hours["msg"])[0])[0])[node]
 
-    data_qoe = algorithm(node, days, 'QOE', True)
-    values_qoe = (((data_qoe["data"])[0])[0])[node]
+            data_qoe = algorithm(node, days, 'QOE', True)
+            values_qoe = (((data_qoe["msg"])[0])[0])[node]
 
-    return render_template('detail.html', node = node, data_values = [values_hours, values_qoe], dates = (data_hours["data"])[1])
+            return render_template('detail.html', node = node, data_values = [values_hours, values_qoe], dates = (data_hours["msg"])[1], with_search = with_search)
+
+        else:
+            with_search = True
+            return render_template('detail.html', with_search = with_search)
+    
+    elif request.method == 'POST':
+
+        node = request.form["node"].upper()
+        days = request.form["days"]
+
+        data_hours = algorithm(node, days, 'HOURS', True, True)
+        data_qoe = algorithm(node, days, 'QOE', True, True)
+
+        if isinstance(data_hours["msg"], str):
+            return data_hours
+        elif isinstance(data_hours["msg"], list):
+
+            values_hours = (((data_hours["msg"])[0])[0])[node]
+            values_qoe = (((data_qoe["msg"])[0])[0])[node]
+
+            data_values = [values_hours, values_qoe]
+            dates = (data_hours["msg"])[1]
+            
+            return {"msg":[node, data_values, dates]}
+        else:
+            pass
 
 @app.route('/upload', methods=['POST', 'GET'])
-def upload():
+def my_upload():
     if request.method == 'GET':
         return render_template('upload.html', title = "Carga de data")
     elif request.method == 'POST':
-        type = request.form["type"]
+        election = request.form["type"]
         date = request.form["date"]
-        # FALTA LLAMAR A LA FUNCIÓN
+        cookie = request.form["cookie"]
         
         if date == "":
-            return {"data": "no date"}
-        return {"data": "Data subida exitosamente"}
+            return {"msg": "Especifique la fecha para la carga"}
+        
+        result = upload(election, date, cookie)
+        
+        return result
 
 @app.route('/info')
 def indexe():
@@ -56,4 +91,8 @@ def data_qoe():
     return data
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8080)
+    app.run(debug=False, port=8080)
+
+# OBENER COOKIES AUTOMÁTICAMENTE
+# DAR DETALLE DE US, DS, T3
+# CREAR PÁGINA PARA POWER BI

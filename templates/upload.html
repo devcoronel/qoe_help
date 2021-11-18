@@ -4,18 +4,18 @@
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/sumary.css') }}">
 	<div style="background-image: radial-gradient(farthest-corner at 45px 45px , #334b6f 0%, #273145 100%);">
 		<div class="container-fluid pb-3" style="padding-top: 4.5rem;">
-			<div class="bg-light" style="margin-left: 28rem; margin-right: 28rem; padding: 2rem; margin-top: 6rem; margin-bottom: 10rem; border-radius: 2rem;" > 
+			<div class="bg-light" style="margin-left: 28rem; margin-right: 28rem; padding: 2rem; margin-top: 6rem; margin-bottom: 6rem; border-radius: 2rem;" > 
 				<div>
-					<div id="title">
+					<div>
 						<h2 class="fw-bold" style="text-align: center;"> <img src="{{ url_for('static', filename='images/aboutme/years.png') }}" width="35" class="pb-2">&nbsp{{title}}&nbsp<img src="{{ url_for('static', filename='images/aboutme/years.png') }}" width="35" class="pb-2"></h2>
 					</div>
 					<br>
 					<form id="form_upload" class="needs-validation" novalidate>
 						<div class="row ">
-							<div class="col-6">
+							<div class="col-3">
 								<label for="exampleFormControlInput1" class="form-label fw-bold fs-5">Cargar:</label>
 							</div>
-							<div class="col-6">
+							<div class="col-9">
 								<select name="type" id="type" class="form-select">
 									<option value="BOTH">QoE y Horas</option>
 									<option value="HOURS">Horas</option>
@@ -25,14 +25,24 @@
 						</div>
 						<br>
 						<div class="row ">
-							<div class="col-6">
+							<div class="col-3">
 								<label for="exampleFormControlInput1" class="form-label fw-bold fs-5">Fecha:</label>
 							</div>
-							<div class="col-6">
+							<div class="col-9">
 								<input type="date" class="form-control" name="date">
 							</div>
 						</div>
 						<br>
+						<div class="row ">
+							<div class="col-3">
+								<label for="exampleFormControlInput1" class="form-label fw-bold fs-5">Cookie:</label>
+							</div>
+							<div class="col-9">
+								<input type="text" name="cookie" class="form-control" placeholder="7E4DFBB6DC8B53D1CF6B755686">
+							</div>
+						</div>
+						<br>
+						<div id="alert"></div>
 						<div class="row " >
 							<div class="col-12" style=" display: flex; justify-content: center;" id="load">
 									<button type="submit" class="btn btn-primary" style="padding-top: 0.2rem;">Subir data</button>

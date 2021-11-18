@@ -18,9 +18,9 @@ mydb = mysql.connector.connect(
 # fetchall para obtener la salida del comando
 min_qoe = 80
 
-def init(x): # x puede ser 'HOURS', 'QOE' o 'BOTH'
+def init(x, cookie): # x puede ser 'HOURS', 'QOE' o 'BOTH'
     try:
-        lima_nodes = get_nodes()
+        lima_nodes = get_nodes(cookie)
         if x == 'HOURS' or x == 'QOE':
             for node in lima_nodes:
                 print(node["name"])
@@ -47,17 +47,18 @@ def init(x): # x puede ser 'HOURS', 'QOE' o 'BOTH'
     except:
         return print("Error")
 
-def upload(x):  # x puede ser 'HOURS', 'QOE' o 'BOTH'
+def upload(x, date, cookie):  # x puede ser 'HOURS', 'QOE' o 'BOTH'
 
-    lima_nodes = get_nodes()
+    today = dt.datetime.utcnow() - dt.timedelta(hours=5)
+    my_date = dt.datetime(int(date[0:4]), int(date[5:7]), int(date[8:10]))
+    if my_date > today:
+        return {"msg":"No hay data para esta fecha"}
+    elif my_date.strftime("%d/%m/20%y") == today.strftime("%d/%m/20%y"):
+        return {"msg":"Todavía no hay data para esta fecha"}
+    else:
+        pass
 
-    today_utc = dt.datetime.utcnow()
-    today_local = today_utc - dt.timedelta(hours= 5)
-    yesterday_local = today_local - dt.timedelta(days=1)
-    ytd = yesterday_local.strftime("%d/%m/20%y")
-    # ytd = '12/11/2021'
-
-    ytd_utc = today_local - dt.timedelta(hours=today_local.hour - 5, minutes=today_local.minute)
+    ytd = my_date.strftime("%d/%m/20%y")
 
     if x == 'HOURS' or x == 'QOE':
 
@@ -72,7 +73,8 @@ def upload(x):  # x puede ser 'HOURS', 'QOE' o 'BOTH'
         result = cursor.fetchall()
 
         if result[0][0] == 1:
-            return print("Column {} already exists".format(ytd))
+            print("Column {} already exists".format(ytd))
+            return {"msg": "Ya existe una data cargada en {}".format(ytd)}
         
         print("Creating column {}".format(ytd))
         query1 = "ALTER TABLE {} ADD COLUMN `{}` FLOAT AFTER PLANO;".format(x, ytd)
@@ -97,7 +99,8 @@ def upload(x):  # x puede ser 'HOURS', 'QOE' o 'BOTH'
             result = cursor.fetchall()
             
             if result[0][0] == 1:
-                return print("Column {} already exists in {} table".format(ytd, bool))
+                print("Column {} already exists in {} table".format(ytd, bool))
+                return {"msg": "Ya existe una data cargada en {} en la tabla {}".format(ytd, bool)}
             
             print("Creating column {}".format(ytd))
             query1 = "ALTER TABLE {} ADD COLUMN `{}` FLOAT AFTER PLANO;".format(bool, ytd)
@@ -109,9 +112,12 @@ def upload(x):  # x puede ser 'HOURS', 'QOE' o 'BOTH'
     else:
        return print("Error typing HOURS, QOE or BOTH")
 
+    lima_nodes = get_nodes(cookie)
+    if isinstance(lima_nodes, dict):
+        return lima_nodes
 
     for node in lima_nodes:
-        link = 'http://190.117.108.84:1380/pathtrak/api/node/{}/qoe/metric/history?duration=1440&sampleResponse=false&startdatetime={}-{}-{}T{}:{}:00.000Z'.format(str(node["nodeId"]), ytd_utc.year, str(ytd_utc.month).zfill(2), str(ytd_utc.day).zfill(2), str(ytd_utc.hour).zfill(2), str(ytd_utc.minute).zfill(2))
+        link = 'http://190.117.108.84:1380/pathtrak/api/node/{}/qoe/metric/history?duration=1440&sampleResponse=false&startdatetime={}-{}-{}T05:00:00.000Z'.format(str(node["nodeId"]), my_date.year, str(my_date.month).zfill(2), str(my_date.day + 1).zfill(2))
         mydata = requests.get(link)
 
         if mydata.status_code == 200:
@@ -223,6 +229,8 @@ def upload(x):  # x puede ser 'HOURS', 'QOE' o 'BOTH'
                 return print("Error typing HOURS, QOE or BOTH")
 
         else:
-            return print("Error connecting with Xpertrak")
+            print("Error connecting with Xpertrak")
+            return {"msg": "Error en la conexión con Xpertrak"}
 
-    return print("======== ¡SUCCESS! ========")
+    print("======== ¡SUCCESS! ========")
+    return {"msg":"Carga subida con éxito"}

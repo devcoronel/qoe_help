@@ -5,6 +5,41 @@
         <div class="container-fluid pb-3" style="padding-top: 4.5rem;">
             <div class="container bg-light rounded pt-2" style="padding-bottom: 20.2rem;">
                 <div class="p-3">
+                    {% if with_search == True %}
+                    <h2 class="fw-bold"> <img src="{{ url_for('static', filename='images/aboutme/i.png') }}" width="35" class="pb-2">&nbspDetalle</h2>
+					
+					<form id="form_detail" class="needs-validation" novalidate>
+						<div class="row ">
+							
+							<div class="mb-1 col-xl-2 col-lg-3 col-md-4 col-sm-5 col-12 col-2">
+								<div class="row">
+									<label for="exampleFormControlInput1" class="form-label fw-bold fs-5">Plano</label>
+								</div>
+								<div class="row ms-0 me-0">
+									<input type="text" class="form-control" id="id-node" name="node" placeholder="LMLO066 o LMLO">
+								</div>
+								
+							</div>
+							<div class="mb-1 col-xl-2 col-lg-3 col-md-4 col-sm-5 col-12 col-2">
+								<div class="row">
+									<label for="exampleFormControlInput1" class="form-label fw-bold fs-5">Número de Días</label>
+								</div>
+								<div class="row ms-0 me-0">
+									<input type="number" min="1" max="20" class="form-control" id="id-days" name="days" placeholder="1 - 20">
+								</div>
+								
+							</div>
+							<div class="mb-1 col-xl-1 col-lg-1 col-md-2 col-sm-2 col-12 col-2">
+								<div class="row"><p>&nbsp</p></div>
+								<div class="row"><button type="submit" class="btn btn-primary" style="padding-top: 0.2rem;"> Analizar</button></div>
+							</div>
+							
+						</div>
+					</form>
+					<hr>
+					<div id="loading" ></div>
+                    {% endif %}
+                    {% if with_search == False %}
                     <h2 class="fw-bold"> <img src="{{ url_for('static', filename='images/aboutme/i.png') }}" width="35" class="pb-2">&nbspDetalle: {{node}}</h2>
 
                     <hr>
@@ -39,12 +74,15 @@
                                 </div>
                         </div>
                     </div>
+                    {% endif %}
                     
-                    <hr>
+                    <div class="row" id="table"></div>
                     
                 </div>
             </div>
         </div>
     </div>
+	<script src="../static/js/detail.js"></script>
+
 
 {% endblock %}

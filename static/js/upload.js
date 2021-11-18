@@ -1,4 +1,5 @@
 const myform = document.getElementById("form_upload");
+let alert = document.getElementById("alert")
 
 myform.addEventListener("submit", function (e) {
 	e.preventDefault();
@@ -10,9 +11,6 @@ myform.addEventListener("submit", function (e) {
         <span class="visually-hidden">Loading...</span>
         </div>
         `
-    document.getElementById("title").innerHTML = `
-    <h2 class="fw-bold" style="text-align: center;"> <img src="{{ url_for('static', filename='images/aboutme/years.png') }}" width="35" class="pb-2">&nbsp{{title}}&nbsp<img src="{{ url_for('static', filename='images/aboutme/years.png') }}" width="35" class="pb-2"></h2>
-    `
 
 	fetch("/upload" , {
 		method: 'POST',
@@ -23,9 +21,23 @@ myform.addEventListener("submit", function (e) {
             document.getElementById("load").innerHTML = `
             <button type="submit" class="btn btn-primary" style="padding-top: 0.2rem;">Subir data</button>
             `
-            document.getElementById("title").innerHTML = `
-            <h2 class="fw-bold" style="text-align: center;"> <img src="static/images/aboutme/check.png" width="35" class="pb-2">&nbspCarga de data&nbsp<img src="static/images/aboutme/check.png" width="35" class="pb-2"></h2>
-            `
+			if(data.msg == 'Carga subida con éxito'){
+				alert.innerHTML = `
+				<div class="alert alert-success alert-dismissible fade show" role="alert">
+				<strong>`+data.msg+`</strong>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+				`
+			} else {
+				alert.innerHTML = `
+				<div class="alert alert-warning alert-dismissible fade show" role="alert">
+				<strong>`+data.msg+`</strong>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+				`
+			}
+			
+			
 		})
 		.catch(err => {
 			console.log("There was an error")

@@ -29,18 +29,14 @@ def normalize(node):
     node.pop("modemAnalyserLicensed")
     node.pop("topologyAlarmLicensed")
 
-def get_nodes():
+def get_nodes(cookie):
     lima_nodes = []
     # url_login = 'http://190.117.108.84:1380/pathtrak/login/view.html#/login'
     # url_page = 'http://190.117.108.84:1380/pathtrak/main/dashboard'
 
-    # COOKIES VÁLIDOS
-    # {'JSESSIONID': '798F94186575CBEF86C7D879964B2218'}
-    # {'JSESSIONID': '904583CCA4AC3CFB48FDE7BB30B540F7'}
-    # 1BE5D32027F07BBA071FCA7F0D789FCD
     print("Getting data's nodes from Xpertrak ...")
     url_nodes = 'http://190.117.108.84:1380/pathtrak/api/node'
-    data_nodes = requests.get(url_nodes, cookies={'JSESSIONID': '1BE5D32027F07BBA071FCA7F0D789FCD'})
+    data_nodes = requests.get(url_nodes, cookies={'JSESSIONID': '{}'.format(cookie)})
 
     if data_nodes.status_code == 200:
         print("Data Obtained")
@@ -98,7 +94,7 @@ def get_nodes():
         return lima_nodes
     
     elif data_nodes.status_code == 500:
-        return print("Error 500 - Iniciar Sesión")
+        return {"msg":"Cookie incorrecta"}
     
     else:
-        return print("Error")
+        return {"msg":"Cookie incorrecta"}
