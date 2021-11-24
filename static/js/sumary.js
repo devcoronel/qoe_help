@@ -16,7 +16,7 @@ myform.addEventListener("submit", function (e) {
 		</div>
 	`
 	const formData = new FormData(this);
-	if(x == 'HOURS') {
+	if(x == 'NEW_HOURS') {
 		value_x = "/hours"
 	} else {
 		value_x = "/qoe"

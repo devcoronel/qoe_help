@@ -1,3 +1,3 @@
 from upload import upload, init
-# init('BOTH')
-upload('BOTH')
+# init('QOE', 'AA53C49CF18E5119B4DDE8D02393CA83')
+# upload('BOTH')

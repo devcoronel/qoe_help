@@ -11,7 +11,10 @@ if (route == "hours") {
 } else if (route == "info") {
     let info = document.getElementById("info");
     info.innerHTML = `<a class="nav-link fw-bold" href="/info">Info</a>`;
-} else if (route == "upload") {
+} else if (route == "priority") {
+    let priority = document.getElementById("priority");
+    priority.innerHTML = `<a class="nav-link fw-bold" href="/priority">Priority</a>`;
+}  else if (route == "upload") {
     let upload = document.getElementById("upload");
     upload.innerHTML = `<a class="nav-link fw-bold" href="/upload">Upload</a>`;
 } else {

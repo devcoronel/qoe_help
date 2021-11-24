@@ -59,6 +59,9 @@ def upload(x, date, cookie):  # x puede ser 'HOURS', 'QOE' o 'BOTH'
         pass
 
     ytd = my_date.strftime("%d/%m/20%y")
+    lima_nodes = get_nodes(cookie)
+    if isinstance(lima_nodes, dict):
+        return lima_nodes
 
     if x == 'HOURS' or x == 'QOE':
 
@@ -112,9 +115,7 @@ def upload(x, date, cookie):  # x puede ser 'HOURS', 'QOE' o 'BOTH'
     else:
        return print("Error typing HOURS, QOE or BOTH")
 
-    lima_nodes = get_nodes(cookie)
-    if isinstance(lima_nodes, dict):
-        return lima_nodes
+    # DEBE IR ANTES DE CREAR LA COLUMNA
 
     for node in lima_nodes:
         link = 'http://190.117.108.84:1380/pathtrak/api/node/{}/qoe/metric/history?duration=1440&sampleResponse=false&startdatetime={}-{}-{}T05:00:00.000Z'.format(str(node["nodeId"]), my_date.year, str(my_date.month).zfill(2), str(my_date.day + 1).zfill(2))
