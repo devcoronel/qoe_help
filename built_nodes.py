@@ -1,5 +1,6 @@
 import requests, json, re
 from iteration_utilities import duplicates, unique_everseen
+from constants import url_ext, url_int
 
 def normalize(node):
     node.pop("modems")
@@ -35,7 +36,7 @@ def get_nodes(cookie):
     # url_page = 'http://190.117.108.84:1380/pathtrak/main/dashboard'
 
     print("Getting data's nodes from Xpertrak ...")
-    url_nodes = 'http://190.117.108.84:1380/pathtrak/api/node'
+    url_nodes = 'http://{}/pathtrak/api/node'.format(url_ext)
     data_nodes = requests.get(url_nodes, cookies={'JSESSIONID': '{}'.format(cookie)})
 
     if data_nodes.status_code == 200:
@@ -71,7 +72,7 @@ def get_nodes(cookie):
                 complete_redundant_nodes.append(node)
         
         for node in complete_redundant_nodes:
-            link = 'http://190.117.108.84:1380/pathtrak/api/node/{}/summary/metric?sampleResponse=false'.format(node["nodeId"])
+            link = 'http://{}/pathtrak/api/node/{}/summary/metric?sampleResponse=false'.format(url_ext, node["nodeId"])
             get_link = requests.get(link)
             if get_link.status_code == 500:
                 index = lima_nodes.index(node)

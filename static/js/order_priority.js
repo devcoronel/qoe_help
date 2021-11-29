@@ -19,7 +19,7 @@ function sortTable(n) {
             y = rows[i + 1].getElementsByTagName("TD")[n];
             /* Check if the two rows should switch place, based on the direction, asc or desc: */
 
-            if (n == 0){
+            if (n !== 4){
                 if (dir == "desc") {
                     if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
                         // If so, mark as a switch and break the loop:

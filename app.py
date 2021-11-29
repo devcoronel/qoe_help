@@ -1,8 +1,8 @@
 from datetime import date
 from flask import Flask, render_template, request, jsonify, url_for, redirect
-from main import algorithm
+from main import algorithm, priority
 from up import upload
-import requests
+from constants import days_detail
 
 app = Flask(__name__)
 
@@ -32,15 +32,18 @@ def detail(node = None):
     if request.method == 'GET':
         if node:
             with_search = False
-            days = 14
+            days = days_detail
 
-            data_hours = algorithm(node, days, 'NEW_HOURS', True)
+            data_hours = algorithm(node, days, 'NEW_HOURS', True, True)
             values_hours = (((data_hours["msg"])[0])[0])[node]
 
-            data_qoe = algorithm(node, days, 'NEW_QOE', True)
+            data_qoe = algorithm(node, days, 'NEW_QOE', True, True)
             values_qoe = (((data_qoe["msg"])[0])[0])[node]
+            
+            data_period = algorithm(node, days, 'PERIOD', True, True)
+            values_period = (((data_period["msg"])[0])[0])[node]
 
-            return render_template('detail.html', node = node, data_values = [values_hours, values_qoe], dates = (data_hours["msg"])[1], with_search = with_search)
+            return render_template('detail.html', node = node, data_values = [values_hours, values_qoe, values_period], dates = (data_hours["msg"])[1], with_search = with_search)
 
         else:
             with_search = True
@@ -53,6 +56,7 @@ def detail(node = None):
 
         data_hours = algorithm(node, days, 'NEW_HOURS', True, True)
         data_qoe = algorithm(node, days, 'NEW_QOE', True, True)
+        data_period = algorithm(node, days, 'PERIOD', True, True)
         print(data_hours)
 
 
@@ -62,8 +66,9 @@ def detail(node = None):
 
             values_hours = (((data_hours["msg"])[0])[0])[node]
             values_qoe = (((data_qoe["msg"])[0])[0])[node]
+            values_period = (((data_period["msg"])[0])[0])[node]
 
-            data_values = [values_hours, values_qoe]
+            data_values = [values_hours, values_qoe, values_period]
             dates = (data_hours["msg"])[1]
             
             return {"msg":[node, data_values, dates]}
@@ -71,10 +76,11 @@ def detail(node = None):
             pass
 
 @app.route('/priority', methods=['POST', 'GET'])
-def priority():
+def my_priority():
     if request.method == 'GET':
+        values = priority()
         # Se tiene que pasar los datos para GET
-        return render_template('priority.html')
+        return render_template('priority.html', values = values)
     elif request.method == 'POST':
         # Tener un botón de actualizar
         # Tener un div (antes de la tabla HTML) que tenga un id para construir una tabla por JS
@@ -101,19 +107,6 @@ def my_upload():
 def indexe():
     return render_template('index.html')
 
-# @app.route('/hours', methods=['POST'])
-# def data_hours():
-#     node = request.form['node']
-#     days = request.form['days']
-#     data = algorithm(node, days, 'NEW_HOURS', False)
-#     return data
-
-# @app.route('/qoe', methods=['POST'])
-# def data_qoe():
-#     node = request.form['node']
-#     days = request.form['days']
-#     data = algorithm(node, days, 'NEW_QOE', False)
-#     return data
 
 if __name__ == '__main__':
     app.run(debug=False, port=8080)
@@ -121,5 +114,3 @@ if __name__ == '__main__':
 # OBENER COOKIES AUTOMÁTICAMENTE
 # DAR DETALLE DE US, DS, T3
 # CREAR PÁGINA PARA POWER BI
-
-# QOE > 80 AND SHOW HOURS QOE

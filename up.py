@@ -4,18 +4,17 @@ import json
 import requests
 from requests.exceptions import RetryError
 from built_nodes import get_nodes
+from constants import *
 
 mydb = mysql.connector.connect(
-    host="192.168.0.32",
-    user="diego_remote",
-    password="Mysqldiego10",
-    database = "qoehelp",
-    auth_plugin='mysql_native_password' # Define la autenticación que tendrá con la base de datos
+    host= mysql_host,
+    user= mysql_user,
+    password= mysql_password,
+    database = mysql_database,
+    auth_plugin= mysql_auth_plugin # Define la autenticación que tendrá con la base de datos. DEJAR COMENTADO EN LA PC DE OFICINA
     # Se puede verificar en la base de datos con SELECT HOST, USER, PLUGIN FROM MYSQL.USER;
     # Fuente: https://stackoverflow.com/questions/50557234/authentication-plugin-caching-sha2-password-is-not-supported
 )
-
-min_qoe = 80
 
 def init(cookie):
     try:
@@ -47,18 +46,36 @@ def complete():
 
 def insert_value(tabla, fecha, valor, plano):
     cursor = mydb.cursor()
-    query = "UPDATE {} SET `{}` = {} WHERE ID_NODE = (SELECT ID FROM NODES WHERE PLANO = '{}');".format(tabla, fecha, valor, plano)
+    if tabla == 'PERIOD':
+        query = "UPDATE {} SET `{}` = '{}' WHERE ID_NODE = (SELECT ID FROM NODES WHERE PLANO = '{}');".format(tabla, fecha, valor, plano)
+    else:    
+        query = "UPDATE {} SET `{}` = {} WHERE ID_NODE = (SELECT ID FROM NODES WHERE PLANO = '{}');".format(tabla, fecha, valor, plano)
     cursor.execute(query)
     mydb.commit()
 
-def create_column(tabla, ytd, tipo):
+def create_column(tabla, ytd, tipo, default):
     print("Creating column {}".format(ytd))
-    query = "ALTER TABLE {} ADD COLUMN `{}` {} AFTER ID_NODE;".format(tabla, ytd, tipo)
+    query = "ALTER TABLE {} ADD COLUMN `{}` {} DEFAULT {} AFTER ID_NODE;".format(tabla, ytd, tipo, default)
     cursor = mydb.cursor()
     cursor.execute(query)
     mydb.commit()
     print("¡Column created!")
     print("")
+
+def delete_column(tabla, fecha):
+    query = "ALTER TABLE {} DROP COLUMN `{}`;".format(tabla, fecha)
+    cursor = mydb.cursor()
+    cursor.execute(query)
+    mydb.commit()
+
+def autocomplete_null(tabla, ytd, value):
+    cursor = mydb.cursor()
+    if tabla == 'PERIOD':
+        query = "UPDATE {} SET `{}` = '{}' WHERE `{}` = Null;".format(tabla, ytd, value, ytd)
+    else:
+        query = "UPDATE {} SET `{}` = {} WHERE `{}` = Null;".format(tabla, ytd, value, ytd)
+    cursor.execute(query)
+    mydb.commit()
 
 def upload(date, cookie):
 
@@ -90,17 +107,18 @@ def upload(date, cookie):
         
         if result[0][0] == 1:
             print("Column {} already exists in {} table".format(ytd, bool))
-            return {"msg": "Ya existe una data cargada en {} en la tabla {}".format(ytd, bool)}
+            return {"msg": "Ya existe data cargada en {}".format(ytd)}
         
-    create_column('NEW_HOURS', ytd, 'FLOAT')
-    create_column('NEW_QOE', ytd, 'FLOAT')
-    create_column('PERIOD', ytd, 'VARCHAR(20)')
-    create_column('AFECTED_DAYS', ytd, 'INT(1)')
+    create_column('NEW_HOURS', ytd, 'FLOAT', -1)
+    create_column('NEW_QOE', ytd, 'FLOAT', -1)
+    create_column('PERIOD', ytd, 'VARCHAR(20)', "'NO AFECTADO'")
+    create_column('AFECTED_DAYS', ytd, 'INT(1)', 0)
 
 
     for node in lima_nodes:
-        link = 'http://190.117.108.84:1380/pathtrak/api/node/{}/qoe/metric/history?duration=1440&sampleResponse=false&startdatetime={}-{}-{}T05:00:00.000Z'.format(str(node["nodeId"]), my_date.year, str(my_date.month).zfill(2), str(my_date.day + 1).zfill(2))
+        link = 'http://{}/pathtrak/api/node/{}/qoe/metric/history?duration=1440&sampleResponse=false&startdatetime={}-{}-{}T05:00:00.000Z'.format(url_ext ,str(node["nodeId"]), my_date.year, str(my_date.month).zfill(2), str(my_date.day + 1).zfill(2))
         try:
+        #if True:
             mydata = requests.get(link)
 
             if mydata.status_code == 200:
@@ -111,7 +129,7 @@ def upload(date, cookie):
                     print(node["name"], "200 - Without data")
                     print(link)
                     value = -1
-                    value_period = "'NO DATA'"
+                    value_period = "NO DATA"
                     value_afected = 0
 
                     insert_value('NEW_HOURS', ytd, value, node["name"])
@@ -141,27 +159,27 @@ def upload(date, cookie):
                     total_dia = period.count("DIA")
 
                     if total_dia > 24 and total_noche > 12:
-                        value_period = "'TODO EL DIA'"
+                        value_period = "TODO EL DIA"
                     elif total_dia > 24 and total_noche <= 12:
-                        value_period = "'DIA'"
+                        value_period = "DIA"
                     elif total_dia > 12 and total_noche > 12:
                         if total_dia >= total_noche:
-                            value_period = "'DIA'"
+                            value_period = "DIA"
                         else:
-                            value_period = "'NOCHE'"
+                            value_period = "NOCHE"
                     elif total_dia > 12 and total_noche <= 12:
-                        value_period = "'DIA'"
+                        value_period = "DIA"
                     elif total_dia <= 12 and total_noche > 12:
-                        value_period = "'NOCHE'"
+                        value_period = "NOCHE"
                     elif total_dia <= 12 and total_noche <= 12:
                         if total_dia > 8 and total_noche > 8:
-                            value_period = "'DIA'"
+                            value_period = "DIA"
                         elif total_dia > 8:
-                            value_period = "'DIA'"
+                            value_period = "DIA"
                         elif total_noche > 8:
-                            value_period = "'NOCHE'"
+                            value_period = "NOCHE"
                         else:
-                            value_period = "'NO AFECTADO'"
+                            value_period = "NO AFECTADO"
 
                     # QOE PROMEDIO
                     scores = []
@@ -171,7 +189,7 @@ def upload(date, cookie):
 
                     # DIAS AFECTADO
                     value_afected = 0
-                    if qoe < 81 and hours > 5:
+                    if qoe < min_qoe or hours > min_afected_hours:
                         value_afected = 1
                     
                     insert_value('NEW_HOURS', ytd, hours, node["name"])
@@ -183,7 +201,7 @@ def upload(date, cookie):
                 print(node["name"], "500 - Internal Error Server")
                 print(link)
                 value = -1
-                value_period = "'NO DATA'"
+                value_period = "NO DATA"
                 value_afected = 0
 
                 insert_value('NEW_HOURS', ytd, value, node["name"])
@@ -192,8 +210,16 @@ def upload(date, cookie):
                 insert_value('AFECTED_DAYS', ytd, value_afected, node["name"])
 
         except:
+        #else:
             print("Error connecting with Xpertrak")
+            delete_column("NEW_HOURS", ytd)
+            delete_column("NEW_QOE", ytd)
+            delete_column("PERIOD", ytd)
+            delete_column("AFECTED_DAYS", ytd)
             return {"msg": "Error en la conexión con Xpertrak"}
+
+    
+
 
     print("======== ¡SUCCESS! ========")
     return {"msg":"Carga subida con éxito"}

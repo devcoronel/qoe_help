@@ -55,6 +55,14 @@ myform.addEventListener("submit", function (e) {
                 }
                 tablehtml += `
                 </tr>
+                <tr>
+                    <td><strong>Periodo</strong></td>
+                `
+				for(let j in mydata[1][2]){
+                    tablehtml +=  `<td>`+ mydata[1][2][j] +`</td>`
+                }
+                tablehtml += `
+                </tr>
                                 </tbody>
                             </table>
                         </div>

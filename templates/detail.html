@@ -58,14 +58,20 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>Horas</td>
+                                                <td><strong>Horas</strong></td>
                                                 {% for data in data_values[0] %}
                                                     <td>{{data}}</td>
                                                 {% endfor %}
                                             </tr>
                                             <tr>
-                                                <td>QoE</td>
+                                                <td><strong>QoE</strong></td>
                                                 {% for data in data_values[1] %}
+                                                    <td>{{data}}</td>
+                                                {% endfor %}
+                                            </tr>
+											<tr>
+                                                <td><strong>Periodo</strong></td>
+                                                {% for data in data_values[2] %}
                                                     <td>{{data}}</td>
                                                 {% endfor %}
                                             </tr>
