@@ -1,7 +1,10 @@
 div.scrollmenu {
-    overflow: auto;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: auto;
     white-space: nowrap;
 }
+
 
 div.scrollmenu td {
     text-align: center;

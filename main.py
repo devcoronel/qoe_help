@@ -72,7 +72,7 @@ def algorithm(my_node, my_days, x, also_today, only_one = False): # x only can b
         value_node = []
         if also_today:
             link = create_link(node["nodeId"], duration_today, today_utc)
-            print(link)
+            # print(link)
             data = requests.get(link)
             if data.status_code == 200:
                 data = data.content
@@ -149,13 +149,16 @@ def algorithm(my_node, my_days, x, also_today, only_one = False): # x only can b
         cursor = mydb.cursor()
         cursor.execute(query1)
         result = cursor.fetchall()
-        for value in result[0]:
-            value_node.append(value)
 
-        value_nodes.append({node["name"] : value_node})
+        # MOMENTANEO
+        if result != []:
+            for value in result[0]:
+                value_node.append(value)
 
-        if also_today:    
-            dates.insert(0, today.strftime("%d/%m/20%y"))
+            value_nodes.append({node["name"] : value_node})
+
+            if also_today:    
+                dates.insert(0, today.strftime("%d/%m/20%y"))
 
     return {"msg": [value_nodes, dates]}
 
@@ -208,20 +211,17 @@ def priority():
         if suma > 1 and suma < days +1:
             value.append(node[1])
             
-            query2 = "SELECT DEPENDENCIA, IMPEDIMENTO, TIPO, PROBLEMA, ESTADO , DETALLE FROM STATUS_NODE WHERE ID_NODE = {}".format(node[0])
+            query2 = "SELECT DEPENDENCIA, IMPEDIMENTO, REVISION, TIPO, PROBLEMA, ESTADO , DETALLE FROM STATUS_NODE WHERE ID_NODE = {}".format(node[0])
             cursor = mydb.cursor()
             cursor.execute(query2)
             result_2 = cursor.fetchall()
             for data in result_2[0]:
                 value.append(data)
             
-            value.insert(4, suma)
-            # print(value)
+            value.insert(5, suma)
 
             values.append(value)
-    
-    # print(values)
-    #print(result)
+
     # Hacer una sumatoria de las 8 últimas fechas cargadas de la tabla AFECTED_DAYS
     
     # Si la sumatoria sale en el rango de 1 a 8, adjuntarla en una lista

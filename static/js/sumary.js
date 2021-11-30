@@ -18,8 +18,10 @@ myform.addEventListener("submit", function (e) {
 	const formData = new FormData(this);
 	if(x == 'NEW_HOURS') {
 		value_x = "/hours"
-	} else {
+	} else if(x == 'NEW_QOE') {
 		value_x = "/qoe"
+	} else {
+		value_x = "/period"
 	}
 
 	fetch(value_x , {

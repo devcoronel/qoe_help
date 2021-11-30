@@ -26,6 +26,16 @@ def qoe():
         data = algorithm(node, days, 'NEW_QOE', False)
         return data
 
+@app.route('/period', methods = ['GET', 'POST'])
+def period():
+    if request.method == 'GET':
+        return render_template('sumary.html', title = "Periodo", x = 'PERIOD')
+    elif request.method == 'POST':
+        node = request.form['node']
+        days = request.form['days']
+        data = algorithm(node, days, 'PERIOD', False)
+        return data
+
 @app.route(r'/detail', methods = ['GET', 'POST'])
 @app.route(r'/detail/<string:node>', methods = ['GET'])
 def detail(node = None):

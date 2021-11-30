@@ -32,8 +32,6 @@ def normalize(node):
 
 def get_nodes(cookie):
     lima_nodes = []
-    # url_login = 'http://190.117.108.84:1380/pathtrak/login/view.html#/login'
-    # url_page = 'http://190.117.108.84:1380/pathtrak/main/dashboard'
 
     print("Getting data's nodes from Xpertrak ...")
     url_nodes = 'http://{}/pathtrak/api/node'.format(url_ext)
@@ -92,7 +90,13 @@ def get_nodes(cookie):
         file_nodes.write(']')
         file_nodes.close()
 
-        return lima_nodes
+        return lima_nodes 
+        # SACAR UN ALGORITMO PARA SACAR UNA RESTA DE PLANOS, SACAR LOS PLANOS QUE NO ESTÁN
+        # Y CREAR EN LA BASE DE DATOS LA ENTRADA CON EL NUEVO PLANO
+        # NO HAY PROBLEMA SI MÁS ADELANTE YA NO ESTÁ EL PLANO FUNCIONANDO, PORQUE EN DEFAULT
+        # NO VA A INFLUIR
+        # PARA RESTAR CONJUNTOS CONVERTIR UNA LISTA A SET (PRIMERO CONSTRUIR UNA LISTA DE NOMBRE DE NODOS
+        # Y AHI ITERAR YA QUE NO SE PUEDE ITERAR EN UNA LISTA CON DICCIONARIOS DENTRO)
     
     elif data_nodes.status_code == 500:
         return {"msg":"Cookie incorrecta"}

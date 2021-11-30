@@ -8,6 +8,9 @@ if (route == "hours") {
 } else if (route == "qoe") {
     let qoe = document.getElementById("qoe");
     qoe.innerHTML = `<a class="nav-link fw-bold" href="/qoe">QoE</a>`;
+} else if (route == "period") {
+    let period = document.getElementById("period");
+    period.innerHTML = `<a class="nav-link fw-bold" href="/period">Periodo</a>`;
 } else if (route == "info") {
     let info = document.getElementById("info");
     info.innerHTML = `<a class="nav-link fw-bold" href="/info">Info</a>`;

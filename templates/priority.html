@@ -15,11 +15,12 @@
                                     <td onclick="sortTable(0)" class="header"><strong>Plano</strong></td>
                                     <td onclick="sortTable(1)" class="header"><strong>Dependencia</strong></td>
                                     <td onclick="sortTable(2)" class="header"><strong>Impedimento</strong></td>
-                                    <td onclick="sortTable(3)" class="header"><strong>Tipo</strong></td>
-                                    <td onclick="sortTable(4)" class="header"><strong>Días</strong></td>
-                                    <td onclick="sortTable(5)" class="header"><strong>Problema</strong></td>
-                                    <td onclick="sortTable(6)" class="header"><strong>Estado</strong></td>
-                                    <td onclick="sortTable(7)" class="header"><strong>Detalle</strong></td>
+                                    <td onclick="sortTable(3)" class="header"><strong>Revisión</strong></td>
+                                    <td onclick="sortTable(4)" class="header"><strong>Tipo</strong></td>
+                                    <td onclick="sortTable(5)" class="header"><strong>Días</strong></td>
+                                    <td onclick="sortTable(6)" class="header"><strong>Problema</strong></td>
+                                    <td onclick="sortTable(7)" class="header"><strong>Estado</strong></td>
+                                    <td onclick="sortTable(8)" class="header"><strong>Detalle</strong></td>
                                     <!-- {% for date in dates %}
                                     <td class="header"><strong>date</strong></td>
                                     {% endfor %} -->
@@ -46,7 +47,7 @@
         </div>
     </div>
 	<script src="../static/js/detail.js"></script>
-	<script src="{{ url_for('static', filename='js/order_priority.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/order.js') }}"></script>
 
 
 {% endblock %}
