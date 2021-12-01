@@ -211,7 +211,7 @@ def priority():
         if suma > 1 and suma < days +1:
             value.append(node[1])
             
-            query2 = "SELECT DEPENDENCIA, IMPEDIMENTO, REVISION, TIPO, PROBLEMA, ESTADO , DETALLE FROM STATUS_NODE WHERE ID_NODE = {}".format(node[0])
+            query2 = "SELECT DEPENDENCIA, IMPEDIMENTO, REVISION, TIPO, PROBLEMA, ESTADO FROM STATUS_NODE WHERE ID_NODE = {}".format(node[0])
             cursor = mydb.cursor()
             cursor.execute(query2)
             result_2 = cursor.fetchall()
@@ -222,10 +222,5 @@ def priority():
 
             values.append(value)
 
-    # Hacer una sumatoria de las 8 últimas fechas cargadas de la tabla AFECTED_DAYS
-    
-    # Si la sumatoria sale en el rango de 1 a 8, adjuntarla en una lista
-    
-    #
     # values = [[[LMLO066, DEPENDENCIA, IMPEDIMENTO, TIPO, DIAS, PERIODO, PROBLEMA, ESTADO , DETALLE, V_FECHA1, V_FECHA3], []], [FECHA1, FECHA2, FECHA3]]
-    return values
+    return [values, dates]

@@ -2,9 +2,9 @@ let myurl = window.location.href;
 let mysplit = myurl.split("/");
 let myroute = mysplit[mysplit.length - 1]
 
-function sortTable(n) {
+function sortTable(n, name_table) {
     let table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-    table = document.getElementById("hourstable");
+    table = document.getElementById(name_table);
     switching = true;
     dir = "asc";
 

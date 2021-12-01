@@ -35,11 +35,11 @@ myform.addEventListener("submit", function (e) {
 				let dates = data.msg[1]
 				//console.log(elements, dates, days)
 
-				let tablehtml = '<table class="table table-hover" id="hourstable" data-excel-name="Horas_QoE_afectado" ><thead class="table-dark"><td onclick="sortTable(0)" class="header"><strong>Plano</strong></td>'
+				let tablehtml = `<table class="table table-hover" id="hourstable" data-excel-name="Horas_QoE_afectado" ><thead class="table-dark"><td onclick="sortTable(0, 'hourstable')" class="header"><strong>Plano</strong></td>`
 							
 				for (let i in dates) {
 					let a = parseInt(i)+1
-					tablehtml += '<td onclick="sortTable('+ a +')" class="header"><strong>'+ dates[i] +'</strong></td>' 
+					tablehtml += `<td onclick="sortTable(`+ a +`, 'hourstable')" class="header"><strong>`+ dates[i] +`</strong></td>`
 				}
 				tablehtml += '</thead><tbody>'
 				

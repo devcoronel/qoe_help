@@ -8,22 +8,69 @@
                     <h2 class="fw-bold"> <img src="{{ url_for('static', filename='images/aboutme/i.png') }}" width="35" class="pb-2">&nbspPrioridad</h2>
                     <hr>
                     <br>
+                    <div class="row">
+						<div class="col-sm-10 col-md-9 col-9">
+							<h3 class="fw-bold"> <img src="{{ url_for('static', filename='images/aboutme/foco.png') }}" width="25" class="pb-2">&nbspTabla General</h3>
+						</div>
+						<div class="col-sm-2 col-md-3 col-3" style="display: flex ;justify-content: right;">
+							<button id="generalbutton" class="btn btn-success" style="margin-bottom: 2rem;">Exportar</button>
+						</div>
+					</div>
                     <div class="scrollmenu">
-                        <table id="hourstable" class="table table-hover" data-excel-name="Priority">
+                        <table id="generaltable" class="table table-hover" data-excel-name="General_Priority">
                             <thead class="table-dark">
                                 <tr>
-                                    <td onclick="sortTable(0)" class="header"><strong>Plano</strong></td>
-                                    <td onclick="sortTable(1)" class="header"><strong>Dependencia</strong></td>
-                                    <td onclick="sortTable(2)" class="header"><strong>Impedimento</strong></td>
-                                    <td onclick="sortTable(3)" class="header"><strong>Revisión</strong></td>
-                                    <td onclick="sortTable(4)" class="header"><strong>Tipo</strong></td>
-                                    <td onclick="sortTable(5)" class="header"><strong>Días</strong></td>
-                                    <td onclick="sortTable(6)" class="header"><strong>Problema</strong></td>
-                                    <td onclick="sortTable(7)" class="header"><strong>Estado</strong></td>
-                                    <td onclick="sortTable(8)" class="header"><strong>Detalle</strong></td>
+                                    <td onclick="sortTable(0,'generaltable')" class="header"><strong>Plano</strong></td>
+                                    <td onclick="sortTable(1,'generaltable')" class="header"><strong>Dependencia</strong></td>
+                                    <td onclick="sortTable(2,'generaltable')" class="header"><strong>Impedimento</strong></td>
+                                    <td onclick="sortTable(3,'generaltable')" class="header"><strong>Revisión</strong></td>
+                                    <td onclick="sortTable(4,'generaltable')" class="header"><strong>Tipo</strong></td>
+                                    <td onclick="sortTable(5,'generaltable')" class="header"><strong>Días</strong></td>
+                                    <td onclick="sortTable(6,'generaltable')" class="header"><strong>Problema</strong></td>
+                                    <td onclick="sortTable(7,'generaltable')" class="header"><strong>Estado</strong></td>
                                     <!-- {% for date in dates %}
                                     <td class="header"><strong>date</strong></td>
                                     {% endfor %} -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for value in values %}
+                                <tr>
+                                    {% for i in value %}
+                                    {% if i == value[0] %}
+                                    <td><a href="{{ '/detail/%s'%i }}" target= "_blank">{{i}}</a></td>
+                                    {% else %}
+                                    <td>{{i}}</td>
+                                    {% endif %}
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <br>
+                    <hr>
+                    <br>
+                    <div class="row">
+						<div class="col-sm-10 col-md-9 col-9">
+							<h3 class="fw-bold"> <img src="{{ url_for('static', filename='images/aboutme/foco.png') }}" width="25" class="pb-2">&nbspTabla Específica</h3>
+						</div>
+						<div class="col-sm-2 col-md-3 col-3" style="display: flex ;justify-content: right;">
+							<button id="especificbutton" class="btn btn-success" style="margin-bottom: 2rem;">Exportar</button>
+						</div>
+					</div>
+                    <div class="scrollmenu">
+                        <table id="especifictable" class="table table-hover" data-excel-name="Especific_Priority">
+                            <thead class="table-dark">
+                                <tr>
+                                    <td onclick="sortTable(0, 'especifictable')" class="header"><strong>Plano</strong></td>
+                                    <td onclick="sortTable(4, 'especifictable')" class="header"><strong>Tipo</strong></td>
+                                    <td onclick="sortTable(5, 'especifictable')" class="header"><strong>Días</strong></td>
+                                    <td onclick="sortTable(6, 'especifictable')" class="header"><strong>Problema</strong></td>
+                                    <td onclick="sortTable(7, 'especifictable')" class="header"><strong>Estado</strong></td>
+                                    {% for date in dates %}
+                                    <td class="header"><strong>{{date}}</strong></td>
+                                    {% endfor %}
                                 </tr>
                             </thead>
                             <tbody>
@@ -46,7 +93,18 @@
             </div>
         </div>
     </div>
-	<script src="../static/js/detail.js"></script>
+    <script>
+		document.getElementById('generalbutton').addEventListener('click', function() {
+			var table2excel = new Table2Excel();
+  			table2excel.export(document.querySelectorAll("#generaltable"), name);
+		});
+	</script>
+    <script>
+		document.getElementById('especificbutton').addEventListener('click', function() {
+			var table2excel = new Table2Excel();
+  			table2excel.export(document.querySelectorAll("#especifictable"), name);
+		});
+	</script>
 	<script src="{{ url_for('static', filename='js/order.js') }}"></script>
 
 

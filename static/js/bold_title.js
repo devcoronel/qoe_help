@@ -10,7 +10,7 @@ if (route == "hours") {
     qoe.innerHTML = `<a class="nav-link fw-bold" href="/qoe">QoE</a>`;
 } else if (route == "period") {
     let period = document.getElementById("period");
-    period.innerHTML = `<a class="nav-link fw-bold" href="/period">Periodo</a>`;
+    period.innerHTML = `<a class="nav-link fw-bold" href="/period">Period</a>`;
 } else if (route == "info") {
     let info = document.getElementById("info");
     info.innerHTML = `<a class="nav-link fw-bold" href="/info">Info</a>`;

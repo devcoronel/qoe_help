@@ -88,9 +88,10 @@ def detail(node = None):
 @app.route('/priority', methods=['POST', 'GET'])
 def my_priority():
     if request.method == 'GET':
-        values = priority()
-        # Se tiene que pasar los datos para GET
-        return render_template('priority.html', values = values)
+        data = priority()
+        values = data[0]
+        dates = data[1]
+        return render_template('priority.html', values = values, dates = dates)
     elif request.method == 'POST':
         # Tener un botón de actualizar
         # Tener un div (antes de la tabla HTML) que tenga un id para construir una tabla por JS
@@ -119,7 +120,7 @@ def indexe():
 
 
 if __name__ == '__main__':
-    app.run(debug=False, port=8080)
+    app.run(host= "0.0.0.0", port=8080, debug=False)
 
 # OBENER COOKIES AUTOMÁTICAMENTE
 # DAR DETALLE DE US, DS, T3

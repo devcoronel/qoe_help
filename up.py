@@ -189,7 +189,7 @@ def upload(date, cookie):
 
                     # DIAS AFECTADO
                     value_afected = 0
-                    if qoe < min_qoe or hours > min_afected_hours:
+                    if (qoe < min_qoe and qoe >= 0) or hours > min_afected_hours:
                         value_afected = 1
                     
                     insert_value('NEW_HOURS', ytd, hours, node["name"])
