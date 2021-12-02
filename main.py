@@ -1,7 +1,7 @@
 import json, requests
 import datetime as dt
 from lima_nodes import lima_nodes
-from up import mydb
+from up import mydb, get_values_in_dates
 from constants import *
 import re
 
@@ -34,10 +34,8 @@ def algorithm(my_node, my_days, x, also_today, only_one = False): # x only can b
     if only_one == True and len(match) > 1:
         for only_node in match:
             if my_node == only_node["name"]:
-                print("cae aqui")
                 match = [only_node]
         # Mejorar aqui, corre 3 veces
-        print(match)
         if len(match) > 1:
             return {"msg": "Se necesita especificar solo un plano"}
     
@@ -189,7 +187,11 @@ def priority():
 
     dates = new_dates
     
-    values = []
+    general_values = []
+    especific_values = []
+    total_especific_qoe = []
+    total_especific_hours = []
+    total_especific_period = []
     # Iterar planos
     query = "SELECT * FROM NODES;"
     cursor = mydb.cursor()
@@ -197,30 +199,45 @@ def priority():
     result = cursor.fetchall()
     
     for node in result:
-        value = []
-        query1 = "SELECT"
-        for date in dates:
-            query1 = query1 + "`"+ date + "`,"
-        query1 = query1[:-1]
-        query1 = query1 + " FROM AFECTED_DAYS WHERE ID_NODE = {};".format(int(node[0]))
-        cursor = mydb.cursor()
-        cursor.execute(query1)
-        result_1 = cursor.fetchall()
-        suma = sum(result_1[0])
+        general_value = []
+        especific_value = []
+
+        especific_qoe = []
+        especific_hours = []
+        especific_period = []
+
+        result_1 = get_values_in_dates(dates, "AFECTED_DAYS", int(node[0]))
+        suma = sum(result_1)
 
         if suma > 1 and suma < days +1:
-            value.append(node[1])
+            general_value.append(node[1])
+            especific_value.append(node[1])
             
             query2 = "SELECT DEPENDENCIA, IMPEDIMENTO, REVISION, TIPO, PROBLEMA, ESTADO FROM STATUS_NODE WHERE ID_NODE = {}".format(node[0])
             cursor = mydb.cursor()
             cursor.execute(query2)
             result_2 = cursor.fetchall()
-            for data in result_2[0]:
-                value.append(data)
+            result_2 = list(result_2[0])
+
+            for item in result_2:
+                general_value.append(item)
+                especific_value.append(item)
+            especific_value.pop(1)
+            especific_value.pop(1)
+            especific_value.pop(1)
             
-            value.insert(5, suma)
+            general_value.insert(5, suma)
+            especific_value.insert(2, suma)
+            print(especific_value)
 
-            values.append(value)
+            general_values.append(general_value)
+            especific_values.append(especific_value)
 
-    # values = [[[LMLO066, DEPENDENCIA, IMPEDIMENTO, TIPO, DIAS, PERIODO, PROBLEMA, ESTADO , DETALLE, V_FECHA1, V_FECHA3], []], [FECHA1, FECHA2, FECHA3]]
-    return [values, dates]
+            total_especific_qoe.append(get_values_in_dates(dates, "NEW_QOE", int(node[0])))
+            total_especific_hours.append(get_values_in_dates(dates, "NEW_HOURS", int(node[0])))
+            total_especific_period.append(get_values_in_dates(dates, "PERIOD", int(node[0])))
+            
+
+    # general_values = [[[LMLO066, DEPENDENCIA, IMPEDIMENTO, REVISION, TIPO, DIAS, PROBLEMA, ESTADO, V_FECHA1, V_FECHA3], []], [FECHA1, FECHA2, FECHA3]]
+    # especific_values = [[[LMLO066, TIPO, DIAS, PROBLEMA, ESTADO, V_FECHA1, V_FECHA3], []], [FECHA1, FECHA2, FECHA3]]
+    return [general_values, especific_values , total_especific_qoe, total_especific_hours, total_especific_period, dates]

@@ -53,6 +53,18 @@ def insert_value(tabla, fecha, valor, plano):
     cursor.execute(query)
     mydb.commit()
 
+def get_values_in_dates(dates, tabla, id_node):
+    query = "SELECT"
+    for date in dates:
+        query = query + "`"+ date + "`,"
+    query = query[:-1]
+    query = query + " FROM {} WHERE ID_NODE = {};".format(tabla, id_node)
+    cursor = mydb.cursor()
+    cursor.execute(query)
+    result = cursor.fetchall()
+    result = list(result[0])
+    return result
+
 def create_column(tabla, ytd, tipo, default):
     print("Creating column {}".format(ytd))
     query = "ALTER TABLE {} ADD COLUMN `{}` {} DEFAULT {} AFTER ID_NODE;".format(tabla, ytd, tipo, default)
@@ -111,12 +123,12 @@ def upload(date, cookie):
         
     create_column('NEW_HOURS', ytd, 'FLOAT', -1)
     create_column('NEW_QOE', ytd, 'FLOAT', -1)
-    create_column('PERIOD', ytd, 'VARCHAR(20)', "'NO AFECTADO'")
+    create_column('PERIOD', ytd, 'VARCHAR(20)', "'NO DATA'")
     create_column('AFECTED_DAYS', ytd, 'INT(1)', 0)
-
+    my_date_plus = my_date + dt.timedelta(days=1)
 
     for node in lima_nodes:
-        link = 'http://{}/pathtrak/api/node/{}/qoe/metric/history?duration=1440&sampleResponse=false&startdatetime={}-{}-{}T05:00:00.000Z'.format(url_ext ,str(node["nodeId"]), my_date.year, str(my_date.month).zfill(2), str(my_date.day + 1).zfill(2))
+        link = 'http://{}/pathtrak/api/node/{}/qoe/metric/history?duration=1440&sampleResponse=false&startdatetime={}-{}-{}T05:00:00.000Z'.format(url_ext ,str(node["nodeId"]), my_date_plus.year, str(my_date_plus.month).zfill(2), str(my_date_plus.day).zfill(2))
         try:
         #if True:
             mydata = requests.get(link)

@@ -67,8 +67,6 @@ def detail(node = None):
         data_hours = algorithm(node, days, 'NEW_HOURS', True, True)
         data_qoe = algorithm(node, days, 'NEW_QOE', True, True)
         data_period = algorithm(node, days, 'PERIOD', True, True)
-        print(data_hours)
-
 
         if isinstance(data_hours["msg"], str):
             return data_hours
@@ -89,9 +87,13 @@ def detail(node = None):
 def my_priority():
     if request.method == 'GET':
         data = priority()
-        values = data[0]
-        dates = data[1]
-        return render_template('priority.html', values = values, dates = dates)
+        general_values = data[0]
+        especific_values = data[1]
+        qoe_values = data[2]
+        hours_values = data[3]
+        period_values = data[4]
+        dates = data[5]
+        return render_template('priority.html', general_values = general_values, especific_values = especific_values, qoe_values = qoe_values, hours_values = hours_values, period_values = period_values, dates = dates)
     elif request.method == 'POST':
         # Tener un botón de actualizar
         # Tener un div (antes de la tabla HTML) que tenga un id para construir una tabla por JS
@@ -111,7 +113,6 @@ def my_upload():
             return {"msg": "Especifique la fecha para la carga"}
         
         result = upload(date, cookie)
-        
         return result
 
 @app.route('/info')
