@@ -20,6 +20,9 @@ if (route == "hours") {
 }  else if (route == "upload") {
     let upload = document.getElementById("upload");
     upload.innerHTML = `<a class="nav-link fw-bold" href="/upload">Upload</a>`;
+} else if (route == "modulation") {
+    let modulation = document.getElementById("modulation");
+    modulation.innerHTML = `<a class="nav-link fw-bold" href="/modulation">Modulation</a>`;
 } else {
     let detail = document.getElementById("detail");
     detail.innerHTML = `<a class="nav-link fw-bold" href="/detail">Detail</a>`;

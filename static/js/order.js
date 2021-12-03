@@ -16,7 +16,7 @@ function sortTable(n, name_table) {
             x = rows[i].getElementsByTagName("TD")[n];
             y = rows[i + 1].getElementsByTagName("TD")[n];
 
-            if (myroute == 'hours' || myroute == 'qoe') {
+            if (myroute == 'hours' || myroute == 'qoe' || myroute == 'modulation') {
                 if (n == 0){
                     if (dir == "desc") {
                         if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {

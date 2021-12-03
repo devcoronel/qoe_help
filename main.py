@@ -202,10 +202,6 @@ def priority():
         general_value = []
         especific_value = []
 
-        especific_qoe = []
-        especific_hours = []
-        especific_period = []
-
         result_1 = get_values_in_dates(dates, "AFECTED_DAYS", int(node[0]))
         suma = sum(result_1)
 
@@ -228,7 +224,6 @@ def priority():
             
             general_value.insert(5, suma)
             especific_value.insert(2, suma)
-            print(especific_value)
 
             general_values.append(general_value)
             especific_values.append(especific_value)
@@ -241,3 +236,60 @@ def priority():
     # general_values = [[[LMLO066, DEPENDENCIA, IMPEDIMENTO, REVISION, TIPO, DIAS, PROBLEMA, ESTADO, V_FECHA1, V_FECHA3], []], [FECHA1, FECHA2, FECHA3]]
     # especific_values = [[[LMLO066, TIPO, DIAS, PROBLEMA, ESTADO, V_FECHA1, V_FECHA3], []], [FECHA1, FECHA2, FECHA3]]
     return [general_values, especific_values , total_especific_qoe, total_especific_hours, total_especific_period, dates]
+
+def modulation(for_modulation):
+    # for_modulation = True # La función se usa para el ranking de modulación
+    # for_modulation = False # La función se usa para el detalle de un plano
+    days = days_modulation
+    dates = []
+    today_utc = dt.datetime.utcnow()
+    today = today_utc - dt.timedelta(hours=5)
+    
+    for day in range(days+1):
+        dates.append((today - dt.timedelta(days = day)).strftime("%d/%m/20%y"))
+    dates.pop(0)
+    
+    new_dates = []
+    for date in dates:
+
+        query0 = """
+        SELECT IF ( EXISTS (
+        SELECT * FROM information_schema.COLUMNS 
+        WHERE TABLE_SCHEMA = 'qoehelp' AND TABLE_NAME = 'MODULATION' AND COLUMN_NAME = '{}'),1,0);
+        """.format(date)
+
+        cursor = mydb.cursor()
+        cursor.execute(query0)
+        result = cursor.fetchall()
+        if result[0][0] == 1:
+            new_dates.append(date)
+
+    dates = new_dates
+
+    values = []
+    # Iterar planos
+    query = "SELECT * FROM NODES;"
+    cursor = mydb.cursor()
+    cursor.execute(query)
+    result = cursor.fetchall()
+    
+    for node in result:
+        value = []
+        query1 = "SELECT"
+        for date in dates:
+            query1 = query1 + "`"+ date + "`,"
+        query1 = query1[:-1]
+        query1 = query1 + " FROM MODULATION WHERE ID_NODE = {};".format(int(node[0]))
+        cursor = mydb.cursor()
+        cursor.execute(query1)
+        result_1 = cursor.fetchall()
+
+        if for_modulation == True:
+            suma = sum(result_1[0])
+
+            if suma >= umbral_ch_mod:
+                value.append(node[1])
+                for nmod in result_1[0]:
+                    value.append(nmod)
+                values.append(value)
+    return [values, dates]

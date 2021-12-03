@@ -1,5 +1,6 @@
 general_{% extends 'layout.html' %}
 {% block content %}
+    <script src="../static/js/table2excel.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sumary.css') }}">
     <div style="background-image: radial-gradient(farthest-corner at 45px 45px , #334b6f 0%, #273145 100%);">
         <div class="container-fluid pb-3" style="padding-top: 4.5rem;">
@@ -95,13 +96,13 @@ general_{% extends 'layout.html' %}
     <script>
 		document.getElementById('generalbutton').addEventListener('click', function() {
 			var table2excel = new Table2Excel();
-  			table2excel.export(document.querySelectorAll("#generaltable"), name);
+  			table2excel.export(document.querySelectorAll("#generaltable"), "General_Priority");
 		});
 	</script>
     <script>
 		document.getElementById('especificbutton').addEventListener('click', function() {
 			var table2excel = new Table2Excel();
-  			table2excel.export(document.querySelectorAll("#especifictable"), name);
+  			table2excel.export(document.querySelectorAll("#especifictable"), "Especific_Priority");
 		});
 	</script>
 	<script src="{{ url_for('static', filename='js/order.js') }}"></script>

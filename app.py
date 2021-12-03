@@ -1,8 +1,8 @@
 from datetime import date
 from flask import Flask, render_template, request, jsonify, url_for, redirect
-from main import algorithm, priority
+from main import algorithm, priority, modulation
 from up import upload
-from constants import days_detail
+from constants import days_detail, days_modulation
 
 app = Flask(__name__)
 
@@ -114,6 +114,14 @@ def my_upload():
         
         result = upload(date, cookie)
         return result
+
+@app.route('/modulation',methods=['POST', 'GET'])
+def my_modulation():
+    if request.method == 'GET':
+        return render_template('modulation.html')
+    elif request.method == 'POST':
+        data = modulation(True)
+        return {"msg": data}
 
 @app.route('/info')
 def indexe():

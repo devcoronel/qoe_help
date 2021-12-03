@@ -38,7 +38,7 @@ def complete():
     result = cursor.fetchall()
     
     for id in result:
-        for x in ['STATUS_NODE', 'NEW_HOURS', 'NEW_QOE', 'PERIOD', 'AFECTED_DAYS']:
+        for x in ['MODULATION']:# , 'STATUS_NODE', 'NEW_HOURS', 'NEW_QOE', 'PERIOD', 'AFECTED_DAYS']:
             query0 = "INSERT INTO {} (ID_NODE) VALUES ({})".format(x, id[0])
             cursor = mydb.cursor()
             cursor.execute(query0)
@@ -105,7 +105,7 @@ def upload(date, cookie):
     if isinstance(lima_nodes, dict):
         return lima_nodes
 
-    for bool in ['NEW_HOURS', 'NEW_QOE', 'PERIOD', 'AFECTED_DAYS']:
+    for bool in ['MODULATION']: # , 'NEW_HOURS', 'NEW_QOE', 'PERIOD', 'AFECTED_DAYS']:
 
         query0 = """
         SELECT IF ( EXISTS (
@@ -121,117 +121,131 @@ def upload(date, cookie):
             print("Column {} already exists in {} table".format(ytd, bool))
             return {"msg": "Ya existe data cargada en {}".format(ytd)}
         
-    create_column('NEW_HOURS', ytd, 'FLOAT', -1)
-    create_column('NEW_QOE', ytd, 'FLOAT', -1)
-    create_column('PERIOD', ytd, 'VARCHAR(20)', "'NO DATA'")
-    create_column('AFECTED_DAYS', ytd, 'INT(1)', 0)
+    # create_column('NEW_HOURS', ytd, 'FLOAT', -1)
+    # create_column('NEW_QOE', ytd, 'FLOAT', -1)
+    # create_column('PERIOD', ytd, 'VARCHAR(20)', "'NO DATA'")
+    # create_column('AFECTED_DAYS', ytd, 'INT(1)', 0)
+    create_column('MODULATION', ytd, 'FLOAT', 0)
     my_date_plus = my_date + dt.timedelta(days=1)
 
     for node in lima_nodes:
         link = 'http://{}/pathtrak/api/node/{}/qoe/metric/history?duration=1440&sampleResponse=false&startdatetime={}-{}-{}T05:00:00.000Z'.format(url_ext ,str(node["nodeId"]), my_date_plus.year, str(my_date_plus.month).zfill(2), str(my_date_plus.day).zfill(2))
+        link_modul = 'http://{}/pathtrak/api/node/{}/capacity/channels/history?duration=1440&sampleResponse=false&startdatetime={}-{}-{}T05:00:00.000Z'.format(url_ext ,str(node["nodeId"]), my_date_plus.year, str(my_date_plus.month).zfill(2), str(my_date_plus.day).zfill(2))
         try:
         #if True:
-            mydata = requests.get(link)
+            # mydata = requests.get(link)
 
-            if mydata.status_code == 200:
-                mydata = mydata.content
-                mydata = json.loads(mydata)
+            # if mydata.status_code == 200:
+            #     mydata = mydata.content
+            #     mydata = json.loads(mydata)
                 
-                if mydata == []:
-                    print(node["name"], "200 - Without data")
-                    print(link)
-                    value = -1
-                    value_period = "NO DATA"
-                    value_afected = 0
+            #     if mydata == []:
+            #         print(node["name"], "200 - Without data")
+            #         print(link)
+            #         value = -1
+            #         value_period = "NO DATA"
+            #         value_afected = 0
 
-                    insert_value('NEW_HOURS', ytd, value, node["name"])
-                    insert_value('NEW_QOE', ytd, value, node["name"])
-                    insert_value('PERIOD', ytd, value_period, node["name"])
-                    insert_value('AFECTED_DAYS', ytd, value_afected, node["name"])
+            #         insert_value('NEW_HOURS', ytd, value, node["name"])
+            #         insert_value('NEW_QOE', ytd, value, node["name"])
+            #         insert_value('PERIOD', ytd, value_period, node["name"])
+            #         insert_value('AFECTED_DAYS', ytd, value_afected, node["name"])
 
-                else:
-                    print(node["name"], "200 - OK")
-                    print(link)
+            #     else:
+            #         print(node["name"], "200 - OK")
+            #         print(link)
 
-                    # HORAS QOE AFECTADO Y PERIODO DE AFECTACIÓN
-                    counter = 0
-                    period = []
-                    for i in mydata:
-                        if i["qoeScore"] < min_qoe:
-                            counter = counter + 1
-                            ts = i["timestamp"]
-                            hour = int((dt.datetime(int(ts[0:4]), int(ts[5:7]), int(ts[8:10]), int(ts[11:13])) - dt.timedelta(hours=5)).strftime("%H"))
-                            if hour > 17:
-                                period.append("NOCHE")
-                            elif hour > 8:
-                                period.append("DIA")
+            #         # HORAS QOE AFECTADO Y PERIODO DE AFECTACIÓN
+            #         counter = 0
+            #         period = []
+            #         for i in mydata:
+            #             if i["qoeScore"] < min_qoe:
+            #                 counter = counter + 1
+            #                 ts = i["timestamp"]
+            #                 hour = int((dt.datetime(int(ts[0:4]), int(ts[5:7]), int(ts[8:10]), int(ts[11:13])) - dt.timedelta(hours=5)).strftime("%H"))
+            #                 if hour > 17:
+            #                     period.append("NOCHE")
+            #                 elif hour > 8:
+            #                     period.append("DIA")
 
-                    hours = (counter*15)/60
-                    total_noche = period.count("NOCHE")
-                    total_dia = period.count("DIA")
+            #         hours = (counter*15)/60
+            #         total_noche = period.count("NOCHE")
+            #         total_dia = period.count("DIA")
 
-                    if total_dia > 24 and total_noche > 12:
-                        value_period = "TODO EL DIA"
-                    elif total_dia > 24 and total_noche <= 12:
-                        value_period = "DIA"
-                    elif total_dia > 12 and total_noche > 12:
-                        if total_dia >= total_noche:
-                            value_period = "DIA"
-                        else:
-                            value_period = "NOCHE"
-                    elif total_dia > 12 and total_noche <= 12:
-                        value_period = "DIA"
-                    elif total_dia <= 12 and total_noche > 12:
-                        value_period = "NOCHE"
-                    elif total_dia <= 12 and total_noche <= 12:
-                        if total_dia > 8 and total_noche > 8:
-                            value_period = "DIA"
-                        elif total_dia > 8:
-                            value_period = "DIA"
-                        elif total_noche > 8:
-                            value_period = "NOCHE"
-                        else:
-                            value_period = "NO AFECTADO"
+            #         if total_dia > 24 and total_noche > 12:
+            #             value_period = "TODO EL DIA"
+            #         elif total_dia > 24 and total_noche <= 12:
+            #             value_period = "DIA"
+            #         elif total_dia > 12 and total_noche > 12:
+            #             if total_dia >= total_noche:
+            #                 value_period = "DIA"
+            #             else:
+            #                 value_period = "NOCHE"
+            #         elif total_dia > 12 and total_noche <= 12:
+            #             value_period = "DIA"
+            #         elif total_dia <= 12 and total_noche > 12:
+            #             value_period = "NOCHE"
+            #         elif total_dia <= 12 and total_noche <= 12:
+            #             if total_dia > 8 and total_noche > 8:
+            #                 value_period = "DIA"
+            #             elif total_dia > 8:
+            #                 value_period = "DIA"
+            #             elif total_noche > 8:
+            #                 value_period = "NOCHE"
+            #             else:
+            #                 value_period = "NO AFECTADO"
 
-                    # QOE PROMEDIO
-                    scores = []
-                    for j in mydata:
-                        scores.append(j["qoeScore"])
-                    qoe = round(sum(scores)/len(scores), 0)
+            #         # QOE PROMEDIO
+            #         scores = []
+            #         for j in mydata:
+            #             scores.append(j["qoeScore"])
+            #         qoe = round(sum(scores)/len(scores), 0)
 
-                    # DIAS AFECTADO
-                    value_afected = 0
-                    if (qoe < min_qoe and qoe >= 0) or hours > min_afected_hours:
-                        value_afected = 1
+            #         # DIAS AFECTADO
+            #         value_afected = 0
+            #         if (qoe < min_qoe and qoe >= 0) or hours > min_afected_hours:
+            #             value_afected = 1
                     
-                    insert_value('NEW_HOURS', ytd, hours, node["name"])
-                    insert_value('NEW_QOE', ytd, qoe, node["name"])
-                    insert_value('PERIOD', ytd, value_period, node["name"])
-                    insert_value('AFECTED_DAYS', ytd, value_afected, node["name"])
+            #         insert_value('NEW_HOURS', ytd, hours, node["name"])
+            #         insert_value('NEW_QOE', ytd, qoe, node["name"])
+            #         insert_value('PERIOD', ytd, value_period, node["name"])
+            #         insert_value('AFECTED_DAYS', ytd, value_afected, node["name"])
                 
-            elif mydata.status_code == 500:
-                print(node["name"], "500 - Internal Error Server")
-                print(link)
-                value = -1
-                value_period = "NO DATA"
-                value_afected = 0
+            # elif mydata.status_code == 500:
+            #     print(node["name"], "500 - Internal Server Error")
+            #     print(link)
 
-                insert_value('NEW_HOURS', ytd, value, node["name"])
-                insert_value('NEW_QOE', ytd, value, node["name"])
-                insert_value('PERIOD', ytd, value_period, node["name"])
-                insert_value('AFECTED_DAYS', ytd, value_afected, node["name"])
+            mydata_modul = requests.get(link_modul)
+			
+            if mydata_modul.status_code == 200:
+                print(node["name"])
+                print(link_modul)
+                mydata_modul = mydata_modul.content
+                mydata_modul = json.loads(mydata_modul)
+
+                change_modul_group = []
+                modul_node_dayly = []
+                modul_node_dayly.append(mydata_modul["upstreamTotalChannels"])
+                modul_node_dayly.append(mydata_modul["upstreamChannelCapacityHistory"])
+
+                for modul in modul_node_dayly[1]:
+                    if modul["modChanged"] == True and modul["modType"] != "qam64":
+                        change_modul_group.append(modul)
+                insert_value('MODULATION', ytd, len(change_modul_group), node["name"])
+
+            elif mydata_modul.status_code == 500:
+                print(node["name"], "500 - Internal Server Error")
+                print(link)
 
         except:
         #else:
             print("Error connecting with Xpertrak")
-            delete_column("NEW_HOURS", ytd)
-            delete_column("NEW_QOE", ytd)
-            delete_column("PERIOD", ytd)
-            delete_column("AFECTED_DAYS", ytd)
+            # delete_column("NEW_HOURS", ytd)
+            # delete_column("NEW_QOE", ytd)
+            # delete_column("PERIOD", ytd)
+            # delete_column("AFECTED_DAYS", ytd)
+            delete_column("MODULATION", ytd)
             return {"msg": "Error en la conexión con Xpertrak"}
-
     
-
-
     print("======== ¡SUCCESS! ========")
     return {"msg":"Carga subida con éxito"}

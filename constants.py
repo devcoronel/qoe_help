@@ -2,6 +2,9 @@ min_qoe = 80
 min_afected_hours = 6
 days_priority = 8
 days_detail = 8
+days_modulation = 8
+umbral_ch_mod = 3
+
 
 url_int = '10.150.2.110'
 url_ext = '190.117.108.84:1380'
