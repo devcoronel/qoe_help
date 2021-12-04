@@ -21,7 +21,6 @@ def init(cookie):
         lima_nodes = get_nodes(cookie)
 
         for node in lima_nodes:
-            print(node["name"])
             query = "INSERT INTO NODES (PLANO) VALUES ('{}');".format(node["name"])
             cursor = mydb.cursor()
             cursor.execute(query)
@@ -66,13 +65,11 @@ def get_values_in_dates(dates, tabla, id_node):
     return result
 
 def create_column(tabla, ytd, tipo, default):
-    print("Creating column {}".format(ytd))
     query = "ALTER TABLE {} ADD COLUMN `{}` {} DEFAULT {} AFTER ID_NODE;".format(tabla, ytd, tipo, default)
     cursor = mydb.cursor()
     cursor.execute(query)
     mydb.commit()
-    print("¡Column created!")
-    print("")
+    print("Column {} created in {}".format(ytd, tabla))
 
 def delete_column(tabla, fecha):
     query = "ALTER TABLE {} DROP COLUMN `{}`;".format(tabla, fecha)

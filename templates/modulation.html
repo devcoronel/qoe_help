@@ -14,18 +14,11 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-xl-11 col-lg-10 col-md-10 col-sm-9 col-12">
-							<div class="row"><p>La tabla recopila información de la cantidad de veces que un plano ha cambiado a una modulación distinta a 64QAM en los últimos {{days_modulation}} días</p></div>
-						</div>
-						<div class="col-xl-1 col-lg-2 col-md-2 col-sm-3 col-12">
-							<form id="form_sumary" class="needs-validation" novalidate>
-								<div class="row"><button type="submit" class="btn btn-primary" style="margin-bottom: 2rem;"> Analizar</button></div>
-							</form>
-						</div>
+						<div class="row"><p>La tabla recopila información de la cantidad de veces que un plano ha cambiado a una modulación distinta a 64QAM en los últimos {{days_modulation}} días</p></div>
 					</div>
                     <hr>
-					<div id="mytable" class="scrollmenu" style="border-radius:10px;" data-excel-name="Cambios_Modulacion"></div>
-                    <div id="loading" ></div>
+					<div id="mytable" class="scrollmenu" style="border-radius:10px;" data-excel-name="Modulation_Changes"></div>
+                    <div id="loading" style="text-align: center;" ></div>
 				</div>
             </div>
         </div>
@@ -33,7 +26,7 @@
     <script>
 		document.getElementById('modulationbutton').addEventListener('click', function() {
 			var table2excel = new Table2Excel();
-  			table2excel.export(document.querySelectorAll("#modulationtable"), "Cambios_Modulacion");
+  			table2excel.export(document.querySelectorAll("#modulationtable"), "Modulation_Changes");
 		});
     </script>
     

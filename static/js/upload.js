@@ -37,9 +37,9 @@ myform.addEventListener("submit", function (e) {
 				`
 			}
 			
-			
 		})
 		.catch(err => {
+			document.getElementById("load").innerHTML = ''
 			console.log("There was an error")
 			
 		})

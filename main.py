@@ -70,16 +70,15 @@ def algorithm(my_node, my_days, x, also_today, only_one = False): # x only can b
         value_node = []
         if also_today:
             link = create_link(node["nodeId"], duration_today, today_utc)
-            # print(link)
             data = requests.get(link)
             if data.status_code == 200:
                 data = data.content
                 data = json.loads(data)
 
                 if data == []:
-                    value_node.append("Null")
+                    value_node.append("NO DATA")
                 
-                if x == 'NEW_HOURS':
+                elif x == 'NEW_HOURS':
                     counter = 0
                     for j in data:
                         if j["qoeScore"] < min_qoe:
@@ -133,10 +132,10 @@ def algorithm(my_node, my_days, x, also_today, only_one = False): # x only can b
                     value_node.append(value_period)
                 
                 else:
-                    return print("Error typing HOURS or QOE")
+                    pass
             
             else:
-                value_node.append("Null")
+                value_node.append("NO DATA")
 
         query1 = "SELECT "
         for date in dates:
@@ -161,135 +160,144 @@ def algorithm(my_node, my_days, x, also_today, only_one = False): # x only can b
     return {"msg": [value_nodes, dates]}
 
 def priority():
-    days = days_priority
-    dates = []
-    today_utc = dt.datetime.utcnow()
-    today = today_utc - dt.timedelta(hours=5)
-    
-    for day in range(days+1):
-        dates.append((today - dt.timedelta(days = day)).strftime("%d/%m/20%y"))
-    dates.pop(0)
-    
-    new_dates = []
-    for date in dates:
 
-        query0 = """
-        SELECT IF ( EXISTS (
-        SELECT * FROM information_schema.COLUMNS 
-        WHERE TABLE_SCHEMA = 'qoehelp' AND TABLE_NAME = 'AFECTED_DAYS' AND COLUMN_NAME = '{}'),1,0);
-        """.format(date)
+    try:
+        days = days_priority
+        dates = []
+        today_utc = dt.datetime.utcnow()
+        today = today_utc - dt.timedelta(hours=5)
+        
+        for day in range(days+1):
+            dates.append((today - dt.timedelta(days = day)).strftime("%d/%m/20%y"))
+        dates.pop(0)
+        
+        new_dates = []
+        for date in dates:
 
-        cursor = mydb.cursor()
-        cursor.execute(query0)
-        result = cursor.fetchall()
-        if result[0][0] == 1:
-            new_dates.append(date)
+            query0 = """
+            SELECT IF ( EXISTS (
+            SELECT * FROM information_schema.COLUMNS 
+            WHERE TABLE_SCHEMA = 'qoehelp' AND TABLE_NAME = 'AFECTED_DAYS' AND COLUMN_NAME = '{}'),1,0);
+            """.format(date)
 
-    dates = new_dates
-    
-    general_values = []
-    especific_values = []
-    total_especific_qoe = []
-    total_especific_hours = []
-    total_especific_period = []
-    # Iterar planos
-    query = "SELECT * FROM NODES;"
-    cursor = mydb.cursor()
-    cursor.execute(query)
-    result = cursor.fetchall()
-    
-    for node in result:
-        general_value = []
-        especific_value = []
-
-        result_1 = get_values_in_dates(dates, "AFECTED_DAYS", int(node[0]))
-        suma = sum(result_1)
-
-        if suma > 1 and suma < days +1:
-            general_value.append(node[1])
-            especific_value.append(node[1])
-            
-            query2 = "SELECT DEPENDENCIA, IMPEDIMENTO, REVISION, TIPO, PROBLEMA, ESTADO FROM STATUS_NODE WHERE ID_NODE = {}".format(node[0])
             cursor = mydb.cursor()
-            cursor.execute(query2)
-            result_2 = cursor.fetchall()
-            result_2 = list(result_2[0])
+            cursor.execute(query0)
+            result = cursor.fetchall()
+            if result[0][0] == 1:
+                new_dates.append(date)
 
-            for item in result_2:
-                general_value.append(item)
-                especific_value.append(item)
-            especific_value.pop(1)
-            especific_value.pop(1)
-            especific_value.pop(1)
-            
-            general_value.insert(5, suma)
-            especific_value.insert(2, suma)
+        dates = new_dates
+        
+        general_values = []
+        especific_values = []
+        total_especific_qoe = []
+        total_especific_hours = []
+        total_especific_period = []
+        # Iterar planos
+        query = "SELECT * FROM NODES;"
+        cursor = mydb.cursor()
+        cursor.execute(query)
+        result = cursor.fetchall()
+        
+        for node in result:
+            general_value = []
+            especific_value = []
 
-            general_values.append(general_value)
-            especific_values.append(especific_value)
+            result_1 = get_values_in_dates(dates, "AFECTED_DAYS", int(node[0]))
+            suma = sum(result_1)
 
-            total_especific_qoe.append(get_values_in_dates(dates, "NEW_QOE", int(node[0])))
-            total_especific_hours.append(get_values_in_dates(dates, "NEW_HOURS", int(node[0])))
-            total_especific_period.append(get_values_in_dates(dates, "PERIOD", int(node[0])))
-            
+            if suma > 1 and suma < days +1:
+                general_value.append(node[1])
+                especific_value.append(node[1])
+                
+                query2 = "SELECT DEPENDENCIA, IMPEDIMENTO, REVISION, TIPO, PROBLEMA, ESTADO FROM STATUS_NODE WHERE ID_NODE = {}".format(node[0])
+                cursor = mydb.cursor()
+                cursor.execute(query2)
+                result_2 = cursor.fetchall()
+                result_2 = list(result_2[0])
 
-    # general_values = [[[LMLO066, DEPENDENCIA, IMPEDIMENTO, REVISION, TIPO, DIAS, PROBLEMA, ESTADO, V_FECHA1, V_FECHA3], []], [FECHA1, FECHA2, FECHA3]]
-    # especific_values = [[[LMLO066, TIPO, DIAS, PROBLEMA, ESTADO, V_FECHA1, V_FECHA3], []], [FECHA1, FECHA2, FECHA3]]
-    return [general_values, especific_values , total_especific_qoe, total_especific_hours, total_especific_period, dates]
+                for item in result_2:
+                    general_value.append(item)
+                    especific_value.append(item)
+                especific_value.pop(1)
+                especific_value.pop(1)
+                especific_value.pop(1)
+                
+                general_value.insert(5, suma)
+                especific_value.insert(2, suma)
+
+                general_values.append(general_value)
+                especific_values.append(especific_value)
+
+                total_especific_qoe.append(get_values_in_dates(dates, "NEW_QOE", int(node[0])))
+                total_especific_hours.append(get_values_in_dates(dates, "NEW_HOURS", int(node[0])))
+                total_especific_period.append(get_values_in_dates(dates, "PERIOD", int(node[0])))
+                
+
+        # general_values = [[[LMLO066, DEPENDENCIA, IMPEDIMENTO, REVISION, TIPO, DIAS, PROBLEMA, ESTADO, V_FECHA1, V_FECHA3], []], [FECHA1, FECHA2, FECHA3]]
+        # especific_values = [[[LMLO066, TIPO, DIAS, PROBLEMA, ESTADO, V_FECHA1, V_FECHA3], []], [FECHA1, FECHA2, FECHA3]]
+        return [general_values, especific_values , total_especific_qoe, total_especific_hours, total_especific_period, dates]
+
+    except:
+        return "Error en la conexión con la Base de Datos"
 
 def modulation(for_modulation):
     # for_modulation = True # La función se usa para el ranking de modulación
     # for_modulation = False # La función se usa para el detalle de un plano
-    days = days_modulation
-    dates = []
-    today_utc = dt.datetime.utcnow()
-    today = today_utc - dt.timedelta(hours=5)
-    
-    for day in range(days+1):
-        dates.append((today - dt.timedelta(days = day)).strftime("%d/%m/20%y"))
-    dates.pop(0)
-    
-    new_dates = []
-    for date in dates:
-
-        query0 = """
-        SELECT IF ( EXISTS (
-        SELECT * FROM information_schema.COLUMNS 
-        WHERE TABLE_SCHEMA = 'qoehelp' AND TABLE_NAME = 'MODULATION' AND COLUMN_NAME = '{}'),1,0);
-        """.format(date)
-
-        cursor = mydb.cursor()
-        cursor.execute(query0)
-        result = cursor.fetchall()
-        if result[0][0] == 1:
-            new_dates.append(date)
-
-    dates = new_dates
-
-    values = []
-    # Iterar planos
-    query = "SELECT * FROM NODES;"
-    cursor = mydb.cursor()
-    cursor.execute(query)
-    result = cursor.fetchall()
-    
-    for node in result:
-        value = []
-        query1 = "SELECT"
+    try:
+        days = days_modulation
+        dates = []
+        today_utc = dt.datetime.utcnow()
+        today = today_utc - dt.timedelta(hours=5)
+        
+        for day in range(days+1):
+            dates.append((today - dt.timedelta(days = day)).strftime("%d/%m/20%y"))
+        dates.pop(0)
+        
+        new_dates = []
         for date in dates:
-            query1 = query1 + "`"+ date + "`,"
-        query1 = query1[:-1]
-        query1 = query1 + " FROM MODULATION WHERE ID_NODE = {};".format(int(node[0]))
+
+            query0 = """
+            SELECT IF ( EXISTS (
+            SELECT * FROM information_schema.COLUMNS 
+            WHERE TABLE_SCHEMA = 'qoehelp' AND TABLE_NAME = 'MODULATION' AND COLUMN_NAME = '{}'),1,0);
+            """.format(date)
+
+            cursor = mydb.cursor()
+            cursor.execute(query0)
+            result = cursor.fetchall()
+            if result[0][0] == 1:
+                new_dates.append(date)
+
+        dates = new_dates
+
+        values = []
+        # Iterar planos
+        query = "SELECT * FROM NODES;"
         cursor = mydb.cursor()
-        cursor.execute(query1)
-        result_1 = cursor.fetchall()
+        cursor.execute(query)
+        result = cursor.fetchall()
+        
+        for node in result:
+            value = []
+            query1 = "SELECT"
+            for date in dates:
+                query1 = query1 + "`"+ date + "`,"
+            query1 = query1[:-1]
+            query1 = query1 + " FROM MODULATION WHERE ID_NODE = {};".format(int(node[0]))
+            cursor = mydb.cursor()
+            cursor.execute(query1)
+            result_1 = cursor.fetchall()
 
-        if for_modulation == True:
-            suma = sum(result_1[0])
+            if for_modulation == True:
+                suma = sum(result_1[0])
 
-            if suma >= umbral_ch_mod:
-                value.append(node[1])
-                for nmod in result_1[0]:
-                    value.append(nmod)
-                values.append(value)
-    return [values, dates]
+                if suma >= umbral_ch_mod:
+                    value.append(node[1])
+                    for nmod in result_1[0]:
+                        value.append(nmod)
+                    values.append(value)
+        return [values, dates]
+    
+    except:
+        return "Error en la conexión con la Base de Datos"

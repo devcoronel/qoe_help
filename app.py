@@ -86,19 +86,23 @@ def detail(node = None):
 @app.route('/priority', methods=['POST', 'GET'])
 def my_priority():
     if request.method == 'GET':
-        data = priority()
-        general_values = data[0]
-        especific_values = data[1]
-        qoe_values = data[2]
-        hours_values = data[3]
-        period_values = data[4]
-        dates = data[5]
-        return render_template('priority.html', general_values = general_values, especific_values = especific_values, qoe_values = qoe_values, hours_values = hours_values, period_values = period_values, dates = dates)
+        # data = priority()
+        # general_values = data[0]
+        # especific_values = data[1]
+        # qoe_values = data[2]
+        # hours_values = data[3]
+        # period_values = data[4]
+        # dates = data[5]
+        return render_template('priority.html')#, general_values = general_values, especific_values = especific_values, qoe_values = qoe_values, hours_values = hours_values, period_values = period_values, dates = dates)
     elif request.method == 'POST':
-        # Tener un botón de actualizar
-        # Tener un div (antes de la tabla HTML) que tenga un id para construir una tabla por JS
-        # Se necesita editar tabla
-        pass
+        data = priority()
+        # general_values = data[0]
+        # especific_values = data[1]
+        # qoe_values = data[2]
+        # hours_values = data[3]
+        # period_values = data[4]
+        # dates = data[5]
+        return {"msg": data}
 
 @app.route('/upload', methods=['POST', 'GET'])
 def my_upload():

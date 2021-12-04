@@ -33,7 +33,6 @@ myform.addEventListener("submit", function (e) {
 			if(typeof(data.msg) === 'object') {
 				let elements = data.msg[0]
 				let dates = data.msg[1]
-				//console.log(elements, dates, days)
 
 				let tablehtml = `<table class="table table-hover" id="hourstable" data-excel-name="Horas_QoE_afectado" ><thead class="table-dark"><td onclick="sortTable(0, 'hourstable')" class="header"><strong>Plano</strong></td>`
 							
@@ -68,6 +67,7 @@ myform.addEventListener("submit", function (e) {
 			
 		})
 		.catch(err => {
+			load.innerHTML = ''
 			console.log("There was an error")
 			
 		})

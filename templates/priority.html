@@ -1,4 +1,4 @@
-general_{% extends 'layout.html' %}
+{% extends 'layout.html' %}
 {% block content %}
     <script src="../static/js/table2excel.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sumary.css') }}">
@@ -6,7 +6,7 @@ general_{% extends 'layout.html' %}
         <div class="container-fluid pb-3" style="padding-top: 4.5rem;">
             <div class="container bg-light rounded pt-2" style="padding-bottom: 20.2rem;">
                 <div class="p-3">
-                    <h2 class="fw-bold"> <img src="{{ url_for('static', filename='images/aboutme/i.png') }}" width="35" class="pb-2">&nbspPrioridad</h2>
+                    <h2 class="fw-bold"> <img src="{{ url_for('static', filename='images/aboutme/i.png') }}" width="35" class="pb-2">&nbspPrioridad&nbsp</h2>
                     <hr>
                     <br>
                     <div class="row">
@@ -17,35 +17,8 @@ general_{% extends 'layout.html' %}
 							<button id="generalbutton" class="btn btn-success" style="margin-bottom: 2rem;">Exportar</button>
 						</div>
 					</div>
-                    <div class="scrollmenu" style="border-radius:10px;">
-                        <table id="generaltable" class="table table-hover" data-excel-name="General_Priority">
-                            <thead class="table-dark">
-                                <tr>
-                                    <td onclick="sortTable(0,'generaltable')" class="header"><strong>Plano</strong></td>
-                                    <td onclick="sortTable(1,'generaltable')" class="header"><strong>Dependencia</strong></td>
-                                    <td onclick="sortTable(2,'generaltable')" class="header"><strong>Impedimento</strong></td>
-                                    <td onclick="sortTable(3,'generaltable')" class="header"><strong>Revisión</strong></td>
-                                    <td onclick="sortTable(4,'generaltable')" class="header"><strong>Tipo</strong></td>
-                                    <td onclick="sortTable(5,'generaltable')" class="header"><strong>Días</strong></td>
-                                    <td onclick="sortTable(6,'generaltable')" class="header"><strong>Problema</strong></td>
-                                    <td onclick="sortTable(7,'generaltable')" class="header"><strong>Estado</strong></td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for value in general_values %}
-                                <tr>
-                                    {% for i in value %}
-                                    {% if i == value[0] %}
-                                    <td><a href="{{ '/detail/%s'%i }}" target= "_blank">{{i}}</a></td>
-                                    {% else %}
-                                    <td>{{i}}</td>
-                                    {% endif %}
-                                    {% endfor %}
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                    <div id="loading1" style="text-align: center;" ></div>
+                    <div class="scrollmenu" style="border-radius:10px;" id="div_generaltable"></div>
                     <br>
                     <hr>
                     <br>
@@ -57,36 +30,21 @@ general_{% extends 'layout.html' %}
 							<button id="especificbutton" class="btn btn-success" style="margin-bottom: 2rem;">Exportar</button>
 						</div>
 					</div>
-                    <div class="scrollmenu" style="border-radius:10px;">
-                        <table id="especifictable" class="table table-hover" data-excel-name="Especific_Priority">
-                            <thead class="table-dark">
-                                <tr>
-                                    <td onclick="sortTable(0, 'especifictable')" class="header"><strong>Plano</strong></td>
-                                    <td onclick="sortTable(4, 'especifictable')" class="header"><strong>Tipo</strong></td>
-                                    <td onclick="sortTable(5, 'especifictable')" class="header"><strong>Días</strong></td>
-                                    <td onclick="sortTable(6, 'especifictable')" class="header"><strong>Problema</strong></td>
-                                    <td onclick="sortTable(7, 'especifictable')" class="header"><strong>Estado</strong></td>
-                                    {% for date in dates %}
-                                    <td class="header"><strong>{{date}}</strong></td>
-                                    {% endfor %}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for value in especific_values %}
-                                <tr>
-                                    {% for i in value %}
-                                    {% if i == value[0] %}
-                                    <td><a href="{{ '/detail/%s'%i }}" target= "_blank">{{i}}</a></td>
-                                    {% else %}
-                                    <td>{{i}}</td>
-                                    {% endif %}
-                                    {% endfor %}
-                                    <div id="values" ></div>
-                                    <!-- Crear un select para cambiar valores de qoe, hours y period -->
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                    <div class="row">
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-5 col-5">
+                            <h5>&emsp;&ensp;Revisión por:</h5>
+                        </div>
+                        <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-4" style="display: flex ;justify-content: left;">
+                            <select name="type" id="type" class="form-select">
+                                <option value="qoe">QoE</option>
+                                <option value="hours">Horas</option>
+                                <option value="period">Periodo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <div id="loading2" style="text-align: center;" ></div>
+                    <div class="scrollmenu" style="border-radius:10px;" id="div_especifictable">
                     </div>
                     
                 </div>
@@ -106,6 +64,7 @@ general_{% extends 'layout.html' %}
 		});
 	</script>
 	<script src="{{ url_for('static', filename='js/order.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/priority.js') }}"></script>
 
 
 {% endblock %}
