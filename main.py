@@ -5,6 +5,24 @@ from up import mydb, get_values_in_dates
 from constants import *
 import re
 
+def if_column_exists(x, dates, new_dates):
+    for date in dates:
+
+        query = """
+        SELECT IF ( EXISTS (
+        SELECT * FROM information_schema.COLUMNS 
+        WHERE TABLE_SCHEMA = 'qoehelp' AND TABLE_NAME = '{}' AND COLUMN_NAME = '{}'),1,0);
+        """.format(x, date)
+
+        cursor = mydb.cursor()
+        cursor.execute(query)
+        result = cursor.fetchall()
+        if result[0][0] == 1:
+            new_dates.append(date)
+
+    dates = new_dates
+    return dates
+
 def algorithm(my_node, my_days, x, also_today, only_one = False): # x only can be 'HOURS' or 'QOE'
     match = []
     today_utc = dt.datetime.utcnow()
@@ -48,21 +66,8 @@ def algorithm(my_node, my_days, x, also_today, only_one = False): # x only can b
     dates.pop(0)
 
     new_dates = []
-    for date in dates:
+    dates = if_column_exists(x, dates, new_dates)
 
-        query0 = """
-        SELECT IF ( EXISTS (
-        SELECT * FROM information_schema.COLUMNS 
-        WHERE TABLE_SCHEMA = 'qoehelp' AND TABLE_NAME = '{}' AND COLUMN_NAME = '{}'),1,0);
-        """.format(x, date)
-
-        cursor = mydb.cursor()
-        cursor.execute(query0)
-        result = cursor.fetchall()
-        if result[0][0] == 1:
-            new_dates.append(date)
-
-    dates = new_dates
     if dates == []:
         return {"msg": "No se tiene data en estos últimos {} dias".format(days)}
     
@@ -172,21 +177,7 @@ def priority():
         dates.pop(0)
         
         new_dates = []
-        for date in dates:
-
-            query0 = """
-            SELECT IF ( EXISTS (
-            SELECT * FROM information_schema.COLUMNS 
-            WHERE TABLE_SCHEMA = 'qoehelp' AND TABLE_NAME = 'AFECTED_DAYS' AND COLUMN_NAME = '{}'),1,0);
-            """.format(date)
-
-            cursor = mydb.cursor()
-            cursor.execute(query0)
-            result = cursor.fetchall()
-            if result[0][0] == 1:
-                new_dates.append(date)
-
-        dates = new_dates
+        dates = if_column_exists('AFECTED_DAYS', dates, new_dates)
         
         general_values = []
         especific_values = []
@@ -255,21 +246,7 @@ def modulation(for_modulation):
         dates.pop(0)
         
         new_dates = []
-        for date in dates:
-
-            query0 = """
-            SELECT IF ( EXISTS (
-            SELECT * FROM information_schema.COLUMNS 
-            WHERE TABLE_SCHEMA = 'qoehelp' AND TABLE_NAME = 'MODULATION' AND COLUMN_NAME = '{}'),1,0);
-            """.format(date)
-
-            cursor = mydb.cursor()
-            cursor.execute(query0)
-            result = cursor.fetchall()
-            if result[0][0] == 1:
-                new_dates.append(date)
-
-        dates = new_dates
+        dates = if_column_exists('MODULATION', dates, new_dates)
 
         values = []
         # Iterar planos

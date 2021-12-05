@@ -1,21 +1,9 @@
-let load = document.getElementById("loading");
 let table = document.getElementById("mytable");
 
-load.innerHTML = `
-        </br>
-		<div class="spinner-border text-primary" role="status">
-		<span class="visually-hidden">Loading...</span>
-		</div>`
-
-fetch("/modulation" , {
-	method: 'POST'
-})
-	.then(response => response.json())
-	.then(data => {
+function build(data) {
 		if(typeof(data.msg) === 'object') {
 			let elements = data.msg[0]
 			let dates = data.msg[1]
-			load.innerHTML = ''
 
 			let tablehtml = `<table class="table table-hover" id="modulationtable" data-excel-name="Horas_QoE_afectado" ><thead class="table-dark"><td onclick="sortTable(0, 'modulationtable')" class="header"><strong>Plano</strong></td>`
 						
@@ -42,13 +30,6 @@ fetch("/modulation" , {
 
 		}
 		else{
-			load.innerHTML = ''
 			table.innerHTML = '<strong>'+ data.msg +'</strong>'
 		}
-		
-	})
-	.catch(err => {
-		load.innerHTML = ''
-		console.log("There was an error")
-		
-	})
+}
