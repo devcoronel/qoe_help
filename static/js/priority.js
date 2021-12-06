@@ -71,7 +71,13 @@ function build(data) {
                     }
                 }
                 for (let k in qoe_values[e_value]){
-                    especific_body += `<td>`+ qoe_values[e_value][k] +`</td>`
+                    if (qoe_values[e_value][k] > 80) {
+                        especific_body += `<td style="background-color: 70EC66;">`+ qoe_values[e_value][k] +`</td>`
+                    } else if (qoe_values[e_value][k] >= 70) {
+                        especific_body += `<td style="background-color: F3DE5B">`+ qoe_values[e_value][k] +`</td>`
+                    } else {
+                        especific_body += `<td style="background-color: FB7D4D">`+ qoe_values[e_value][k] +`</td>`
+                    }
                 }
             }
             especific_body += `</tbody></table>`
@@ -107,7 +113,13 @@ function build(data) {
                         }
                     }
                     for (let k in hours_values[e_value]){
-                        especific_body += `<td>`+ hours_values[e_value][k] +`</td>`
+                        if (hours_values[e_value][k] <= 3) {
+                            especific_body += `<td style="background-color: 70EC66;">`+ hours_values[e_value][k] +`</td>`
+                        } else if (hours_values[e_value][k] <= 6) {
+                            especific_body += `<td style="background-color: F3DE5B">`+ hours_values[e_value][k] +`</td>`
+                        } else {
+                            especific_body += `<td style="background-color: FB7D4D">`+ hours_values[e_value][k] +`</td>`
+                        }
                     }
                 }
                 especific_body += `</tbody></table>`
@@ -124,7 +136,15 @@ function build(data) {
                         }
                     }
                     for (let k in period_values[e_value]){
-                        especific_body += `<td>`+ period_values[e_value][k] +`</td>`
+                        if (period_values[e_value][k] == 'DIA') {
+                            especific_body += `<td style="background-color: 7BE0EA;">`+ period_values[e_value][k] +`</td>`
+                        } else if (period_values[e_value][k] == 'NOCHE') {
+                            especific_body += `<td style="background-color: 647EB9">`+ period_values[e_value][k] +`</td>`
+                        } else if (period_values[e_value][k] == 'TODO EL DIA') {
+                            especific_body += `<td style="background-color: FB7D4D">`+ period_values[e_value][k] +`</td>`
+                        } else {
+                            especific_body += `<td>`+ period_values[e_value][k] +`</td>`
+                        }
                     }
                 }
                 especific_body += `</tbody></table>`
@@ -140,7 +160,13 @@ function build(data) {
                         }
                     }
                     for (let k in qoe_values[e_value]){
-                        especific_body += `<td>`+ qoe_values[e_value][k] +`</td>`
+                        if (qoe_values[e_value][k] > 80) {
+                            especific_body += `<td style="background-color: 70EC66;">`+ qoe_values[e_value][k] +`</td>`
+                        } else if (qoe_values[e_value][k] >= 70) {
+                            especific_body += `<td style="background-color: F3DE5B">`+ qoe_values[e_value][k] +`</td>`
+                        } else {
+                            especific_body += `<td style="background-color: FB7D4D">`+ qoe_values[e_value][k] +`</td>`
+                        }
                     }
                 }
                 especific_body += `</tbody></table>`

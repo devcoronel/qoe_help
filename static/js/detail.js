@@ -63,6 +63,14 @@ myform.addEventListener("submit", function (e) {
                 }
                 tablehtml += `
                 </tr>
+                <tr>
+                    <td><strong>Cambios Modulación</strong></td>
+                `
+				for(let j in mydata[1][3]){
+                    tablehtml +=  `<td>`+ mydata[1][3][j] +`</td>`
+                }
+                tablehtml += `
+                </tr>
                                 </tbody>
                             </table>
                         </div>

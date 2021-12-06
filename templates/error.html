@@ -11,7 +11,9 @@
         <h1>{{number}}</h1>
     {% endif %}
     {% if number == 429 %}
-        <h1>{{number}}</h1>
+        <h1>Error: {{number}}</h1>
+        <h2>Se ha registrado un número de solicitudes mayor a lo permitido.</h2>
+        <h2>Ir atrás</h2>
     {% endif %}
     {% if number == 500 %}
         <h1>{{number}}</h1>

@@ -160,9 +160,9 @@ def upload(date, cookie):
                             counter = counter + 1
                             ts = i["timestamp"]
                             hour = int((dt.datetime(int(ts[0:4]), int(ts[5:7]), int(ts[8:10]), int(ts[11:13])) - dt.timedelta(hours=5)).strftime("%H"))
-                            if hour > 17:
+                            if hour > umbral_night:
                                 period.append("NOCHE")
-                            elif hour > 8:
+                            elif hour > umbral_morning_afternoon:
                                 period.append("DIA")
 
                     hours = (counter*15)/60

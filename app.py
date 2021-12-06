@@ -1,6 +1,6 @@
 from datetime import date
 from flask import Flask, render_template, request, jsonify, url_for, redirect
-from main import algorithm, priority, modulation
+from main import algorithm, dayly, priority, modulation
 from up import upload
 from constants import days_detail, days_modulation
 from xpertrak_login import get_cookie
@@ -73,7 +73,10 @@ def detail(node = None):
             data_period = algorithm(node, days, 'PERIOD', True, True)
             values_period = (((data_period["msg"])[0])[0])[node]
 
-            return render_template('index.html', route = 1, node = node, data_values = [values_hours, values_qoe, values_period], dates = (data_hours["msg"])[1], with_search = with_search)
+            data_modul = algorithm(node, days, 'MODULATION', True, True)
+            values_modul = (((data_modul["msg"])[0])[0])[node]
+
+            return render_template('index.html', route = 1, node = node, data_values = [values_hours, values_qoe, values_period, values_modul], dates = (data_hours["msg"])[1], with_search = with_search)
 
         else:
             with_search = True
@@ -87,6 +90,7 @@ def detail(node = None):
         data_hours = algorithm(node, days, 'NEW_HOURS', True, True)
         data_qoe = algorithm(node, days, 'NEW_QOE', True, True)
         data_period = algorithm(node, days, 'PERIOD', True, True)
+        data_modul = algorithm(node, days, 'MODULATION', True, True)
 
         if isinstance(data_hours["msg"], str):
             return data_hours
@@ -95,8 +99,9 @@ def detail(node = None):
             values_hours = (((data_hours["msg"])[0])[0])[node]
             values_qoe = (((data_qoe["msg"])[0])[0])[node]
             values_period = (((data_period["msg"])[0])[0])[node]
+            values_modul = (((data_modul["msg"])[0])[0])[node]
 
-            data_values = [values_hours, values_qoe, values_period]
+            data_values = [values_hours, values_qoe, values_period, values_modul]
             dates = (data_hours["msg"])[1]
             
             return {"msg":[node, data_values, dates]}
@@ -151,10 +156,20 @@ def my_upload():
         elif action == 'delete':
             pass
 
+@app.route('/dayly', methods = ['GET', 'POST'])
+@limiter.limit("1/2second")
+def my_dayly():
+    if request.method == 'GET':
+        return render_template('index.html', route = 5)
+    elif request.method == 'POST':
+        date = request.form["date"]
+        data = dayly(date)
+        return data
+
 @app.route('/info')
 @limiter.limit("2/second")
 def indexe():
-    return render_template('index.html', route = 5)
+    return render_template('index.html', route = 6)
 
 
 if __name__ == '__main__':
