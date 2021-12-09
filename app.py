@@ -1,7 +1,7 @@
 from datetime import date
 from flask import Flask, render_template, request, jsonify, url_for, redirect
 from main import algorithm, dayly, priority, modulation
-from up import upload
+from up import upload, verify_upload
 from constants import days_detail, days_modulation
 from xpertrak_login import get_cookie
 from flask_limiter import Limiter
@@ -118,7 +118,8 @@ def my_priority():
         # qoe_values = data[2]
         # hours_values = data[3]
         # period_values = data[4]
-        # dates = data[5]
+        # modulation_values = data[5]
+        # dates = data[6]
         return render_template('index.html', route = 2, data = {'msg': data})
     
     elif request.method == 'POST':
@@ -150,8 +151,14 @@ def my_upload():
 
         if action == 'upload':
             cookie = get_cookie()
-            result = upload(date, cookie)
-            return result
+            result = verify_upload(date, cookie)
+
+            if isinstance(result, list):
+                process = upload(result[0], result[1], result[2])
+                return process
+
+            else:
+                return result
         
         elif action == 'delete':
             pass

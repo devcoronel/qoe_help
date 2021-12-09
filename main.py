@@ -192,6 +192,52 @@ def algorithm(my_node, my_days, x, also_today, only_one = False): # x only can b
 
     return {"msg": [value_nodes, dates]}
 
+def data_priority(table, afected_id_nodes, dates):
+    query = "SELECT "
+    for date in dates:
+        query += "`"+ date + "`,"
+    query = query[:-1]
+    query += " FROM {} WHERE ID_NODE IN {};".format(table, afected_id_nodes)
+
+    cursor = mydb.cursor()
+    cursor.execute(query)
+    result = cursor.fetchall()
+    # FALTA
+
+
+def new_priority():
+    days = days_priority
+    dates = []
+    today_utc = dt.datetime.utcnow()
+    today = today_utc - dt.timedelta(hours=5)
+    
+    for day in range(days+1):
+        dates.append((today - dt.timedelta(days = day)).strftime("%d/%m/20%y"))
+    dates.pop(0)
+    
+    new_dates = []
+    dates = if_column_exists('AFECTED_DAYS', dates, new_dates)
+
+    query = "SELECT ID_NODE FROM AFECTED_DAYS WHERE "
+    for date in dates:
+        query += "`"+ date + "`+"
+    query = query[:-1]
+    query += ">= 2;"
+
+    cursor = mydb.cursor()
+    cursor.execute(query)
+    result = cursor.fetchall()
+    
+    afected_id_nodes = []
+    for id_node in result:
+        afected_id_nodes.append(id_node[0])
+    afected_id_nodes = str(tuple(afected_id_nodes))
+    # OPTIMIZAR PRIORITY
+
+
+
+new_priority()
+
 def priority():
 
     try:
@@ -212,6 +258,7 @@ def priority():
         total_especific_qoe = []
         total_especific_hours = []
         total_especific_period = []
+        total_especific_modulation = []
         # Iterar planos
         query = "SELECT * FROM NODES;"
         cursor = mydb.cursor()
@@ -225,7 +272,7 @@ def priority():
             result_1 = get_values_in_dates(dates, "AFECTED_DAYS", int(node[0]))
             suma = sum(result_1)
 
-            if suma > 1 and suma < days +1:
+            if suma > 1:
                 general_value.append(node[1])
                 especific_value.append(node[1])
                 
@@ -251,11 +298,12 @@ def priority():
                 total_especific_qoe.append(get_values_in_dates(dates, "NEW_QOE", int(node[0])))
                 total_especific_hours.append(get_values_in_dates(dates, "NEW_HOURS", int(node[0])))
                 total_especific_period.append(get_values_in_dates(dates, "PERIOD", int(node[0])))
-                
+                total_especific_modulation.append(get_values_in_dates(dates, "MODULATION", int(node[0])))
+
 
         # general_values = [[[LMLO066, DEPENDENCIA, IMPEDIMENTO, REVISION, TIPO, DIAS, PROBLEMA, ESTADO, V_FECHA1, V_FECHA3], []], [FECHA1, FECHA2, FECHA3]]
         # especific_values = [[[LMLO066, TIPO, DIAS, PROBLEMA, ESTADO, V_FECHA1, V_FECHA3], []], [FECHA1, FECHA2, FECHA3]]
-        return [general_values, especific_values , total_especific_qoe, total_especific_hours, total_especific_period, dates]
+        return [general_values, especific_values , total_especific_qoe, total_especific_hours, total_especific_period, total_especific_modulation, dates]
 
     except:
         return "Error en la conexión con la Base de Datos"

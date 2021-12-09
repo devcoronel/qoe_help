@@ -212,6 +212,7 @@
                             <option value="qoe">QoE</option>
                             <option value="hours">Horas</option>
                             <option value="period">Periodo</option>
+                            <option value="modulation">Modulación</option>
                         </select>
                     </div>
                 </div>
@@ -240,6 +241,7 @@
         let data = '{{ data|tojson|safe }}'
         let jsondata = JSON.parse(data)
         build(jsondata)
+        console.log(jsondata)
     </script>
 
 <!-- MODULACION -->

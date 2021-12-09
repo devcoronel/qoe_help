@@ -86,8 +86,7 @@ def autocomplete_null(tabla, ytd, value):
     cursor.execute(query)
     mydb.commit()
 
-def upload(date, cookie):
-
+def verify_upload(date, cookie):
     today = dt.datetime.utcnow() - dt.timedelta(hours=5)
     my_date = dt.datetime(int(date[0:4]), int(date[5:7]), int(date[8:10]))
     if my_date > today:
@@ -125,12 +124,22 @@ def upload(date, cookie):
     create_column('MODULATION', ytd, 'FLOAT', 0)
     my_date_plus = my_date + dt.timedelta(days=1)
 
+    return [lima_nodes, ytd, my_date_plus]
+
+def upload(lima_nodes, ytd, my_date_plus):
+
     for node in lima_nodes:
         link = 'http://{}/pathtrak/api/node/{}/qoe/metric/history?duration=1440&sampleResponse=false&startdatetime={}-{}-{}T05:00:00.000Z'.format(url_ext ,str(node["nodeId"]), my_date_plus.year, str(my_date_plus.month).zfill(2), str(my_date_plus.day).zfill(2))
         link_modul = 'http://{}/pathtrak/api/node/{}/capacity/channels/history?duration=1440&sampleResponse=false&startdatetime={}-{}-{}T05:00:00.000Z'.format(url_ext ,str(node["nodeId"]), my_date_plus.year, str(my_date_plus.month).zfill(2), str(my_date_plus.day).zfill(2))
         try:
-        #if True:
+        # if True:
             mydata = requests.get(link)
+
+            value_qoe = -1
+            value_hours = -1
+            value_period = "NO DATA"
+            value_afected = 0
+            value_modulation = 0
 
             if mydata.status_code == 200:
                 mydata = mydata.content
@@ -139,12 +148,9 @@ def upload(date, cookie):
                 if mydata == []:
                     print(node["name"], "200 - Without data")
                     print(link)
-                    value = -1
-                    value_period = "NO DATA"
-                    value_afected = 0
 
-                    insert_value('NEW_HOURS', ytd, value, node["name"])
-                    insert_value('NEW_QOE', ytd, value, node["name"])
+                    insert_value('NEW_HOURS', ytd, value_hours, node["name"])
+                    insert_value('NEW_QOE', ytd, value_qoe, node["name"])
                     insert_value('PERIOD', ytd, value_period, node["name"])
                     insert_value('AFECTED_DAYS', ytd, value_afected, node["name"])
 
@@ -152,10 +158,14 @@ def upload(date, cookie):
                     print(node["name"], "200 - OK")
                     print(link)
 
-                    # HORAS QOE AFECTADO Y PERIODO DE AFECTACIÓN
+                    # QOE, HORAS QOE AFECTADO Y PERIODO DE AFECTACIÓN
                     counter = 0
                     period = []
+                    scores = []
+
                     for i in mydata:
+                        scores.append(i["qoeScore"])
+
                         if i["qoeScore"] < min_qoe:
                             counter = counter + 1
                             ts = i["timestamp"]
@@ -164,49 +174,43 @@ def upload(date, cookie):
                                 period.append("NOCHE")
                             elif hour > umbral_morning_afternoon:
                                 period.append("DIA")
+                            else:
+                                period.append("MADRUGADA")
 
-                    hours = (counter*15)/60
-                    total_noche = period.count("NOCHE")
-                    total_dia = period.count("DIA")
+                    value_qoe = round(sum(scores)/len(scores), 0)
+                    value_hours = (counter*15)/60
 
-                    if total_dia > 24 and total_noche > 12:
+                    noche = period.count("NOCHE")
+                    dia = period.count("DIA")
+                    madrugada = period.count("MADRUGADA")
+
+                    if dia > 24 and noche > 12:
                         value_period = "TODO EL DIA"
-                    elif total_dia > 24 and total_noche <= 12:
+                    elif dia > 24 and noche <= 12:
                         value_period = "DIA"
-                    elif total_dia > 12 and total_noche > 12:
-                        if total_dia >= total_noche:
+                    elif dia > 12 and noche > 12:
+                        if dia >= noche:
                             value_period = "DIA"
                         else:
                             value_period = "NOCHE"
-                    elif total_dia > 12 and total_noche <= 12:
+                    elif dia > 12 and noche <= 12:
                         value_period = "DIA"
-                    elif total_dia <= 12 and total_noche > 12:
+                    elif dia <= 12 and noche > 12:
                         value_period = "NOCHE"
-                    elif total_dia <= 12 and total_noche <= 12:
-                        if total_dia > 8 and total_noche > 8:
+                    elif dia <= 12 and noche <= 12:
+                        if dia > 8 and noche > 8:
                             value_period = "DIA"
-                        elif total_dia > 8:
+                        elif dia > 8:
                             value_period = "DIA"
-                        elif total_noche > 8:
+                        elif noche > 8:
                             value_period = "NOCHE"
                         else:
                             value_period = "NO AFECTADO"
 
-                    # QOE PROMEDIO
-                    scores = []
-                    for j in mydata:
-                        scores.append(j["qoeScore"])
-                    qoe = round(sum(scores)/len(scores), 0)
-
-                    # DIAS AFECTADO
-                    value_afected = 0
-                    if (qoe < min_qoe and qoe >= 0) or hours > min_afected_hours:
-                        value_afected = 1
                     
-                    insert_value('NEW_HOURS', ytd, hours, node["name"])
-                    insert_value('NEW_QOE', ytd, qoe, node["name"])
+                    insert_value('NEW_HOURS', ytd, value_hours, node["name"])
+                    insert_value('NEW_QOE', ytd, value_qoe, node["name"])
                     insert_value('PERIOD', ytd, value_period, node["name"])
-                    insert_value('AFECTED_DAYS', ytd, value_afected, node["name"])
                 
             elif mydata.status_code == 500:
                 print(node["name"], "500 - Internal Server Error")
@@ -228,14 +232,23 @@ def upload(date, cookie):
                 for modul in modul_node_dayly[1]:
                     if modul["modChanged"] == True and modul["modType"] != "qam64":
                         change_modul_group.append(modul)
-                insert_value('MODULATION', ytd, len(change_modul_group), node["name"])
+                value_modulation = len(change_modul_group)
+                insert_value('MODULATION', ytd, value_modulation, node["name"])
 
             elif mydata_modul.status_code == 500:
                 print(node["name"], "500 - Internal Server Error")
-                print(link)
+                print(link_modul)
+
+            # DIAS AFECTADO
+            if (value_qoe < min_qoe and value_qoe >= 0) or (value_hours > min_afected_hours):# or (value_modulation >= 1):
+                value_afected = 1
+
+            print(value_qoe, value_hours, value_period, value_modulation, value_afected)
+
+            insert_value('AFECTED_DAYS', ytd, value_afected, node["name"])
 
         except:
-        #else:
+        # else:
             print("Error connecting with Xpertrak")
             delete_column("NEW_HOURS", ytd)
             delete_column("NEW_QOE", ytd)

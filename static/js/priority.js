@@ -10,7 +10,8 @@ function build(data) {
         let qoe_values = mydata[2]
         let hours_values = mydata[3]
         let period_values = mydata[4]
-        let dates = mydata[5]
+        let modulation_values = mydata[5]
+        let dates = mydata[6]
 
         let general_table = `
             <table id="generaltable" class="table table-hover" data-excel-name="General_Priority">
@@ -75,8 +76,10 @@ function build(data) {
                         especific_body += `<td style="background-color: 70EC66;">`+ qoe_values[e_value][k] +`</td>`
                     } else if (qoe_values[e_value][k] >= 70) {
                         especific_body += `<td style="background-color: F3DE5B">`+ qoe_values[e_value][k] +`</td>`
-                    } else {
+                    } else if (qoe_values[e_value][k] >= 0){
                         especific_body += `<td style="background-color: FB7D4D">`+ qoe_values[e_value][k] +`</td>`
+                    } else {
+                        especific_body += `<td>`+ qoe_values[e_value][k] +`</td>`
                     }
                 }
             }
@@ -113,12 +116,14 @@ function build(data) {
                         }
                     }
                     for (let k in hours_values[e_value]){
-                        if (hours_values[e_value][k] <= 3) {
-                            especific_body += `<td style="background-color: 70EC66;">`+ hours_values[e_value][k] +`</td>`
-                        } else if (hours_values[e_value][k] <= 6) {
+                        if (hours_values[e_value][k] >= 6) {
+                            especific_body += `<td style="background-color: FB7D4D;">`+ hours_values[e_value][k] +`</td>`
+                        } else if (hours_values[e_value][k] >= 3) {
                             especific_body += `<td style="background-color: F3DE5B">`+ hours_values[e_value][k] +`</td>`
+                        } else if (hours_values[e_value][k] >= 0) {
+                            especific_body += `<td style="background-color: 70EC66">`+ hours_values[e_value][k] +`</td>`
                         } else {
-                            especific_body += `<td style="background-color: FB7D4D">`+ hours_values[e_value][k] +`</td>`
+                            especific_body += `<td>`+ hours_values[e_value][k] +`</td>`
                         }
                     }
                 }
@@ -149,6 +154,30 @@ function build(data) {
                 }
                 especific_body += `</tbody></table>`
                 div_especifictable.innerHTML = especific_head + especific_body
+
+            } else if (select.value == 'modulation') {
+                for (let e_value in especific_values) {
+                    especific_body += `<tr>
+                    <td><a href="/detail/`+ especific_values[e_value][0] +`" target= "_blank">`+ especific_values[e_value][0] +`</a></td>`
+                    
+                    for (let j in especific_values[e_value]) {
+                        if (j != 0){
+                            especific_body += `<td>`+ especific_values[e_value][j] +`</td>`
+                        }
+                    }
+                    for (let k in modulation_values[e_value]){
+                        if (modulation_values[e_value][k] >= 4) {
+                            especific_body += `<td style="background-color: FB7D4D;">`+ modulation_values[e_value][k] +`</td>`
+                        } else if (modulation_values[e_value][k] >= 1) {
+                            especific_body += `<td style="background-color: F3DE5B">`+ modulation_values[e_value][k] +`</td>`
+                        } else {
+                            especific_body += `<td>`+ modulation_values[e_value][k] +`</td>`
+                        }
+                    }
+                }
+                especific_body += `</tbody></table>`
+                div_especifictable.innerHTML = especific_head + especific_body
+
             } else if (select.value == 'qoe') {
                 for (let e_value in especific_values) {
                     especific_body += `<tr>
@@ -164,8 +193,10 @@ function build(data) {
                             especific_body += `<td style="background-color: 70EC66;">`+ qoe_values[e_value][k] +`</td>`
                         } else if (qoe_values[e_value][k] >= 70) {
                             especific_body += `<td style="background-color: F3DE5B">`+ qoe_values[e_value][k] +`</td>`
-                        } else {
+                        } else if (qoe_values[e_value][k] >= 0){
                             especific_body += `<td style="background-color: FB7D4D">`+ qoe_values[e_value][k] +`</td>`
+                        } else {
+                            especific_body += `<td>`+ qoe_values[e_value][k] +`</td>`
                         }
                     }
                 }
