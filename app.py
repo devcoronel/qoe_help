@@ -1,4 +1,3 @@
-from datetime import date
 from flask import Flask, render_template, request, jsonify, url_for, redirect
 from main import algorithm, dayly, priority, modulation
 from up import upload, verify_upload
@@ -22,38 +21,20 @@ def error_404(error):
 def error_500(error):
     return render_template('error.html', number = 500)
 
-@app.route('/hours', methods = ['GET', 'POST'])
-@limiter.limit("2/second")
-def hours():
-    if request.method == 'GET':
-        return render_template('index.html', route = 0, title = "Horas con QoE bajo", x = 'NEW_HOURS')
-    elif request.method == 'POST':
-        node = request.form['node']
-        days = request.form['days']
-        data = algorithm(node, days, 'NEW_HOURS', False)
-        return data
 
-@app.route('/qoe', methods = ['GET', 'POST'])
+@app.route('/analysis', methods = ['GET', 'POST'])
 @limiter.limit("2/second")
 def qoe():
     if request.method == 'GET':
-        return render_template('index.html', route = 0, title = "Estado diario QoE", x = 'NEW_QOE')
+        return render_template('index.html', route = 0)
+
     elif request.method == 'POST':
+        parameter = request.form['type']
         node = request.form['node']
         days = request.form['days']
-        data = algorithm(node, days, 'NEW_QOE', False)
+        data = algorithm(node, days, parameter, False)
         return data
 
-@app.route('/period', methods = ['GET', 'POST'])
-@limiter.limit("2/second")
-def period():
-    if request.method == 'GET':
-        return render_template('index.html', route = 0, title = "Periodo", x = 'PERIOD')
-    elif request.method == 'POST':
-        node = request.form['node']
-        days = request.form['days']
-        data = algorithm(node, days, 'PERIOD', False)
-        return data
 
 @app.route(r'/detail', methods = ['GET', 'POST'])
 @app.route(r'/detail/<string:node>', methods = ['GET'])
@@ -109,32 +90,22 @@ def detail(node = None):
             pass
 
 @app.route('/priority', methods=['POST', 'GET'])
-@limiter.limit("1/2second")
+@limiter.limit("2/second")
 def my_priority():
     if request.method == 'GET':
         data = priority()
-        # general_values = data[0]
-        # especific_values = data[1]
-        # qoe_values = data[2]
-        # hours_values = data[3]
-        # period_values = data[4]
-        # modulation_values = data[5]
-        # dates = data[6]
         return render_template('index.html', route = 2, data = {'msg': data})
     
     elif request.method == 'POST':
         
         return 0
 
-@app.route('/modulation',methods=['POST', 'GET'])
-@limiter.limit("1/2second")
+@app.route('/modulation')
+@limiter.limit("2/second")
 def my_modulation():
-    if request.method == 'GET':
-        data = modulation(True)
-        return render_template('index.html', route = 3, data = {'msg': data})
+    data = modulation()
+    return render_template('index.html', route = 3, data = {'msg': data})
     
-    elif request.method == 'POST':
-        return 0
 
 @app.route('/upload', methods=['POST', 'GET'])
 @limiter.limit("2/second")
@@ -171,7 +142,7 @@ def my_dayly():
     elif request.method == 'POST':
         date = request.form["date"]
         data = dayly(date)
-        return data
+        return {'msg': data}
 
 @app.route('/info')
 @limiter.limit("2/second")
@@ -182,5 +153,4 @@ def indexe():
 if __name__ == '__main__':
     app.run(host= "0.0.0.0", port=8080, debug=False)
 
-# DAR DETALLE DE US, DS, T3
 # CREAR PÁGINA PARA POWER BI

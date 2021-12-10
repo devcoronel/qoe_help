@@ -16,7 +16,50 @@ function sortTable(n, name_table) {
             x = rows[i].getElementsByTagName("TD")[n];
             y = rows[i + 1].getElementsByTagName("TD")[n];
 
-            if (myroute == 'hours' || myroute == 'qoe' || myroute == 'modulation') {
+            if (myroute == 'analysis'){
+                
+                if (name_table == 'PERIOD') {
+                    if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                } else {
+                    if (n == 0){
+                        if (dir == "desc") {
+                            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                                shouldSwitch = true;
+                                break;
+                                }
+                            } else if (dir == "asc") {
+                                if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                                    shouldSwitch = true;
+                                    break;
+                                    }
+                                }
+                    } else {
+                        if (dir == "desc") {
+                            if (parseFloat(x.innerHTML.toLowerCase()) > parseFloat(y.innerHTML.toLowerCase())) {
+                                shouldSwitch = true;
+                                break;
+                                }
+                            } else if (dir == "asc") {
+                                if (parseFloat(x.innerHTML.toLowerCase()) < parseFloat(y.innerHTML.toLowerCase())) {
+                                    shouldSwitch = true;
+                                    break;
+                                    }
+                                }
+                        
+                    }
+                }
+
+            } else if (myroute == 'modulation') {
                 if (n == 0){
                     if (dir == "desc") {
                         if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
@@ -43,21 +86,68 @@ function sortTable(n, name_table) {
                             }
                     
                 }
-            } else if (myroute == 'period'){
-                if (dir == "desc") {
-                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                        shouldSwitch = true;
-                        break;
+            } else if (myroute == 'priority'){
+
+                if (name_table == 'generaltable') {
+                    if (n !== 5){
+                        if (dir == "desc") {
+                            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                                shouldSwitch = true;
+                                break;
+                            }
+                        } else if (dir == "asc") {
+                            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                                shouldSwitch = true;
+                                break;
+                            }
+                        }
+        
+                    } else {
+                        if (dir == "desc") {
+                            if (parseFloat(x.innerHTML.toLowerCase()) > parseFloat(y.innerHTML.toLowerCase())) {
+                                shouldSwitch = true;
+                                break;
+                            }
+                        } else if (dir == "asc") {
+                            if (parseFloat(x.innerHTML.toLowerCase()) < parseFloat(y.innerHTML.toLowerCase())) {
+                                shouldSwitch = true;
+                                break;
+                            }
+                        }
+                        
                     }
-                } else if (dir == "asc") {
-                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-                        shouldSwitch = true;
-                        break;
+                } else if (name_table == 'especifictable') {
+                    if (n !== 2){
+                        if (dir == "desc") {
+                            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                                shouldSwitch = true;
+                                break;
+                            }
+                        } else if (dir == "asc") {
+                            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                                shouldSwitch = true;
+                                break;
+                            }
+                        }
+        
+                    } else {
+                        if (dir == "desc") {
+                            if (parseFloat(x.innerHTML.toLowerCase()) > parseFloat(y.innerHTML.toLowerCase())) {
+                                shouldSwitch = true;
+                                break;
+                            }
+                        } else if (dir == "asc") {
+                            if (parseFloat(x.innerHTML.toLowerCase()) < parseFloat(y.innerHTML.toLowerCase())) {
+                                shouldSwitch = true;
+                                break;
+                            }
+                        }
+                        
                     }
                 }
 
-            } else {
-                if (n !== 5){
+            } else if (myroute == 'dayly'){
+                if (n == 0 || n == 3){
                     if (dir == "desc") {
                         if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
                             shouldSwitch = true;
@@ -84,7 +174,6 @@ function sortTable(n, name_table) {
                     }
                     
                 }
-
             }
                 
         }

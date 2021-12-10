@@ -3,6 +3,7 @@ min_afected_hours = 3
 days_priority = 8
 days_detail = 8
 days_modulation = 8
+days_dayly = 8
 umbral_ch_mod = 2
 
 umbral_night = 16

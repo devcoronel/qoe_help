@@ -190,22 +190,58 @@ def algorithm(my_node, my_days, x, also_today, only_one = False): # x only can b
             if also_today:    
                 dates.insert(0, today.strftime("%d/%m/20%y"))
 
-    return {"msg": [value_nodes, dates]}
+    return {"msg": [value_nodes, dates, x]}
 
-def data_priority(table, afected_id_nodes, dates):
-    query = "SELECT "
+def data_priority(general_or_especific, table, dates):
+
+    sum_dates_general = ""
+    sum_dates_afected = ""
+    sum_dates_especific = ""
     for date in dates:
-        query += "`"+ date + "`,"
-    query = query[:-1]
-    query += " FROM {} WHERE ID_NODE IN {};".format(table, afected_id_nodes)
+        sum_dates_general += "`"+ date + "` + "
+        sum_dates_afected += "AFECTED_DAYS.`"+ date + "` + "
+        sum_dates_especific += "{}.`".format(table) + date + "` , "
+    sum_dates_general =  sum_dates_general[:-2]
+    sum_dates_afected =  sum_dates_afected[:-2]
+    sum_dates_especific =  sum_dates_especific[:-2]
 
-    cursor = mydb.cursor()
-    cursor.execute(query)
-    result = cursor.fetchall()
-    # FALTA
+    if general_or_especific == 'G':
+
+        query = """SELECT PLANO, DEPENDENCIA, IMPEDIMENTO, REVISION, TIPO, SUM({0}) AS DAYS, PROBLEMA, ESTADO FROM STATUS_NODE
+        INNER JOIN NODES ON NODES.ID = STATUS_NODE.ID_NODE
+        INNER JOIN AFECTED_DAYS ON NODES.ID = AFECTED_DAYS.ID_NODE
+        WHERE STATUS_NODE.ID_NODE IN (
+        SELECT ID_NODE FROM AFECTED_DAYS
+        WHERE {0} >= 2)
+        GROUP BY STATUS_NODE.ID_NODE
+        ORDER BY DAYS DESC;""".format(sum_dates_general)
+
+        cursor = mydb.cursor()
+        cursor.execute(query)
+        result = cursor.fetchall()
+
+        return result
+
+    if general_or_especific == 'E':
+
+        query = """SELECT PLANO, TIPO, SUM({0}) AS DAYS, PROBLEMA, ESTADO, {1} FROM {2}
+        INNER JOIN NODES ON NODES.ID = {2}.ID_NODE
+        INNER JOIN STATUS_NODE ON NODES.ID = STATUS_NODE.ID_NODE
+        INNER JOIN AFECTED_DAYS ON NODES.ID = AFECTED_DAYS.ID_NODE
+        WHERE {2}.ID_NODE IN (
+        SELECT ID_NODE FROM AFECTED_DAYS
+        WHERE {3} >= 2)
+        GROUP BY STATUS_NODE.ID_NODE
+        ORDER BY DAYS DESC;""".format(sum_dates_afected, sum_dates_especific, table, sum_dates_general)
+
+        cursor = mydb.cursor()
+        cursor.execute(query)
+        result = cursor.fetchall()
+
+        return result
 
 
-def new_priority():
+def priority():
     days = days_priority
     dates = []
     today_utc = dt.datetime.utcnow()
@@ -216,154 +252,151 @@ def new_priority():
     dates.pop(0)
     
     new_dates = []
-    dates = if_column_exists('AFECTED_DAYS', dates, new_dates)
 
-    query = "SELECT ID_NODE FROM AFECTED_DAYS WHERE "
+    try:
+        dates = if_column_exists('AFECTED_DAYS', dates, new_dates)
+
+        if dates == []:
+            return "No hay data en estos últimos {} días".format(days)
+        
+        else:
+            general_priority = data_priority('G', '', dates)
+            especific_priority_qoe =data_priority('E', 'NEW_QOE', dates) 
+            especific_priority_hours =data_priority('E', 'NEW_HOURS', dates) 
+            especific_priority_period =data_priority('E', 'PERIOD', dates) 
+            especific_priority_modulation =data_priority('E', 'MODULATION', dates)
+
+            return [general_priority, especific_priority_qoe, especific_priority_hours, especific_priority_period, especific_priority_modulation, dates]
+
+    except:
+        return "Error en la conexión con la Base de Datos"
+
+def data_modulation(dates):
+
+    query_dates = ""
     for date in dates:
-        query += "`"+ date + "`+"
-    query = query[:-1]
-    query += ">= 2;"
+        query_dates += "`"+ date + "` , "
+    query_dates =  query_dates[:-2]
+
+    try:
+        query = """
+        SELECT PLANO, {} FROM MODULATION
+        INNER JOIN NODES ON NODES.ID = MODULATION.ID_NODE
+        WHERE ID_NODE IN (
+        SELECT ID_NODE FROM MODULATION
+        WHERE `{}` >= 1 AND `{}` >= 1);
+        """.format(query_dates, dates[0], dates[1])
+
+        cursor = mydb.cursor()
+        cursor.execute(query)
+        result = cursor.fetchall()
+
+        return result
+    
+    except:
+        return "Error en la conexión con la Base de Datos"
+
+
+def modulation():
+    days = days_modulation
+    dates = []
+    today_utc = dt.datetime.utcnow()
+    today = today_utc - dt.timedelta(hours=5)
+    
+    for day in range(days+1):
+        dates.append((today - dt.timedelta(days = day)).strftime("%d/%m/20%y"))
+    dates.pop(0)
+    
+    new_dates = []
+
+    try:
+        dates = if_column_exists('MODULATION', dates, new_dates)
+
+        if dates == []:
+            return "No hay data en estos últimos {} días".format(days)
+        
+        else:
+            values_modulation = data_modulation(dates)
+            return [values_modulation, dates]
+
+    except:
+        return "Error en la conexión con la Base de Datos"
+
+
+def data_dayly(dates, mydate):
+
+    sum_dates_general = ""
+    sum_dates_afected = ""
+    for date in dates:
+        sum_dates_general += "`"+ date + "` + "
+        sum_dates_afected += "AFECTED_DAYS.`"+ date + "` + "
+    sum_dates_general =  sum_dates_general[:-2]
+    sum_dates_afected =  sum_dates_afected[:-2]
+
+    query = """
+    SELECT PLANO,
+    NEW_QOE.`{0}` AS QOE,
+    NEW_HOURS.`{0}` AS HOURS,
+    PERIOD.`{0}` AS PERIOD,
+    MODULATION.`{0}` AS MODULATION,
+    SUM({1}) AS DAYS
+    FROM NODES
+    INNER JOIN NEW_QOE ON NEW_QOE.ID_NODE = NODES.ID
+    INNER JOIN NEW_HOURS ON NEW_HOURS.ID_NODE = NODES.ID
+    INNER JOIN PERIOD ON PERIOD.ID_NODE = NODES.ID
+    INNER JOIN MODULATION ON MODULATION.ID_NODE = NODES.ID
+    INNER JOIN AFECTED_DAYS ON NODES.ID = AFECTED_DAYS.ID_NODE
+    WHERE AFECTED_DAYS.ID_NODE IN (
+    SELECT ID_NODE FROM AFECTED_DAYS
+    WHERE {2} >= 2)
+    OR AFECTED_DAYS.ID_NODE IN (
+    SELECT ID_NODE FROM MODULATION
+    WHERE `{3}` >= 1 AND `{4}` >= 1)
+    GROUP BY AFECTED_DAYS.ID_NODE
+    ORDER BY DAYS DESC;
+    """.format(mydate, sum_dates_afected, sum_dates_general, dates[0], dates[1])
 
     cursor = mydb.cursor()
     cursor.execute(query)
     result = cursor.fetchall()
-    
-    afected_id_nodes = []
-    for id_node in result:
-        afected_id_nodes.append(id_node[0])
-    afected_id_nodes = str(tuple(afected_id_nodes))
-    # OPTIMIZAR PRIORITY
 
+    return result
 
-
-new_priority()
-
-def priority():
-
-    try:
-        days = days_priority
-        dates = []
-        today_utc = dt.datetime.utcnow()
-        today = today_utc - dt.timedelta(hours=5)
-        
-        for day in range(days+1):
-            dates.append((today - dt.timedelta(days = day)).strftime("%d/%m/20%y"))
-        dates.pop(0)
-        
-        new_dates = []
-        dates = if_column_exists('AFECTED_DAYS', dates, new_dates)
-        
-        general_values = []
-        especific_values = []
-        total_especific_qoe = []
-        total_especific_hours = []
-        total_especific_period = []
-        total_especific_modulation = []
-        # Iterar planos
-        query = "SELECT * FROM NODES;"
-        cursor = mydb.cursor()
-        cursor.execute(query)
-        result = cursor.fetchall()
-        
-        for node in result:
-            general_value = []
-            especific_value = []
-
-            result_1 = get_values_in_dates(dates, "AFECTED_DAYS", int(node[0]))
-            suma = sum(result_1)
-
-            if suma > 1:
-                general_value.append(node[1])
-                especific_value.append(node[1])
-                
-                query2 = "SELECT DEPENDENCIA, IMPEDIMENTO, REVISION, TIPO, PROBLEMA, ESTADO FROM STATUS_NODE WHERE ID_NODE = {}".format(node[0])
-                cursor = mydb.cursor()
-                cursor.execute(query2)
-                result_2 = cursor.fetchall()
-                result_2 = list(result_2[0])
-
-                for item in result_2:
-                    general_value.append(item)
-                    especific_value.append(item)
-                especific_value.pop(1)
-                especific_value.pop(1)
-                especific_value.pop(1)
-                
-                general_value.insert(5, suma)
-                especific_value.insert(2, suma)
-
-                general_values.append(general_value)
-                especific_values.append(especific_value)
-
-                total_especific_qoe.append(get_values_in_dates(dates, "NEW_QOE", int(node[0])))
-                total_especific_hours.append(get_values_in_dates(dates, "NEW_HOURS", int(node[0])))
-                total_especific_period.append(get_values_in_dates(dates, "PERIOD", int(node[0])))
-                total_especific_modulation.append(get_values_in_dates(dates, "MODULATION", int(node[0])))
-
-
-        # general_values = [[[LMLO066, DEPENDENCIA, IMPEDIMENTO, REVISION, TIPO, DIAS, PROBLEMA, ESTADO, V_FECHA1, V_FECHA3], []], [FECHA1, FECHA2, FECHA3]]
-        # especific_values = [[[LMLO066, TIPO, DIAS, PROBLEMA, ESTADO, V_FECHA1, V_FECHA3], []], [FECHA1, FECHA2, FECHA3]]
-        return [general_values, especific_values , total_especific_qoe, total_especific_hours, total_especific_period, total_especific_modulation, dates]
-
-    except:
-        return "Error en la conexión con la Base de Datos"
-
-def modulation(for_modulation):
-    # for_modulation = True # La función se usa para el ranking de modulación
-    # for_modulation = False # La función se usa para el detalle de un plano
-    try:
-        days = days_modulation
-        dates = []
-        today_utc = dt.datetime.utcnow()
-        today = today_utc - dt.timedelta(hours=5)
-        
-        for day in range(days+1):
-            dates.append((today - dt.timedelta(days = day)).strftime("%d/%m/20%y"))
-        dates.pop(0)
-        
-        new_dates = []
-        dates = if_column_exists('MODULATION', dates, new_dates)
-
-        values = []
-        # Iterar planos
-        query = "SELECT * FROM NODES;"
-        cursor = mydb.cursor()
-        cursor.execute(query)
-        result = cursor.fetchall()
-        
-        for node in result:
-            value = []
-            query1 = "SELECT"
-            for date in dates:
-                query1 = query1 + "`"+ date + "`,"
-            query1 = query1[:-1]
-            query1 = query1 + " FROM MODULATION WHERE ID_NODE = {};".format(int(node[0]))
-            cursor = mydb.cursor()
-            cursor.execute(query1)
-            result_1 = cursor.fetchall()
-
-            if for_modulation == True:
-                suma = sum(result_1[0])
-
-                if suma >= umbral_ch_mod:
-                    value.append(node[1])
-                    for nmod in result_1[0]:
-                        value.append(nmod)
-                    values.append(value)
-        return [values, dates]
-    
-    except:
-        return "Error en la conexión con la Base de Datos"
+# data_dayly(['06/12/2021', '05/12/2021', '04/12/2021'])
 
 def dayly(date):
-    today = dt.datetime.utcnow() - dt.timedelta(hours=5)
+    days = days_modulation
+    dates = []
+    today_utc = dt.datetime.utcnow()
+    today = today_utc - dt.timedelta(hours=5)
+    
+    for day in range(days+1):
+        dates.append((today - dt.timedelta(days = day)).strftime("%d/%m/20%y"))
+    dates.pop(0)
+    
+    new_dates = []
     my_date = dt.datetime(int(date[0:4]), int(date[5:7]), int(date[8:10]))
-    if my_date > today:
-        return {"msg":"No hay data para esta fecha"}
-    elif my_date.strftime("%d/%m/20%y") == today.strftime("%d/%m/20%y"):
-        return {"msg":"Todavía no hay data para esta fecha"}
-    else:
-        pass
 
-    ytd = my_date.strftime("%d/%m/20%y")
-    return {'msg': [[], [ytd]]}
+    if my_date > today:
+        return "No hay data para esta fecha"
+
+    elif my_date.strftime("%d/%m/20%y") == today.strftime("%d/%m/20%y"):
+        return "Todavía no hay data para esta fecha"
+
+    else:
+
+        try:
+        # if True:
+            dates = if_column_exists('MODULATION', dates, new_dates)
+
+            if dates == [] or (my_date.strftime("%d/%m/20%y") not in dates):
+                print(dates)
+                return "No hay data para la fecha {}".format(my_date.strftime("%d/%m/20%y"))
+            
+            else:
+                values_dayly = data_dayly(dates, my_date.strftime("%d/%m/20%y"))
+                return [values_dayly, my_date.strftime("%d/%m/20%y")]
+
+        except:
+        # else:
+            return "Error en la conexión con la Base de Datos"

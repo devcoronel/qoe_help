@@ -1,5 +1,5 @@
 let load = document.getElementById("loading");
-let table = document.getElementById("my_table");
+let table = document.getElementById("div_dayly_table");
 
 const myform = document.getElementById("form_sumary");
 
@@ -21,30 +21,28 @@ myform.addEventListener("submit", function (e) {
 		.then(data => {
 			if(typeof(data.msg) === 'object') {
 				let elements = data.msg[0]
-				let dates = data.msg[1]
+				let today = data.msg[1]
 
 				let tablehtml = `
-                <table class="table table-hover" id="daylytable" data-excel-name="Diario_`+ dates +`" >
+                <table class="table table-hover" id="daylytable">
                 <thead class="table-dark">
                 <td onclick="sortTable(0, 'daylytable')" class="header"><strong>Plano</strong></td>
-				<td onclick="sortTable(1, 'hourstable')" class="header"><strong>QoE</strong></td>
-				<td onclick="sortTable(2, 'hourstable')" class="header"><strong>Horas</strong></td>
-				<td onclick="sortTable(3, 'hourstable')" class="header"><strong>Periodo</strong></td>
-				<td onclick="sortTable(4, 'hourstable')" class="header"><strong>Cambios Modulación</strong></td>`
+				<td onclick="sortTable(1, 'daylytable')" class="header"><strong>QoE</strong></td>
+				<td onclick="sortTable(2, 'daylytable')" class="header"><strong>Horas</strong></td>
+				<td onclick="sortTable(3, 'daylytable')" class="header"><strong>Periodo</strong></td>
+				<td onclick="sortTable(4, 'daylytable')" class="header"><strong>Cambios Modulación</strong></td>
+				<td onclick="sortTable(5, 'daylytable')" class="header"><strong>Días</strong></td>`
 				tablehtml += '</thead><tbody>'
 				
 				for(let i in elements){
-					// let n = parseInt(i) + 1
-					let key = Object.keys(elements[i])
-					let values = elements[i][key]
 
-					tablehtml += '</td><td><a href="/detail/'+ key +'" target= "_blank">'+ key +'</a></td>'
+					tablehtml += `<tr><td><a href="/detail/`+ elements[i][0] +`" target= "_blank">`+ elements[i][0] +`</a></td>
+					<td>`+ elements[i][1] +`</td>
+					<td>`+ elements[i][2] +`</td>
+					<td>`+ elements[i][3] +`</td>
+					<td>`+ elements[i][4] +`</td>
+					<td>`+ elements[i][5] +`</td></tr>`
 
-					for(let j in values) {
-						tablehtml += '<td>'+ values[j] +'</td>'
-					}
-				tablehtml += '</tr>'
-						
 				}
 				tablehtml += '</tbody></table>'
 				load.innerHTML = ''

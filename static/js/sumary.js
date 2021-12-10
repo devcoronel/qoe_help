@@ -2,8 +2,6 @@ let mynode = document.getElementById("id-node");
 let mydays = document.getElementById("id-days");
 let load = document.getElementById("loading");
 let table = document.getElementById("my_table");
-let x = document.getElementById("x").innerHTML;
-let value_x = "";
 
 const myform = document.getElementById("form_sumary");
 
@@ -16,15 +14,8 @@ myform.addEventListener("submit", function (e) {
 		</div>
 	`
 	const formData = new FormData(this);
-	if(x == 'NEW_HOURS') {
-		value_x = "/hours"
-	} else if(x == 'NEW_QOE') {
-		value_x = "/qoe"
-	} else {
-		value_x = "/period"
-	}
 
-	fetch(value_x , {
+	fetch("/analysis" , {
 		method: 'POST',
 		body: formData
 	})
@@ -33,12 +24,13 @@ myform.addEventListener("submit", function (e) {
 			if(typeof(data.msg) === 'object') {
 				let elements = data.msg[0]
 				let dates = data.msg[1]
+				let id_table = data.msg[2]
 
-				let tablehtml = `<table class="table table-hover" id="hourstable" data-excel-name="Horas_QoE_afectado" ><thead class="table-dark"><td onclick="sortTable(0, 'hourstable')" class="header"><strong>Plano</strong></td>`
+				let tablehtml = `<table class="table table-hover" id="`+ id_table +`"><thead class="table-dark"><td onclick="sortTable(0, '`+ id_table +`')" class="header"><strong>Plano</strong></td>`
 							
 				for (let i in dates) {
 					let a = parseInt(i)+1
-					tablehtml += `<td onclick="sortTable(`+ a +`, 'hourstable')" class="header"><strong>`+ dates[i] +`</strong></td>`
+					tablehtml += `<td onclick="sortTable(`+ a +`, '`+ id_table +`')" class="header"><strong>`+ dates[i] +`</strong></td>`
 				}
 				tablehtml += '</thead><tbody>'
 				

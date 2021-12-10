@@ -2,15 +2,9 @@ let url = window.location.href;
 let split = url.split("/");
 let route = split[split.length - 1]
 
-if (route == "hours") {
-    let hours = document.getElementById("hours");
-    hours.innerHTML = `<a class="nav-link fw-bold" href="/hours">Horas</a>`;
-} else if (route == "qoe") {
-    let qoe = document.getElementById("qoe");
-    qoe.innerHTML = `<a class="nav-link fw-bold" href="/qoe">QoE</a>`;
-} else if (route == "period") {
-    let period = document.getElementById("period");
-    period.innerHTML = `<a class="nav-link fw-bold" href="/period">Periodo</a>`;
+if (route == "analysis") {
+    let analysis = document.getElementById("analysis");
+    analysis.innerHTML = `<a class="nav-link fw-bold" href="/analysis">Análisis</a>`;
 } else if (route == "info") {
     let info = document.getElementById("info");
     info.innerHTML = `<a class="nav-link fw-bold" href="/info">Info</a>`;
