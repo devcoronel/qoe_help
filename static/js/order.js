@@ -60,7 +60,7 @@ function sortTable(n, name_table) {
                 }
 
             } else if (myroute == 'modulation') {
-                if (n == 0){
+                if (n == 0 || n == 1){
                     if (dir == "desc") {
                         if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
                             shouldSwitch = true;
@@ -89,7 +89,7 @@ function sortTable(n, name_table) {
             } else if (myroute == 'priority'){
 
                 if (name_table == 'generaltable') {
-                    if (n !== 5){
+                    if (n !== 6){
                         if (dir == "desc") {
                             if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
                                 shouldSwitch = true;
@@ -117,7 +117,7 @@ function sortTable(n, name_table) {
                         
                     }
                 } else if (name_table == 'especifictable') {
-                    if (n !== 2){
+                    if (n !== 3){
                         if (dir == "desc") {
                             if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
                                 shouldSwitch = true;
@@ -147,7 +147,7 @@ function sortTable(n, name_table) {
                 }
 
             } else if (myroute == 'dayly'){
-                if (n == 0 || n == 3){
+                if (n == 0 || n == 1 || n == 4){
                     if (dir == "desc") {
                         if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
                             shouldSwitch = true;

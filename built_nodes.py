@@ -4,7 +4,6 @@ from constants import url_ext, url_int
 
 def normalize(node):
     node.pop("modems")
-    node.pop("cmts")
     node.pop("cmtsNodeId")
     node.pop("cmtsNode")
     node.pop("rphyMac")
@@ -46,16 +45,22 @@ def get_nodes(cookie):
 
             if re.search("^LM", node["name"], re.IGNORECASE):
                 normalize(node)
+                if node["cmts"] == None:
+                    node["cmts"] = "-"
                 lima_nodes.append(node)
-            
+
             elif re.search("^LAMO", node["name"], re.IGNORECASE):
                 normalize(node)
+                if node["cmts"] == None:
+                    node["cmts"] = "-"
                 lima_nodes.append(node)
 
             elif re.search("^5", node["name"], re.IGNORECASE):
                 normalize(node)
+                if node["cmts"] == None:
+                    node["cmts"] = "-"
                 lima_nodes.append(node)
-            
+
             else:
                 pass
         

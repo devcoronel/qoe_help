@@ -1,10 +1,12 @@
 import mysql.connector
 import datetime as dt
 import json
+from mysql.connector import connection
 import requests
 from requests.exceptions import RetryError
 from built_nodes import get_nodes
 from constants import *
+from xpertrak_login import get_cookie
 
 mydb = mysql.connector.connect(
     host= mysql_host,
@@ -16,18 +18,21 @@ mydb = mysql.connector.connect(
     # Fuente: https://stackoverflow.com/questions/50557234/authentication-plugin-caching-sha2-password-is-not-supported
 )
 
-def init(cookie):
+def init():
     try:
+    # if True:
+        cookie = get_cookie()
         lima_nodes = get_nodes(cookie)
 
         for node in lima_nodes:
-            query = "INSERT INTO NODES (PLANO) VALUES ('{}');".format(node["name"])
+            query = "INSERT INTO NODES (PLANO, CMTS) VALUES ('{}', '{}');".format(node["name"], node["cmts"])
             cursor = mydb.cursor()
             cursor.execute(query)
             mydb.commit()
         return print("======== ¡SUCCESS! ========")
 
     except:
+    # else:
         return print("Error")
 
 def complete():
@@ -184,30 +189,49 @@ def upload(lima_nodes, ytd, my_date_plus):
                     dia = period.count("DIA")
                     madrugada = period.count("MADRUGADA")
 
-                    if dia > 24 and noche > 12:
-                        value_period = "TODO EL DIA"
-                    elif dia > 24 and noche <= 12:
-                        value_period = "DIA"
-                    elif dia > 12 and noche > 12:
-                        if dia >= noche:
-                            value_period = "DIA"
+                    if dia >= 24:
+                        if noche >= 12:
+                            value_period = "TODO EL DIA"
                         else:
-                            value_period = "NOCHE"
-                    elif dia > 12 and noche <= 12:
-                        value_period = "DIA"
-                    elif dia <= 12 and noche > 12:
-                        value_period = "NOCHE"
-                    elif dia <= 12 and noche <= 12:
-                        if dia > 8 and noche > 8:
                             value_period = "DIA"
-                        elif dia > 8:
-                            value_period = "DIA"
-                        elif noche > 8:
-                            value_period = "NOCHE"
+                    else:
+                        if dia >= 12:
+                            if noche >= 12:
+                                value_period = "TODO EL DIA"
+                            else:
+                                value_period = "DIA"
                         else:
-                            value_period = "NO AFECTADO"
+                            if noche >= 12:
+                                value_period = "NOCHE"
+                            else:
+                                if madrugada >= 12:
+                                    value_period = "MADRUGADA"
+                                else:
+                                    value_period = "NO AFECTADO"
 
-                    
+                    # if dia > 24 and noche > 12:
+                    #     value_period = "TODO EL DIA"
+                    # elif dia > 24 and noche <= 12:
+                    #     value_period = "DIA"
+                    # elif dia > 12 and noche > 12:
+                    #     if dia >= noche:
+                    #         value_period = "DIA"
+                    #     else:
+                    #         value_period = "NOCHE"
+                    # elif dia > 12 and noche <= 12:
+                    #     value_period = "DIA"
+                    # elif dia <= 12 and noche > 12:
+                    #     value_period = "NOCHE"
+                    # elif dia <= 12 and noche <= 12:
+                    #     if dia > 8 and noche > 8:
+                    #         value_period = "DIA"
+                    #     elif dia > 8:
+                    #         value_period = "DIA"
+                    #     elif noche > 8:
+                    #         value_period = "NOCHE"
+                    #     else:
+                    #         value_period = "NO AFECTADO"
+
                     insert_value('NEW_HOURS', ytd, value_hours, node["name"])
                     insert_value('NEW_QOE', ytd, value_qoe, node["name"])
                     insert_value('PERIOD', ytd, value_period, node["name"])
@@ -240,10 +264,8 @@ def upload(lima_nodes, ytd, my_date_plus):
                 print(link_modul)
 
             # DIAS AFECTADO
-            if (value_qoe < min_qoe and value_qoe >= 0) or (value_hours > min_afected_hours):# or (value_modulation >= 1):
+            if (value_qoe < min_qoe and value_qoe >= 0) or (value_hours >= min_afected_hours):
                 value_afected = 1
-
-            print(value_qoe, value_hours, value_period, value_modulation, value_afected)
 
             insert_value('AFECTED_DAYS', ytd, value_afected, node["name"])
 

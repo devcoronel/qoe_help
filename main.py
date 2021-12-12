@@ -136,31 +136,55 @@ def algorithm(my_node, my_days, x, also_today, only_one = False): # x only can b
                                     period.append("NOCHE")
                                 elif hour > umbral_morning_afternoon:
                                     period.append("DIA")
-                        total_noche = period.count("NOCHE")
-                        total_dia = period.count("DIA")
+                                else:
+                                    period.append("MADRUGADA")
+                                    
+                        noche = period.count("NOCHE")
+                        dia = period.count("DIA")
+                        madrugada = period.count("MADRUGADA")
 
-                        if total_dia > 24 and total_noche > 12:
-                            value_period = "TODO EL DIA"
-                        elif total_dia > 24 and total_noche <= 12:
-                            value_period = "DIA"
-                        elif total_dia > 12 and total_noche > 12:
-                            if total_dia >= total_noche:
-                                value_period = "DIA"
+                        if dia >= 24:
+                            if noche >= 12:
+                                value_period = "TODO EL DIA"
                             else:
-                                value_period = "NOCHE"
-                        elif total_dia > 12 and total_noche <= 12:
-                            value_period = "DIA"
-                        elif total_dia <= 12 and total_noche > 12:
-                            value_period = "NOCHE"
-                        elif total_dia <= 12 and total_noche <= 12:
-                            if total_dia > 8 and total_noche > 8:
                                 value_period = "DIA"
-                            elif total_dia > 8:
-                                value_period = "DIA"
-                            elif total_noche > 8:
-                                value_period = "NOCHE"
+                        else:
+                            if dia >= 12:
+                                if noche >= 12:
+                                    value_period = "TODO EL DIA"
+                                else:
+                                    value_period = "DIA"
                             else:
-                                value_period = "NO AFECTADO"
+                                if noche >= 12:
+                                    value_period = "NOCHE"
+                                else:
+                                    if madrugada >= 12:
+                                        value_period = "MADRUGADA"
+                                    else:
+                                        value_period = "NO AFECTADO"
+
+                        # if total_dia > 24 and total_noche > 12:
+                        #     value_period = "TODO EL DIA"
+                        # elif total_dia > 24 and total_noche <= 12:
+                        #     value_period = "DIA"
+                        # elif total_dia > 12 and total_noche > 12:
+                        #     if total_dia >= total_noche:
+                        #         value_period = "DIA"
+                        #     else:
+                        #         value_period = "NOCHE"
+                        # elif total_dia > 12 and total_noche <= 12:
+                        #     value_period = "DIA"
+                        # elif total_dia <= 12 and total_noche > 12:
+                        #     value_period = "NOCHE"
+                        # elif total_dia <= 12 and total_noche <= 12:
+                        #     if total_dia > 8 and total_noche > 8:
+                        #         value_period = "DIA"
+                        #     elif total_dia > 8:
+                        #         value_period = "DIA"
+                        #     elif total_noche > 8:
+                        #         value_period = "NOCHE"
+                        #     else:
+                        #         value_period = "NO AFECTADO"
                         
                         value_node.append(value_period)
                     
@@ -207,7 +231,7 @@ def data_priority(general_or_especific, table, dates):
 
     if general_or_especific == 'G':
 
-        query = """SELECT PLANO, DEPENDENCIA, IMPEDIMENTO, REVISION, TIPO, SUM({0}) AS DAYS, PROBLEMA, ESTADO FROM STATUS_NODE
+        query = """SELECT CMTS, PLANO, DEPENDENCIA, IMPEDIMENTO, REVISION, TIPO, SUM({0}) AS DAYS, PROBLEMA, ESTADO FROM STATUS_NODE
         INNER JOIN NODES ON NODES.ID = STATUS_NODE.ID_NODE
         INNER JOIN AFECTED_DAYS ON NODES.ID = AFECTED_DAYS.ID_NODE
         WHERE STATUS_NODE.ID_NODE IN (
@@ -224,7 +248,7 @@ def data_priority(general_or_especific, table, dates):
 
     if general_or_especific == 'E':
 
-        query = """SELECT PLANO, TIPO, SUM({0}) AS DAYS, PROBLEMA, ESTADO, {1} FROM {2}
+        query = """SELECT CMTS, PLANO, TIPO, SUM({0}) AS DAYS, PROBLEMA, ESTADO, {1} FROM {2}
         INNER JOIN NODES ON NODES.ID = {2}.ID_NODE
         INNER JOIN STATUS_NODE ON NODES.ID = STATUS_NODE.ID_NODE
         INNER JOIN AFECTED_DAYS ON NODES.ID = AFECTED_DAYS.ID_NODE
@@ -280,7 +304,7 @@ def data_modulation(dates):
 
     try:
         query = """
-        SELECT PLANO, {} FROM MODULATION
+        SELECT CMTS, PLANO, {} FROM MODULATION
         INNER JOIN NODES ON NODES.ID = MODULATION.ID_NODE
         WHERE ID_NODE IN (
         SELECT ID_NODE FROM MODULATION
@@ -334,7 +358,7 @@ def data_dayly(dates, mydate):
     sum_dates_afected =  sum_dates_afected[:-2]
 
     query = """
-    SELECT PLANO,
+    SELECT CMTS, PLANO,
     NEW_QOE.`{0}` AS QOE,
     NEW_HOURS.`{0}` AS HOURS,
     PERIOD.`{0}` AS PERIOD,
