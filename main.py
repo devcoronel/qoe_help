@@ -1,7 +1,7 @@
 import json, requests
 import datetime as dt
 from lima_nodes import lima_nodes
-from up import mydb, get_values_in_dates
+from up import mydb, get_values_in_dates, get_period
 from constants import *
 import re
 
@@ -23,7 +23,70 @@ def if_column_exists(x, dates, new_dates):
     dates = new_dates
     return dates
 
-def algorithm(my_node, my_days, x, also_today, only_one = False): # x only can be 'HOURS' or 'QOE'
+def data_analysis(dates, table, regex):
+
+    query_dates = ""
+    for date in dates:
+        query_dates += "`"+ date + "` , "
+    query_dates =  query_dates[:-2]
+
+    query = """
+    SELECT CMTS, PLANO, {0} FROM NODES
+    INNER JOIN {1} ON {1}.ID_NODE = NODES.ID
+    WHERE PLANO REGEXP '^{2}';
+    """.format(query_dates, table, regex)
+
+    cursor = mydb.cursor()
+    cursor.execute(query)
+    result = cursor.fetchall()
+    if cursor.rowcount == 0:
+        return "Plano(s) no encontrado(s)"
+    else:
+        return result
+
+
+def analysis(regex, days, x):
+
+    try:
+        regex = str(regex).upper()
+        days = int(days)
+        if days == 0 or x not in ['NEW_QOE', 'NEW_HOURS', 'PERIOD', 'MODULATION']:
+            return "Dato(s) incorrectos"
+    except:
+        return "Dato(s) incorrectos"
+
+    dates = []
+    today_utc = dt.datetime.utcnow()
+    today = today_utc - dt.timedelta(hours=5)
+    
+    for day in range(days+1):
+        dates.append((today - dt.timedelta(days = day)).strftime("%d/%m/20%y"))
+    dates.pop(0)
+    new_dates = []
+
+    try:
+        dates = if_column_exists(x, dates, new_dates)
+
+        if dates == []:
+            return "No hay data en estos últimos {} días".format(days)
+        
+        else:
+            analysis = data_analysis(dates, x, regex)
+            if x == 'NEW_HOURS':
+                id_table = 'hourstable'
+            elif x == 'NEW_QOE':
+                id_table = 'qoetable'
+            elif x == 'PERIOD':
+                id_table = 'periodtable'
+            else:
+                id_table = 'modulationtable'
+            return [analysis, dates, id_table]
+    
+    except:
+        return "Error en la conexión con la Base de Datos"
+        
+
+def detail(my_node, my_days, x):
     match = []
     today_utc = dt.datetime.utcnow()
     today = today_utc - dt.timedelta(hours=5)
@@ -45,17 +108,11 @@ def algorithm(my_node, my_days, x, also_today, only_one = False): # x only can b
 
         if match == []:
             return {"msg": "Plano(s) no encontrado(s)"}
+        elif len(match) > 1:
+            return {"msg": "Se necesita especificar solo un plano"}
         
     except:
         return {"msg": "Dato(s) incorrectos"}
-
-    if only_one == True and len(match) > 1:
-        for only_node in match:
-            if my_node == only_node["name"]:
-                match = [only_node]
-        # Mejorar aqui, corre 3 veces
-        if len(match) > 1:
-            return {"msg": "Se necesita especificar solo un plano"}
     
     def create_link(nodeid, duration, date, x = True):
         if x:
@@ -77,122 +134,78 @@ def algorithm(my_node, my_days, x, also_today, only_one = False): # x only can b
     
     for node in match:
         value_node = []
-        if also_today:
 
-            if x == 'MODULATION':
-                link = create_link(node["nodeId"],duration_today, today_utc, False)
-                data = requests.get(link)
-                if data.status_code == 200:
-                    data = data.content
-                    mydata_modul = json.loads(data)
+        if x == 'MODULATION':
+            link = create_link(node["nodeId"],duration_today, today_utc, False)
+            data = requests.get(link)
+            if data.status_code == 200:
+                data = data.content
+                mydata_modul = json.loads(data)
 
-                    change_modul_group = []
-                    modul_node_dayly = []
-                    modul_node_dayly.append(mydata_modul["upstreamTotalChannels"])
-                    modul_node_dayly.append(mydata_modul["upstreamChannelCapacityHistory"])
+                change_modul_group = []
+                modul_node_dayly = []
+                modul_node_dayly.append(mydata_modul["upstreamTotalChannels"])
+                modul_node_dayly.append(mydata_modul["upstreamChannelCapacityHistory"])
 
-                    for modul in modul_node_dayly[1]:
-                        if modul["modChanged"] == True and modul["modType"] != "qam64":
-                            change_modul_group.append(modul)
-                    
-                    value_node.append(len(change_modul_group))
+                for modul in modul_node_dayly[1]:
+                    if modul["modChanged"] == True and modul["modType"] != "qam64":
+                        change_modul_group.append(modul)
                 
-                else:
-                    value_node.append("NO DATA")
-
+                value_node.append(len(change_modul_group))
+            
             else:
+                value_node.append("NO DATA")
 
-                link = create_link(node["nodeId"], duration_today, today_utc)
-                data = requests.get(link)
-                if data.status_code == 200:
-                    data = data.content
-                    data = json.loads(data)
+        else:
 
-                    if data == []:
-                        value_node.append("NO DATA")
-                    
-                    elif x == 'NEW_HOURS':
-                        counter = 0
-                        for j in data:
-                            if j["qoeScore"] < min_qoe:
-                                counter = counter + 1
-                        hours = (counter*15)/60
-                        value_node.append(hours)
-                    
-                    elif x == 'NEW_QOE':
-                        scores = []
-                        for j in data:
-                            scores.append(j["qoeScore"])
-                        qoe = round(sum(scores)/len(scores), 0)
-                        value_node.append(qoe)
-                    
-                    elif x == 'PERIOD':
-                        period = []
-                        for j in data:
-                            if j["qoeScore"] < min_qoe:
-                                ts = j["timestamp"]
-                                hour = int((dt.datetime(int(ts[0:4]), int(ts[5:7]), int(ts[8:10]), int(ts[11:13])) - dt.timedelta(hours=5)).strftime("%H"))
-                                if hour > umbral_night:
-                                    period.append("NOCHE")
-                                elif hour > umbral_morning_afternoon:
-                                    period.append("DIA")
-                                else:
-                                    period.append("MADRUGADA")
-                                    
-                        noche = period.count("NOCHE")
-                        dia = period.count("DIA")
-                        madrugada = period.count("MADRUGADA")
+            link = create_link(node["nodeId"], duration_today, today_utc)
+            data = requests.get(link)
+            if data.status_code == 200:
+                data = data.content
+                data = json.loads(data)
 
-                        if dia >= 24:
-                            if noche >= 12:
-                                value_period = "TODO EL DIA"
-                            else:
-                                value_period = "DIA"
-                        else:
-                            if dia >= 12:
-                                if noche >= 12:
-                                    value_period = "TODO EL DIA"
-                                else:
-                                    value_period = "DIA"
-                            else:
-                                if noche >= 12:
-                                    value_period = "NOCHE"
-                                else:
-                                    if madrugada >= 12:
-                                        value_period = "MADRUGADA"
-                                    else:
-                                        value_period = "NO AFECTADO"
-
-                        # if total_dia > 24 and total_noche > 12:
-                        #     value_period = "TODO EL DIA"
-                        # elif total_dia > 24 and total_noche <= 12:
-                        #     value_period = "DIA"
-                        # elif total_dia > 12 and total_noche > 12:
-                        #     if total_dia >= total_noche:
-                        #         value_period = "DIA"
-                        #     else:
-                        #         value_period = "NOCHE"
-                        # elif total_dia > 12 and total_noche <= 12:
-                        #     value_period = "DIA"
-                        # elif total_dia <= 12 and total_noche > 12:
-                        #     value_period = "NOCHE"
-                        # elif total_dia <= 12 and total_noche <= 12:
-                        #     if total_dia > 8 and total_noche > 8:
-                        #         value_period = "DIA"
-                        #     elif total_dia > 8:
-                        #         value_period = "DIA"
-                        #     elif total_noche > 8:
-                        #         value_period = "NOCHE"
-                        #     else:
-                        #         value_period = "NO AFECTADO"
-                        
-                        value_node.append(value_period)
-                    
-                    else:
-                        pass
-                
-                else:
+                if data == []:
                     value_node.append("NO DATA")
+                
+                elif x == 'NEW_HOURS':
+                    counter = 0
+                    for j in data:
+                        if j["qoeScore"] < min_qoe:
+                            counter = counter + 1
+                    hours = (counter*15)/60
+                    value_node.append(hours)
+                
+                elif x == 'NEW_QOE':
+                    scores = []
+                    for j in data:
+                        scores.append(j["qoeScore"])
+                    qoe = round(sum(scores)/len(scores), 0)
+                    value_node.append(qoe)
+                
+                elif x == 'PERIOD':
+                    period = []
+                    counter = 0
+                    for j in data:
+                        if j["qoeScore"] < min_qoe:
+                            counter = counter + 1
+                            ts = j["timestamp"]
+                            hour = int((dt.datetime(int(ts[0:4]), int(ts[5:7]), int(ts[8:10]), int(ts[11:13])) - dt.timedelta(hours=5)).strftime("%H"))
+                            if hour > umbral_night:
+                                period.append("NOCHE")
+                            elif hour > umbral_morning_afternoon:
+                                period.append("DIA")
+                            else:
+                                period.append("MADRUGADA")
+                    hours = (counter*15)/60
+                    noche = period.count("NOCHE")
+                    dia = period.count("DIA")
+                    madrugada = period.count("MADRUGADA")
+
+                    value_period = get_period(dia, noche, madrugada, hours)
+                    value_node.append(value_period)
+            
+            else:
+                value_node.append("NO DATA")
 
         query1 = "SELECT "
         for date in dates:
@@ -204,15 +217,11 @@ def algorithm(my_node, my_days, x, also_today, only_one = False): # x only can b
         cursor.execute(query1)
         result = cursor.fetchall()
 
-        # MOMENTANEO
-        if result != []:
-            for value in result[0]:
-                value_node.append(value)
+        for value in result[0]:
+            value_node.append(value)
 
-            value_nodes.append({node["name"] : value_node})
-
-            if also_today:    
-                dates.insert(0, today.strftime("%d/%m/20%y"))
+        value_nodes.append({node["name"] : value_node})
+        dates.insert(0, today.strftime("%d/%m/20%y"))
 
     return {"msg": [value_nodes, dates, x]}
 

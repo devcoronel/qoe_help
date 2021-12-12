@@ -67,27 +67,26 @@
         </div>
     </div>
     <script>
-        let parameter = document.getElementById("type")
         let name = "QoE_Análisis"
 
-        parameter.addEventListener("change", function (){
-            if (parameter.value == 'NEW_QOE'){
+        document.getElementById('analysisbutton').addEventListener('click', function() {
+            var name_id_table = document.getElementsByTagName("table")[0].id
+
+            if (name_id_table == 'qoetable'){
                 name = "QoE_Análisis"
-            } else if (parameter.value == 'NEW_HOURS'){
+            } else if (name_id_table == 'hourstable'){
                 name = "Horas_Análisis"
-            } else if (parameter.value == 'PERIOD'){
+            } else if (name_id_table == 'periodtable'){
                 name = "Periodo_Análisis"
-            } else if (parameter.value == 'MODULATION'){
+            } else if (name_id_table == 'modulationtable'){
                 name = "Modulación_Análisis"
             }
-        })
-        
-        document.getElementById('analysisbutton').addEventListener('click', function() {
+            
             var table2excel = new Table2Excel();
-            table2excel.export(document.querySelectorAll("#hourstable"), name);
+            table2excel.export(document.querySelectorAll(`#`+name_id_table), name);
         });
     </script>
-    <script src="{{ url_for('static', filename='js/sumary.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/analysis.js') }}"></script>
     <script src="{{ url_for('static', filename='js/order.js') }}"></script>
 
 <!-- DETALLE -->
@@ -108,7 +107,7 @@
                                 <label for="exampleFormControlInput1" class="form-label fw-bold fs-5">Plano</label>
                             </div>
                             <div class="row ms-0 me-0">
-                                <input type="text" class="form-control" id="id-node" name="node" placeholder="LMLO066 o LMLO">
+                                <input type="text" class="form-control" name="node" placeholder="LMLO066 o LMLO">
                             </div>
                             
                         </div>
@@ -117,7 +116,7 @@
                                 <label for="exampleFormControlInput1" class="form-label fw-bold fs-5">Número de Días</label>
                             </div>
                             <div class="row ms-0 me-0">
-                                <input type="number" min="1" max="20" class="form-control" id="id-days" name="days" placeholder="1 - 20">
+                                <input type="number" min="1" max="20" class="form-control" name="days" placeholder="1 - 20">
                             </div>
                             
                         </div>

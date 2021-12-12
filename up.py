@@ -91,6 +91,33 @@ def autocomplete_null(tabla, ytd, value):
     cursor.execute(query)
     mydb.commit()
 
+def get_period(dia, noche, madrugada, hours):
+    
+    if dia >= 24:
+        if noche >= 12:
+            value_period = "TODO EL DIA"
+        else:
+            value_period = "DIA"
+    else:
+        if dia >= 12:
+            if noche >= 12:
+                value_period = "TODO EL DIA"
+            else:
+                value_period = "DIA"
+        else:
+            if noche >= 12:
+                value_period = "NOCHE"
+            else:
+                if madrugada >= 12:
+                    value_period = "MADRUGADA"
+                else:
+                    if hours >= 3:
+                        value_period = 'INTERMITENTE'
+                    else:
+                        value_period = "NO AFECTADO"
+
+    return value_period
+
 def verify_upload(date, cookie):
     today = dt.datetime.utcnow() - dt.timedelta(hours=5)
     my_date = dt.datetime(int(date[0:4]), int(date[5:7]), int(date[8:10]))
@@ -189,48 +216,7 @@ def upload(lima_nodes, ytd, my_date_plus):
                     dia = period.count("DIA")
                     madrugada = period.count("MADRUGADA")
 
-                    if dia >= 24:
-                        if noche >= 12:
-                            value_period = "TODO EL DIA"
-                        else:
-                            value_period = "DIA"
-                    else:
-                        if dia >= 12:
-                            if noche >= 12:
-                                value_period = "TODO EL DIA"
-                            else:
-                                value_period = "DIA"
-                        else:
-                            if noche >= 12:
-                                value_period = "NOCHE"
-                            else:
-                                if madrugada >= 12:
-                                    value_period = "MADRUGADA"
-                                else:
-                                    value_period = "NO AFECTADO"
-
-                    # if dia > 24 and noche > 12:
-                    #     value_period = "TODO EL DIA"
-                    # elif dia > 24 and noche <= 12:
-                    #     value_period = "DIA"
-                    # elif dia > 12 and noche > 12:
-                    #     if dia >= noche:
-                    #         value_period = "DIA"
-                    #     else:
-                    #         value_period = "NOCHE"
-                    # elif dia > 12 and noche <= 12:
-                    #     value_period = "DIA"
-                    # elif dia <= 12 and noche > 12:
-                    #     value_period = "NOCHE"
-                    # elif dia <= 12 and noche <= 12:
-                    #     if dia > 8 and noche > 8:
-                    #         value_period = "DIA"
-                    #     elif dia > 8:
-                    #         value_period = "DIA"
-                    #     elif noche > 8:
-                    #         value_period = "NOCHE"
-                    #     else:
-                    #         value_period = "NO AFECTADO"
+                    value_period = get_period(dia, noche, madrugada, value_hours)
 
                     insert_value('NEW_HOURS', ytd, value_hours, node["name"])
                     insert_value('NEW_QOE', ytd, value_qoe, node["name"])

@@ -18,7 +18,7 @@ function sortTable(n, name_table) {
 
             if (myroute == 'analysis'){
                 
-                if (name_table == 'PERIOD') {
+                if (name_table == 'periodtable') {
                     if (dir == "desc") {
                         if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
                             shouldSwitch = true;
@@ -31,7 +31,7 @@ function sortTable(n, name_table) {
                         }
                     }
                 } else {
-                    if (n == 0){
+                    if (n == 0 || n == 1){
                         if (dir == "desc") {
                             if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
                                 shouldSwitch = true;

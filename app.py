@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify, url_for, redirect
-from main import algorithm, dayly, priority, modulation
+from main import detail, dayly, priority, modulation, analysis
 from up import upload, verify_upload
 from constants import days_detail, days_modulation
 from xpertrak_login import get_cookie
@@ -24,7 +24,7 @@ def error_500(error):
 
 @app.route('/analysis', methods = ['GET', 'POST'])
 @limiter.limit("2/second")
-def qoe():
+def my_qoe():
     if request.method == 'GET':
         return render_template('index.html', route = 0)
 
@@ -32,29 +32,30 @@ def qoe():
         parameter = request.form['type']
         node = request.form['node']
         days = request.form['days']
-        data = algorithm(node, days, parameter, False)
-        return data
+        # data = detail(node, days, parameter, False)
+        data = analysis(node, days, parameter)
+        return {'msg': data}
 
 
 @app.route(r'/detail', methods = ['GET', 'POST'])
 @app.route(r'/detail/<string:node>', methods = ['GET'])
 @limiter.limit("2/second")
-def detail(node = None):
+def my_detail(node = None):
     if request.method == 'GET':
         if node:
             with_search = False
             days = days_detail
 
-            data_hours = algorithm(node, days, 'NEW_HOURS', True, True)
+            data_hours = detail(node, days, 'NEW_HOURS')
             values_hours = (((data_hours["msg"])[0])[0])[node]
 
-            data_qoe = algorithm(node, days, 'NEW_QOE', True, True)
+            data_qoe = detail(node, days, 'NEW_QOE')
             values_qoe = (((data_qoe["msg"])[0])[0])[node]
             
-            data_period = algorithm(node, days, 'PERIOD', True, True)
+            data_period = detail(node, days, 'PERIOD')
             values_period = (((data_period["msg"])[0])[0])[node]
 
-            data_modul = algorithm(node, days, 'MODULATION', True, True)
+            data_modul = detail(node, days, 'MODULATION')
             values_modul = (((data_modul["msg"])[0])[0])[node]
 
             return render_template('index.html', route = 1, node = node, data_values = [values_hours, values_qoe, values_period, values_modul], dates = (data_hours["msg"])[1], with_search = with_search)
@@ -68,10 +69,10 @@ def detail(node = None):
         node = request.form["node"].upper()
         days = request.form["days"]
 
-        data_hours = algorithm(node, days, 'NEW_HOURS', True, True)
-        data_qoe = algorithm(node, days, 'NEW_QOE', True, True)
-        data_period = algorithm(node, days, 'PERIOD', True, True)
-        data_modul = algorithm(node, days, 'MODULATION', True, True)
+        data_hours = detail(node, days, 'NEW_HOURS')
+        data_qoe = detail(node, days, 'NEW_QOE')
+        data_period = detail(node, days, 'PERIOD')
+        data_modul = detail(node, days, 'MODULATION')
 
         if isinstance(data_hours["msg"], str):
             return data_hours
@@ -86,8 +87,7 @@ def detail(node = None):
             dates = (data_hours["msg"])[1]
             
             return {"msg":[node, data_values, dates]}
-        else:
-            pass
+            
 
 @app.route('/priority', methods=['POST', 'GET'])
 @limiter.limit("2/second")
