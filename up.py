@@ -1,9 +1,7 @@
 import mysql.connector
 import datetime as dt
 import json
-from mysql.connector import connection
 import requests
-from requests.exceptions import RetryError
 from built_nodes import get_nodes
 from constants import *
 from xpertrak_login import get_cookie
@@ -29,6 +27,7 @@ def init():
             cursor = mydb.cursor()
             cursor.execute(query)
             mydb.commit()
+            cursor.close()
         return print("======== ¡SUCCESS! ========")
 
     except:
@@ -40,6 +39,7 @@ def complete():
     cursor = mydb.cursor()
     cursor.execute(query)
     result = cursor.fetchall()
+    cursor.close()
     
     for id in result:
         for x in ['MODULATION', 'STATUS_NODE', 'NEW_HOURS', 'NEW_QOE', 'PERIOD', 'AFECTED_DAYS']:
@@ -56,6 +56,7 @@ def insert_value(tabla, fecha, valor, plano):
         query = "UPDATE {} SET `{}` = {} WHERE ID_NODE = (SELECT ID FROM NODES WHERE PLANO = '{}');".format(tabla, fecha, valor, plano)
     cursor.execute(query)
     mydb.commit()
+    cursor.close()
 
 def get_values_in_dates(dates, tabla, id_node):
     query = "SELECT"
@@ -67,6 +68,7 @@ def get_values_in_dates(dates, tabla, id_node):
     cursor.execute(query)
     result = cursor.fetchall()
     result = list(result[0])
+    cursor.close()
     return result
 
 def create_column(tabla, ytd, tipo, default):
@@ -74,6 +76,7 @@ def create_column(tabla, ytd, tipo, default):
     cursor = mydb.cursor()
     cursor.execute(query)
     mydb.commit()
+    cursor.close()
     print("Column {} created in {}".format(ytd, tabla))
 
 def delete_column(tabla, fecha):
@@ -81,6 +84,7 @@ def delete_column(tabla, fecha):
     cursor = mydb.cursor()
     cursor.execute(query)
     mydb.commit()
+    cursor.close()
 
 def autocomplete_null(tabla, ytd, value):
     cursor = mydb.cursor()
@@ -90,6 +94,7 @@ def autocomplete_null(tabla, ytd, value):
         query = "UPDATE {} SET `{}` = {} WHERE `{}` = Null;".format(tabla, ytd, value, ytd)
     cursor.execute(query)
     mydb.commit()
+    cursor.close()
 
 def get_period(dia, noche, madrugada, hours):
     
@@ -144,6 +149,7 @@ def verify_upload(date, cookie):
         cursor = mydb.cursor()
         cursor.execute(query0)
         result = cursor.fetchall()
+        cursor.close()
         
         if result[0][0] == 1:
             print("Column {} already exists in {} table".format(ytd, bool))
@@ -158,9 +164,11 @@ def verify_upload(date, cookie):
 
     return [lima_nodes, ytd, my_date_plus]
 
+
 def upload(lima_nodes, ytd, my_date_plus):
 
     for node in lima_nodes:
+    # if True:
         link = 'http://{}/pathtrak/api/node/{}/qoe/metric/history?duration=1440&sampleResponse=false&startdatetime={}-{}-{}T05:00:00.000Z'.format(url_ext ,str(node["nodeId"]), my_date_plus.year, str(my_date_plus.month).zfill(2), str(my_date_plus.day).zfill(2))
         link_modul = 'http://{}/pathtrak/api/node/{}/capacity/channels/history?duration=1440&sampleResponse=false&startdatetime={}-{}-{}T05:00:00.000Z'.format(url_ext ,str(node["nodeId"]), my_date_plus.year, str(my_date_plus.month).zfill(2), str(my_date_plus.day).zfill(2))
         try:
@@ -243,6 +251,7 @@ def upload(lima_nodes, ytd, my_date_plus):
                     if modul["modChanged"] == True and modul["modType"] != "qam64":
                         change_modul_group.append(modul)
                 value_modulation = len(change_modul_group)
+
                 insert_value('MODULATION', ytd, value_modulation, node["name"])
 
             elif mydata_modul.status_code == 500:

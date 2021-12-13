@@ -1,7 +1,7 @@
 import json, requests
 import datetime as dt
 from lima_nodes import lima_nodes
-from up import mydb, get_values_in_dates, get_period
+from up import mydb, get_period
 from constants import *
 import re
 
@@ -17,6 +17,7 @@ def if_column_exists(x, dates, new_dates):
         cursor = mydb.cursor()
         cursor.execute(query)
         result = cursor.fetchall()
+        cursor.close()
         if result[0][0] == 1:
             new_dates.append(date)
 
@@ -39,11 +40,12 @@ def data_analysis(dates, table, regex):
     cursor = mydb.cursor()
     cursor.execute(query)
     result = cursor.fetchall()
+    cursor.close()
     if cursor.rowcount == 0:
         return "Plano(s) no encontrado(s)"
     else:
         return result
-
+    
 
 def analysis(regex, days, x):
 
@@ -216,6 +218,7 @@ def detail(my_node, my_days, x):
         cursor = mydb.cursor()
         cursor.execute(query1)
         result = cursor.fetchall()
+        cursor.close()
 
         for value in result[0]:
             value_node.append(value)
@@ -252,6 +255,7 @@ def data_priority(general_or_especific, table, dates):
         cursor = mydb.cursor()
         cursor.execute(query)
         result = cursor.fetchall()
+        cursor.close()
 
         return result
 
@@ -270,6 +274,7 @@ def data_priority(general_or_especific, table, dates):
         cursor = mydb.cursor()
         cursor.execute(query)
         result = cursor.fetchall()
+        cursor.close()
 
         return result
 
@@ -323,6 +328,7 @@ def data_modulation(dates):
         cursor = mydb.cursor()
         cursor.execute(query)
         result = cursor.fetchall()
+        cursor.close()
 
         return result
     
@@ -392,10 +398,10 @@ def data_dayly(dates, mydate):
     cursor = mydb.cursor()
     cursor.execute(query)
     result = cursor.fetchall()
+    cursor.close()
 
     return result
 
-# data_dayly(['06/12/2021', '05/12/2021', '04/12/2021'])
 
 def dayly(date):
     days = days_modulation
@@ -423,7 +429,6 @@ def dayly(date):
             dates = if_column_exists('MODULATION', dates, new_dates)
 
             if dates == [] or (my_date.strftime("%d/%m/20%y") not in dates):
-                print(dates)
                 return "No hay data para la fecha {}".format(my_date.strftime("%d/%m/20%y"))
             
             else:

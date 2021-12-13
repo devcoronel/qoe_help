@@ -6,6 +6,9 @@ from xpertrak_login import get_cookie
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
+from multiprocessing.dummy import Pool as ThreadPool
+from itertools import repeat
+
 app = Flask(__name__)
 limiter = Limiter(app, key_func=get_remote_address)
 
@@ -126,7 +129,10 @@ def my_upload():
 
             if isinstance(result, list):
                 process = upload(result[0], result[1], result[2])
+                # with ThreadPool(len(result[0])) as pool:
+                #     res = pool.starmap(upload, zip(result[0], repeat(result[1]), repeat(result[2])))
                 return process
+                # return {"msg":"Carga subida con éxito"}
 
             else:
                 return result
@@ -152,5 +158,3 @@ def indexe():
 
 if __name__ == '__main__':
     app.run(host= "0.0.0.0", port=8080, debug=False)
-
-# CREAR PÁGINA PARA POWER BI
