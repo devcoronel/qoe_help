@@ -1,13 +1,14 @@
+from concurrent import futures
 from flask import Flask, render_template, request, jsonify, url_for, redirect
 from main import detail, dayly, priority, modulation, analysis
-from up import upload, verify_upload
+from up import upload, verify_upload, new_upload
 from constants import days_detail, days_modulation
 from xpertrak_login import get_cookie
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
-from multiprocessing.dummy import Pool as ThreadPool
-from itertools import repeat
+from multiprocessing.dummy import Pool
+from concurrent.futures import ThreadPoolExecutor
 
 app = Flask(__name__)
 limiter = Limiter(app, key_func=get_remote_address)
@@ -35,7 +36,6 @@ def my_qoe():
         parameter = request.form['type']
         node = request.form['node']
         days = request.form['days']
-        # data = detail(node, days, parameter, False)
         data = analysis(node, days, parameter)
         return {'msg': data}
 
@@ -128,11 +128,40 @@ def my_upload():
             result = verify_upload(date, cookie)
 
             if isinstance(result, list):
-                process = upload(result[0], result[1], result[2])
+                # process = upload(result[0], result[1], result[2])
+                # return process
+
                 # with ThreadPool(len(result[0])) as pool:
                 #     res = pool.starmap(upload, zip(result[0], repeat(result[1]), repeat(result[2])))
-                return process
-                # return {"msg":"Carga subida con éxito"}
+
+                # SE PUEDE NAVEGAR SIN CRASHEAR EL PROGRAMA
+                # pool = Pool()
+                # pool.map([new_upload(node, result[1], result[2]) for node in result[0]])
+                # pool.join()
+
+                # SE PUEDE NAVEGAR SIN CRASHEAR EL PROGRAMA
+                with Pool() as pool:
+                    res = pool.map([new_upload(node, result[1], result[2]) for node in result[0]])
+
+                # NO ACEPTA NAVEGAR LATERALMENTE
+                # with Pool(len(result[0])) as pool:
+                #     res = pool.starmap([new_upload(node, result[1], result[2]) for node in result[0]])
+
+                # SE PUEDE NAVEGAR SIN CRASHEAR EL PROGRAMA
+                # with ThreadPoolExecutor(max_workers=len(result[0])) as executor:
+                #     future = executor.map([new_upload(node, result[1], result[2]) for node in result[0]])
+                #     future.join()
+
+                # SE PUEDE NAVEGAR SIN CRASHEAR EL PROGRAMA
+                # executor = ThreadPoolExecutor(max_workers=10)
+                # executor.submit([new_upload(node, result[1], result[2]) for node in result[0]])
+
+                # NO FUNCIONA
+                # executor = ThreadPoolExecutor(max_workers=len(result[0]))
+                # for node in result[0]:
+                #     executor.submit(new_upload, node, result[1], result[2])   
+
+                return {"msg":"Carga subida con éxito"}
 
             else:
                 return result
