@@ -26,6 +26,7 @@ function build(data) {
                     <td onclick="sortTable(6,'generaltable')" class="header"><strong>Días</strong></td>
                     <td onclick="sortTable(7,'generaltable')" class="header"><strong>Problema</strong></td>
                     <td onclick="sortTable(8,'generaltable')" class="header"><strong>Estado</strong></td>
+                    <td onclick="sortTable(9,'generaltable')" class="header"><strong>Detalle</strong></td>
                 </tr>
             </thead>
             <tbody>

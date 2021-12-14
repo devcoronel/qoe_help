@@ -243,14 +243,14 @@ def data_priority(general_or_especific, table, dates):
 
     if general_or_especific == 'G':
 
-        query = """SELECT CMTS, PLANO, DEPENDENCIA, IMPEDIMENTO, REVISION, TIPO, SUM({0}) AS DAYS, PROBLEMA, ESTADO FROM STATUS_NODE
+        query = """SELECT CMTS, PLANO, DEPENDENCIA, IMPEDIMENTO, REVISION, TIPO, SUM({0}) AS DAYS, PROBLEMA, ESTADO, DETALLE FROM STATUS_NODE
         INNER JOIN NODES ON NODES.ID = STATUS_NODE.ID_NODE
         INNER JOIN AFECTED_DAYS ON NODES.ID = AFECTED_DAYS.ID_NODE
         WHERE STATUS_NODE.ID_NODE IN (
         SELECT ID_NODE FROM AFECTED_DAYS
         WHERE {0} >= 2)
         GROUP BY STATUS_NODE.ID_NODE
-        ORDER BY DAYS DESC;""".format(sum_dates_general)
+        ORDER BY DAYS DESC, ID DESC;""".format(sum_dates_general)
 
         cursor = mydb.cursor()
         cursor.execute(query)
@@ -269,7 +269,7 @@ def data_priority(general_or_especific, table, dates):
         SELECT ID_NODE FROM AFECTED_DAYS
         WHERE {3} >= 2)
         GROUP BY STATUS_NODE.ID_NODE
-        ORDER BY DAYS DESC;""".format(sum_dates_afected, sum_dates_especific, table, sum_dates_general)
+        ORDER BY DAYS DESC, ID DESC;""".format(sum_dates_afected, sum_dates_especific, table, sum_dates_general)
 
         cursor = mydb.cursor()
         cursor.execute(query)
@@ -318,11 +318,12 @@ def data_modulation(dates):
 
     try:
         query = """
-        SELECT CMTS, PLANO, {} FROM MODULATION
+        SELECT CMTS, PLANO, {0} FROM MODULATION
         INNER JOIN NODES ON NODES.ID = MODULATION.ID_NODE
         WHERE ID_NODE IN (
         SELECT ID_NODE FROM MODULATION
-        WHERE `{}` >= 1 AND `{}` >= 1);
+        WHERE `{1}` >= 1 AND `{2}` >= 1)
+        ORDER BY `{1}` DESC;
         """.format(query_dates, dates[0], dates[1])
 
         cursor = mydb.cursor()
