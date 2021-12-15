@@ -535,7 +535,7 @@
     <script src="{{ url_for('static', filename='js/table2excel.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sumary.css') }}">
     <div class="container-fluid pb-3" style="padding-top: 4.5rem;">
-        <div class="container bg-light rounded pt-2" style="padding-bottom: 17rem;">
+        <div class="container bg-light rounded pt-2" style="padding-bottom: 5rem;">
             <div class="p-3">
                 <div class="row">
                     <div class="col-sm-10 col-md-9 col-9">
@@ -546,7 +546,14 @@
                     </div>
                 </div>
                 <div class="row">
-                    <p>La tabla recopila información de los planos afectados por Horas o QoE (Tabla de Prioridad) o Cambios de modulación (Tabla de Modulación)</p>
+                    <p>La tabla recopila información de los planos afectados por Horas o QoE (Tabla de Prioridad) o Cambios de modulación (Tabla de Modulación) y las clasifica según la siguiente prioridad:</p>
+                    <pre>
+    - Prioridad <strong>1</strong>: QoE &le; 70
+    - Prioridad <strong>2</strong>: 70 < QoE &le; 80
+    - Prioridad <strong>3</strong>: Horas &ge; 3
+    - Prioridad <strong>4</strong>: Cambios de Modulación &ge; 1
+    - Prioridad <strong>5</strong>: No afectado en la fecha
+                    </pre>
                 </div>
                 <hr>
                 <form id="form_sumary" class="needs-validation" novalidate>
@@ -572,6 +579,7 @@
                 <div id="loading" style="text-align: center;" ></div>
                 <div id="div_dayly_table" class="scrollmenu" style="border-radius:10px;"></div>
                 <br>
+                
                 
             </div>
         </div>

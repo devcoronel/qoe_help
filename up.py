@@ -5,6 +5,7 @@ import requests
 from built_nodes import get_nodes
 from constants import *
 from xpertrak_login import get_cookie
+import time
 
 mydb = mysql.connector.connect(
     host= mysql_host,
@@ -15,6 +16,7 @@ mydb = mysql.connector.connect(
     # Se puede verificar en la base de datos con SELECT HOST, USER, PLUGIN FROM MYSQL.USER;
     # Fuente: https://stackoverflow.com/questions/50557234/authentication-plugin-caching-sha2-password-is-not-supported
 )
+cursor = mydb.cursor(buffered=True)
 
 def init():
     try:
@@ -24,7 +26,7 @@ def init():
 
         for node in lima_nodes:
             query = "INSERT INTO NODES (PLANO, CMTS) VALUES ('{}', '{}');".format(node["name"], node["cmts"])
-            cursor = mydb.cursor()
+            # cursor = mydb.cursor()
             cursor.execute(query)
             mydb.commit()
             cursor.close()
@@ -36,7 +38,7 @@ def init():
 
 def complete():
     query = "SELECT ID FROM NODES"
-    cursor = mydb.cursor()
+    # cursor = mydb.cursor()
     cursor.execute(query)
     result = cursor.fetchall()
     cursor.close()
@@ -44,19 +46,19 @@ def complete():
     for id in result:
         for x in ['MODULATION', 'STATUS_NODE', 'NEW_HOURS', 'NEW_QOE', 'PERIOD', 'AFECTED_DAYS']:
             query0 = "INSERT INTO {} (ID_NODE) VALUES ({})".format(x, id[0])
-            cursor = mydb.cursor()
+            # cursor = mydb.cursor()
             cursor.execute(query0)
             mydb.commit()
 
 def insert_value(tabla, fecha, valor, plano):
-    cursor = mydb.cursor()
+    # cursor = mydb.cursor()
     if tabla == 'PERIOD':
         query = "UPDATE {} SET `{}` = '{}' WHERE ID_NODE = (SELECT ID FROM NODES WHERE PLANO = '{}');".format(tabla, fecha, valor, plano)
     else:    
         query = "UPDATE {} SET `{}` = {} WHERE ID_NODE = (SELECT ID FROM NODES WHERE PLANO = '{}');".format(tabla, fecha, valor, plano)
     cursor.execute(query)
     mydb.commit()
-    cursor.close()
+    # cursor.close()
 
 def get_values_in_dates(dates, tabla, id_node):
     query = "SELECT"
@@ -64,7 +66,7 @@ def get_values_in_dates(dates, tabla, id_node):
         query = query + "`"+ date + "`,"
     query = query[:-1]
     query = query + " FROM {} WHERE ID_NODE = {};".format(tabla, id_node)
-    cursor = mydb.cursor()
+    # cursor = mydb.cursor()
     cursor.execute(query)
     result = cursor.fetchall()
     result = list(result[0])
@@ -73,21 +75,21 @@ def get_values_in_dates(dates, tabla, id_node):
 
 def create_column(tabla, ytd, tipo, default):
     query = "ALTER TABLE {} ADD COLUMN `{}` {} DEFAULT {} AFTER ID_NODE;".format(tabla, ytd, tipo, default)
-    cursor = mydb.cursor()
+    # cursor = mydb.cursor()
     cursor.execute(query)
     mydb.commit()
-    cursor.close()
+    # cursor.close()
     print("Column {} created in {}".format(ytd, tabla))
 
 def delete_column(tabla, fecha):
     query = "ALTER TABLE {} DROP COLUMN `{}`;".format(tabla, fecha)
-    cursor = mydb.cursor()
+    # cursor = mydb.cursor()
     cursor.execute(query)
     mydb.commit()
-    cursor.close()
+    # cursor.close()
 
 def autocomplete_null(tabla, ytd, value):
-    cursor = mydb.cursor()
+    # cursor = mydb.cursor()
     if tabla == 'PERIOD':
         query = "UPDATE {} SET `{}` = '{}' WHERE `{}` = Null;".format(tabla, ytd, value, ytd)
     else:
@@ -146,10 +148,10 @@ def verify_upload(date, cookie):
         WHERE TABLE_SCHEMA = 'qoehelp' AND TABLE_NAME = '{}' AND COLUMN_NAME = '{}'),1,0);
         """.format(bool, ytd)
 
-        cursor = mydb.cursor()
+        # cursor = mydb.cursor()
         cursor.execute(query0)
         result = cursor.fetchall()
-        cursor.close()
+        # cursor.close()
         
         if result[0][0] == 1:
             print("Column {} already exists in {} table".format(ytd, bool))
@@ -373,3 +375,13 @@ def new_upload(node, ytd, my_date_plus):
     
     print("======== ¡SUCCESS! ========")
     return {"msg":"Carga subida con éxito"}
+
+def prueba():
+    try:
+        print("Hola Mundo")
+        time.sleep(3)
+        # print(''+1)
+        return {"msg": "Correcto"}
+    except:
+        # print(''+1)
+        return {"msg": "Falla"}

@@ -1,7 +1,7 @@
 import json, requests
 import datetime as dt
 from lima_nodes import lima_nodes
-from up import mydb, get_period
+from up import mydb, get_period, cursor
 from constants import *
 import re
 
@@ -14,10 +14,10 @@ def if_column_exists(x, dates, new_dates):
         WHERE TABLE_SCHEMA = 'qoehelp' AND TABLE_NAME = '{}' AND COLUMN_NAME = '{}'),1,0);
         """.format(x, date)
 
-        cursor = mydb.cursor()
+        # cursor = mydb.cursor()
         cursor.execute(query)
         result = cursor.fetchall()
-        cursor.close()
+        # cursor.close()
         if result[0][0] == 1:
             new_dates.append(date)
 
@@ -37,10 +37,10 @@ def data_analysis(dates, table, regex):
     WHERE PLANO REGEXP '^{2}';
     """.format(query_dates, table, regex)
 
-    cursor = mydb.cursor()
+    # cursor = mydb.cursor()
     cursor.execute(query)
     result = cursor.fetchall()
-    cursor.close()
+    # cursor.close()
     if cursor.rowcount == 0:
         return "Plano(s) no encontrado(s)"
     else:
@@ -103,7 +103,8 @@ def detail(my_node, my_days, x):
         if my_days == 0:
             return {"msg": "Dato(s) incorrectos"}
 
-        regex = re.escape(my_node) + r"\w*"
+        # regex = re.escape(my_node)# + r"\w*"
+        regex = r"^"+ my_node+ r"$"
         for node in lima_nodes:
             if re.search(regex, node["name"], re.IGNORECASE):
                 match.append(node)
@@ -215,10 +216,10 @@ def detail(my_node, my_days, x):
         query1 = query1[:-1]
         query1 = query1 + " FROM {} WHERE ID_NODE = (SELECT ID FROM NODES WHERE PLANO = '{}');".format(x, node["name"])
 
-        cursor = mydb.cursor()
+        # cursor = mydb.cursor()
         cursor.execute(query1)
         result = cursor.fetchall()
-        cursor.close()
+        # cursor.close()
 
         for value in result[0]:
             value_node.append(value)
@@ -252,10 +253,10 @@ def data_priority(general_or_especific, table, dates):
         GROUP BY STATUS_NODE.ID_NODE
         ORDER BY DAYS DESC, ID DESC;""".format(sum_dates_general)
 
-        cursor = mydb.cursor()
+        # cursor = mydb.cursor()
         cursor.execute(query)
         result = cursor.fetchall()
-        cursor.close()
+        # cursor.close()
 
         return result
 
@@ -271,10 +272,10 @@ def data_priority(general_or_especific, table, dates):
         GROUP BY STATUS_NODE.ID_NODE
         ORDER BY DAYS DESC, ID DESC;""".format(sum_dates_afected, sum_dates_especific, table, sum_dates_general)
 
-        cursor = mydb.cursor()
+        # cursor = mydb.cursor()
         cursor.execute(query)
         result = cursor.fetchall()
-        cursor.close()
+        # cursor.close()
 
         return result
 
@@ -326,10 +327,10 @@ def data_modulation(dates):
         ORDER BY `{1}` DESC;
         """.format(query_dates, dates[0], dates[1])
 
-        cursor = mydb.cursor()
+        # cursor = mydb.cursor()
         cursor.execute(query)
         result = cursor.fetchall()
-        cursor.close()
+        # cursor.close()
 
         return result
     
@@ -396,10 +397,10 @@ def data_dayly(dates, mydate):
     ORDER BY DAYS DESC;
     """.format(mydate, sum_dates_afected, sum_dates_general, dates[0], dates[1])
 
-    cursor = mydb.cursor()
+    # cursor = mydb.cursor()
     cursor.execute(query)
     result = cursor.fetchall()
-    cursor.close()
+    # cursor.close()
 
     return result
 

@@ -32,7 +32,8 @@ myform.addEventListener("submit", function (e) {
 				<td onclick="sortTable(3, 'daylytable')" class="header"><strong>Horas</strong></td>
 				<td onclick="sortTable(4, 'daylytable')" class="header"><strong>Periodo</strong></td>
 				<td onclick="sortTable(5, 'daylytable')" class="header"><strong>Cambios Modulación</strong></td>
-				<td onclick="sortTable(6, 'daylytable')" class="header"><strong>Días</strong></td>`
+				<td onclick="sortTable(6, 'daylytable')" class="header"><strong>Días</strong></td>
+				<td onclick="sortTable(7, 'daylytable')" class="header"><strong>Prioridad</strong></td>`
 				tablehtml += '</thead><tbody>'
 				
 				for(let i in elements){
@@ -44,10 +45,23 @@ myform.addEventListener("submit", function (e) {
 					<td>`+ elements[i][3] +`</td>
 					<td>`+ elements[i][4] +`</td>
 					<td>`+ elements[i][5] +`</td>
-					<td>`+ elements[i][6] +`</td></tr>`
+					<td>`+ elements[i][6] +`</td>`
+
+					if (elements[i][2] <= 70 && elements[i][2] >= 0) {
+						tablehtml += `<td>1</td></tr>`
+					} else if (elements[i][2] > 70 && elements[i][2] <= 80) {
+						tablehtml += `<td>2</td></tr>`
+					} else if (elements[i][3] >= 3) {
+						tablehtml += `<td>3</td></tr>`
+					} else if (elements[i][5] >= 1) {
+						tablehtml += `<td>4</td></tr>`
+					} else {
+						tablehtml += `<td>5</td></tr>`
+					}
 
 				}
-				tablehtml += '</tbody></table>'
+				tablehtml += `</tbody></table>`
+				
 				load.innerHTML = ''
 				table.innerHTML = tablehtml
 
