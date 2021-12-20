@@ -1,12 +1,14 @@
 from concurrent import futures
 import concurrent
+from datetime import date
 from flask import Flask, render_template, request, jsonify, url_for, redirect
-from main import detail, dayly, priority, modulation, analysis
-from up import prueba, upload, verify_upload, new_upload
+from main import detail, dayly, insert_status, priority, modulation, analysis
+from up import upload, verify_upload
 from constants import days_detail, days_modulation
 from xpertrak_login import get_cookie
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from decorator import when_upload_runs
 
 import threading
 
@@ -30,24 +32,28 @@ def error_500(error):
     return render_template('error.html', number = 500)
 
 
-@app.route('/analysis', methods = ['GET', 'POST'])
-@limiter.limit("2/second")
-def my_qoe():
-    if request.method == 'GET':
-        return render_template('index.html', route = 0)
+@app.route('/analysis', methods = ['POST'])
+@limiter.limit("1/2second")
+@when_upload_runs
+def my_post_qoe():
+    parameter = request.form['type']
+    node = request.form['node']
+    days = request.form['days']
+    data = analysis(node, days, parameter)
+    return {'msg': data}
 
-    elif request.method == 'POST':
-        parameter = request.form['type']
-        node = request.form['node']
-        days = request.form['days']
-        data = analysis(node, days, parameter)
-        return {'msg': data}
+
+@app.route('/analysis', methods = ['GET'])
+@limiter.limit("2/second")
+@when_upload_runs
+def my_qoe():
+    return render_template('index.html', route = 0)
 
 
 @app.route(r'/detail', methods = ['POST'])
 @limiter.limit("1/2second")
+@when_upload_runs
 def my_post_detail():
-    print("post")
     node = request.form["node"].upper()
     days = request.form["days"]
 
@@ -74,6 +80,7 @@ def my_post_detail():
 @app.route(r'/detail', methods = ['GET'])
 @app.route(r'/detail/<string:node>', methods = ['GET'])
 @limiter.limit("2/second")
+@when_upload_runs
 def my_detail(node = None):
     if node:
         with_search = False
@@ -98,19 +105,17 @@ def my_detail(node = None):
         return render_template('index.html', route = 1, with_search = with_search)
     
 
-@app.route('/priority', methods=['POST', 'GET'])
+@app.route('/priority', methods=['GET'])
 @limiter.limit("2/second")
+@when_upload_runs
 def my_priority():
-    if request.method == 'GET':
-        data = priority()
-        return render_template('index.html', route = 2, data = {'msg': data})
+    data = priority()
+    return render_template('index.html', route = 2, data = {'msg': data})
     
-    elif request.method == 'POST':
-        
-        return 0
 
 @app.route('/modulation')
 @limiter.limit("2/second")
+@when_upload_runs
 def my_modulation():
     data = modulation()
     return render_template('index.html', route = 3, data = {'msg': data})
@@ -118,6 +123,7 @@ def my_modulation():
 
 @app.route('/upload', methods=['POST', 'GET'])
 @limiter.limit("2/second")
+@when_upload_runs
 def my_upload():
     if request.method == 'GET':
         return render_template('index.html', route = 4, title = "Carga de data")
@@ -134,73 +140,12 @@ def my_upload():
             verify_result = verify_upload(date, cookie)
 
             if isinstance(verify_result, list):
-                # process = upload(verify_result[0], verify_result[1], verify_result[2])
-                # return process
-
+                
                 try:
-                    pool = ThreadPool(processes=1)
-                    async_result = pool.apply_async(upload, (verify_result[0], verify_result[1], verify_result[2], ))
-                    return_val = async_result.get()
-    
-                    return return_val
+                    process = upload(verify_result[0], verify_result[1], verify_result[2])
+                    return process
                 except:
-                    return {"msg": "Error en la Conexión con Xpertrak app"}
-                # executor = concurrent.futures.ThreadPoolExecutor()
-                # executor.submit(prueba)
-                # print(executor.result())
-
-                # try:
-                #     with concurrent.futures.ThreadPoolExecutor() as executor:
-                #         future = executor.submit(upload, verify_result[0], verify_result[1], verify_result[2])
-                #         return_value = future.result()
-                #     return return_value
-
-                # except:
-                #     return {"msg": "Error en la conexión con Xpertrak"}
-                # thread = threading.Thread(target=upload, args=(result[0], result[1], result[2], ))
-                # thread.start()
-                # try:
-                #     thread = threading.Thread(target=prueba)
-                #     thread.start()
-                #     print(thread)
-                #     print(thread.get())
-                #     return {"msg": "Correcto app"}
-
-                # except:
-                #     return {"msg": "Incorrecto app"}
-                # process = upload(result[0], result[1], result[2])
-                # return process
-
-                # with ThreadPool(len(result[0])) as pool:
-                #     res = pool.starmap(upload, zip(result[0], repeat(result[1]), repeat(result[2])))
-
-                # SE PUEDE NAVEGAR SIN CRASHEAR EL PROGRAMA
-                # pool = Pool()
-                # pool.map([new_upload(node, result[1], result[2]) for node in result[0]])
-                # pool.join()
-
-                # SE PUEDE NAVEGAR SIN CRASHEAR EL PROGRAMA
-                # with Pool() as pool:
-                #     res = pool.map([new_upload(node, result[1], result[2]) for node in result[0]])
-
-                # NO ACEPTA NAVEGAR LATERALMENTE
-                # with Pool(len(result[0])) as pool:
-                #     res = pool.starmap([new_upload(node, result[1], result[2]) for node in result[0]])
-
-                # SE PUEDE NAVEGAR SIN CRASHEAR EL PROGRAMA
-                # with ThreadPoolExecutor(max_workers=len(result[0])) as executor:
-                #     future = executor.map([new_upload(node, result[1], result[2]) for node in result[0]])
-                #     future.join()
-
-                # SE PUEDE NAVEGAR SIN CRASHEAR EL PROGRAMA
-                # executor = ThreadPoolExecutor(max_workers=10)
-                # executor.submit([new_upload(node, result[1], result[2]) for node in result[0]])
-
-                # NO FUNCIONA
-                # executor = ThreadPoolExecutor(max_workers=len(result[0]))
-                # for node in result[0]:
-                #     executor.submit(new_upload, node, result[1], result[2])   
-
+                    return {"msg": "Error en la Conexión con Xpertrak"}
 
             else:
                 return verify_result
@@ -208,27 +153,57 @@ def my_upload():
         elif action == 'delete':
             pass
 
-@app.route('/dayly', methods = ['GET', 'POST'])
+
+@app.route('/dayly', methods = ['POST'])
 @limiter.limit("1/2second")
+@when_upload_runs
+def my_post_dayly():
+    date = request.form["dayly_date"]
+    
+    if date == '':
+        return {'msg': 'No se ha especificado ninguna fecha'}
+    else:
+        data = dayly(date)
+        return {'msg': data}
+
+
+@app.route('/dayly', methods = ['GET', 'POST'])
+@limiter.limit("2/second")
+@when_upload_runs
 def my_dayly():
-    if request.method == 'GET':
-        return render_template('index.html', route = 5)
+    return render_template('index.html', route = 5)
 
-    elif request.method == 'POST':
-        date = request.form["date"]
-        
-        if date == '':
-            return {'msg': 'No se ha especificado ninguna fecha'}
-
-        else:
-            data = dayly(date)
-            return {'msg': data}
 
 @app.route('/info')
 @limiter.limit("2/second")
-def indexe():
+@when_upload_runs
+def my_info():
     return render_template('index.html', route = 6)
 
 
+@app.route('/status', methods=['POST'])
+@limiter.limit("1/2second")
+@when_upload_runs
+def status():
+    node = request.form["pla"].upper()
+    dependence = request.form["dep"]
+    impediment = request.form["imp"]
+    problem_type = request.form["tip"]
+    problem = request.form["pro"]
+    state = request.form["est"]
+    revision = request.form["rev"]
+    detail = request.form["det"]
+
+    if node == '' or revision == '':
+        return {'msg': 'Faltan datos por completar'}
+    else:
+        try:
+            result = insert_status(dependence, impediment, revision, problem_type, problem, state, detail, node)
+            return result
+        except:
+            return {'msg': 'Error en la conexión con la base de datos'}
+
+
 if __name__ == '__main__':
+    # app.run(port=8080, debug=False)
     app.run(host= "0.0.0.0", port=8080, debug=False)

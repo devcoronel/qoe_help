@@ -169,6 +169,16 @@ def verify_upload(date, cookie):
 
 def upload(lima_nodes, ytd, my_date_plus):
     contador = 0
+
+    with open("templates\\index.html", "r") as f:
+        lines = f.readlines()
+        f.close()
+        
+    lines[-1] = '1'
+    with open("templates\\index.html", "w") as f:
+        for line in lines:
+            f.write(line)
+
     for node in lima_nodes:
     # if True:
         contador += 1
@@ -275,7 +285,17 @@ def upload(lima_nodes, ytd, my_date_plus):
             delete_column("PERIOD", ytd)
             delete_column("AFECTED_DAYS", ytd)
             delete_column("MODULATION", ytd)
+            
+            lines[-1] = '0'
+            with open("templates\\index.html", "w") as f:
+                for line in lines:
+                    f.write(line)
             return {"msg": "Error en la conexión con Xpertrak"}
+    
+    lines[-1] = '0'
+    with open("templates\\index.html", "w") as f:
+        for line in lines:
+            f.write(line)
     
     print("======== ¡SUCCESS! ========")
     return {"msg":"Carga subida con éxito"}
@@ -375,13 +395,3 @@ def new_upload(node, ytd, my_date_plus):
     
     print("======== ¡SUCCESS! ========")
     return {"msg":"Carga subida con éxito"}
-
-def prueba():
-    try:
-        print("Hola Mundo")
-        time.sleep(3)
-        # print(''+1)
-        return {"msg": "Correcto"}
-    except:
-        # print(''+1)
-        return {"msg": "Falla"}

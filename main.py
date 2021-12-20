@@ -5,6 +5,25 @@ from up import mydb, get_period, cursor
 from constants import *
 import re
 
+def insert_status(dependence, impediment, revision, problem_type, problem, state, detail, node):
+    
+    query = """
+    UPDATE STATUS_NODE
+    SET DEPENDENCIA = '{}', IMPEDIMENTO = '{}', REVISION = '{}', TIPO = '{}', PROBLEMA = '{}', ESTADO = '{}', DETALLE = '{}'
+    WHERE ID_NODE = (SELECT ID FROM NODES WHERE PLANO = '{}');
+    """.format(dependence, impediment, revision, problem_type, problem, state, detail, node)
+
+    regex = r"^"+ node + r"$"
+    for lima_node in lima_nodes:
+        if re.search(regex, lima_node["name"], re.IGNORECASE):
+            cursor.execute(query)
+            mydb.commit()
+            # cursor.close()
+            return {'msg': '{}: Status actualizado con éxito'.format(node)}
+    
+    return {'msg': 'No se ha encontrado el plano en la base de datos'}
+
+
 def if_column_exists(x, dates, new_dates):
     for date in dates:
 
@@ -103,7 +122,6 @@ def detail(my_node, my_days, x):
         if my_days == 0:
             return {"msg": "Dato(s) incorrectos"}
 
-        # regex = re.escape(my_node)# + r"\w*"
         regex = r"^"+ my_node+ r"$"
         for node in lima_nodes:
             if re.search(regex, node["name"], re.IGNORECASE):
@@ -244,7 +262,7 @@ def data_priority(general_or_especific, table, dates):
 
     if general_or_especific == 'G':
 
-        query = """SELECT CMTS, PLANO, DEPENDENCIA, IMPEDIMENTO, REVISION, TIPO, SUM({0}) AS DAYS, PROBLEMA, ESTADO, DETALLE FROM STATUS_NODE
+        query = """SELECT CMTS, PLANO, DEPENDENCIA, IMPEDIMENTO, DATE_FORMAT(REVISION, '%Y-%m-%d') AS REVISION, TIPO, SUM({0}) AS DAYS, PROBLEMA, ESTADO, DETALLE FROM STATUS_NODE
         INNER JOIN NODES ON NODES.ID = STATUS_NODE.ID_NODE
         INNER JOIN AFECTED_DAYS ON NODES.ID = AFECTED_DAYS.ID_NODE
         WHERE STATUS_NODE.ID_NODE IN (
@@ -435,7 +453,7 @@ def dayly(date):
             
             else:
                 values_dayly = data_dayly(dates, my_date.strftime("%d/%m/20%y"))
-                return [values_dayly, my_date.strftime("%d/%m/20%y")]
+                return [values_dayly]
 
         except:
         # else:

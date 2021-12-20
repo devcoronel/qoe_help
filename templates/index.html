@@ -1,8 +1,8 @@
 {% extends 'layout.html' %}
 {% block content %}
 
-<!-- HORAS - QOE - PERIODO -->
 {% if route == 0 %}
+<!-- HORAS - QOE - PERIODO -->
 
     <script src="{{ url_for('static', filename='js/table2excel.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sumary.css') }}">
@@ -61,6 +61,7 @@
                 <hr>
                 <div id="loading" style="text-align: center;" ></div>
                 <div id="my_table" class="scrollmenu" style="border-radius:10px;"></div>
+                <div id="alert" ></div>
                 <br>
                 
             </div>
@@ -89,8 +90,8 @@
     <script src="{{ url_for('static', filename='js/analysis.js') }}"></script>
     <script src="{{ url_for('static', filename='js/order.js') }}"></script>
 
-<!-- DETALLE -->
 {% elif route == 1 %}
+<!-- DETALLE -->
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sumary.css') }}">
     <div class="container-fluid pb-3" style="padding-top: 4.5rem;">
@@ -129,6 +130,8 @@
                 </form>
                 <hr>
                 <div id="loading" style="text-align: center;" ></div>
+                <div class="row" id="table"></div>
+                <div id="alert" ></div>
                 {% endif %}
                 {% if with_search == False %}
                 <h2 class="fw-bold"> <img src="{{ url_for('static', filename='images/aboutme/i.png') }}" width="35" class="pb-2">&nbspDetalle: {{node}}</h2>
@@ -178,15 +181,14 @@
                 </div>
                 {% endif %}
                 
-                <div class="row" id="table"></div>
                 
             </div>
         </div>
     </div>
     <script src="{{ url_for('static', filename='js/detail.js') }}"></script>
 
-<!-- PRIORIDAD -->
 {% elif route == 2 %}
+<!-- PRIORIDAD -->
 
     <script src="{{ url_for('static', filename='js/table2excel.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sumary.css') }}">
@@ -197,7 +199,6 @@
                 <div class="row">
                     <p>La tabla recopila información de los planos afectados por Horas (mayor o igual a 3 horas) o QoE (Menor que 80 de puntuación promedio diaria)</p>
                 </div>
-                <hr>
                 <br>
                 <div class="accordion accordion-flush" id="accordionFlushExample">
                     <div class="accordion-item" style="background-color: F2F5FA;">
@@ -259,7 +260,6 @@
                 <div class="row">
                     <p>Editar el status de un plano para mantener actualizado el seguimiento del mismo</p>
                 </div>
-                <hr>
                 <br>
                 <div class="container p-3" style="background-color: EDF0F5;">
                     <form id="form_status" class="needs-validation" novalidate>
@@ -301,12 +301,12 @@
                                     </div>
                                     <div class="row ms-0 me-0">
                                         <select name="dep" id="type" class="form-select">
-                                            <option value="upload">Ninguno</option>
-                                            <option value="delete">Calidad</option>
-                                            <option value="delete">OYM</option>
-                                            <option value="delete">Cicsa</option>
-                                            <option value="delete">Cotener</option>
-                                            <option value="delete">Impedimento</option>
+                                            <option value="Ninguno">Ninguno</option>
+                                            <option value="Calidad">Calidad</option>
+                                            <option value="OYM">OYM</option>
+                                            <option value="CICSA">CICSA</option>
+                                            <option value="Cotener">Cotener</option>
+                                            <option value="Impedimento">Impedimento</option>
                                             
                                         </select>
                                     </div>
@@ -318,15 +318,14 @@
                                     </div>
                                     <div class="row ms-0 me-0">
                                         <select name="imp" id="type" class="form-select">
-                                            <option value="upload">Ninguno</option>
-                                            <option value="delete">Edificio</option>
-                                            <option value="delete">Edificio</option>
-                                            <option value="delete">Centro Comercial</option>
-                                            <option value="delete">Sede Claro</option>
-                                            <option value="delete">Provincia</option>
-                                            <option value="delete">Mercado</option>
-                                            <option value="delete">Zona Riesgosa</option>
-                                            <option value="delete">Falta de Materiales</option>
+                                            <option value="Ninguno">Ninguno</option>
+                                            <option value="Edificio">Edificio</option>
+                                            <option value="Centro Comercial">Centro Comercial</option>
+                                            <option value="Sede Claro">Sede Claro</option>
+                                            <option value="Provincia">Provincia</option>
+                                            <option value="Mercado">Mercado</option>
+                                            <option value="Zona Riesgosa">Zona Riesgosa</option>
+                                            <option value="Falta de Materiales">Falta de Materiales</option>
                                             
                                         </select>
                                     </div>
@@ -338,10 +337,10 @@
                                     </div>
                                     <div class="row ms-0 me-0">
                                         <select name="tip" id="type" class="form-select">
-                                            <option value="upload">Ninguno</option>
-                                            <option value="delete">US</option>
-                                            <option value="delete">DS</option>
-                                            <option value="delete">T3</option>
+                                            <option value="Ninguno">Ninguno</option>
+                                            <option value="US">US</option>
+                                            <option value="DS">DS</option>
+                                            <option value="T3">T3</option>
                                             
                                         </select>
                                     </div>
@@ -353,16 +352,16 @@
                                     </div>
                                     <div class="row ms-0 me-0">
                                         <select name="pro" id="type" class="form-select">
-                                            <option value="upload">Ninguno</option>
-                                            <option value="upload">PINT</option>
-                                            <option value="delete">Ruido de Día</option>
-                                            <option value="delete">Ruido de Noche</option>
-                                            <option value="delete">Ruido Intermitente</option>
-                                            <option value="delete">Módulo RF Averiado</option>
-                                            <option value="delete">Módulo Amplif. Averiado</option>
-                                            <option value="delete">CMs Afectados</option>
-                                            <option value="delete">Avería</option>
-                                            <option value="delete">Performance</option>
+                                            <option value="Ninguno">Ninguno</option>
+                                            <option value="PINT">PINT</option>
+                                            <option value="Ruido de Día">Ruido de Día</option>
+                                            <option value="Ruido de Noche">Ruido de Noche</option>
+                                            <option value="Ruido Intermitente">Ruido Intermitente</option>
+                                            <option value="Módulo RF Averiado">Módulo RF Averiado</option>
+                                            <option value="Módulo Amplif. Averiado">Módulo Amplif. Averiado</option>
+                                            <option value="CMs Afectados">CMs Afectados</option>
+                                            <option value="Avería">Avería</option>
+                                            <option value="Performance">Performance</option>
                                             
                                         </select>
                                     </div>
@@ -374,12 +373,12 @@
                                     </div>
                                     <div class="row ms-0 me-0">
                                         <select name="est" id="type" class="form-select">
-                                            <option value="upload">Ninguno</option>
-                                            <option value="delete">Por Agendar - PEXT</option>
-                                            <option value="delete">Por Agendar - PINT</option>
-                                            <option value="delete">Atendido - Solucionado</option>
-                                            <option value="delete">Atendido - Pendiente</option>
-                                            <option value="delete">Derivado</option>
+                                            <option value="Ninguno">Ninguno</option>
+                                            <option value="Por Agendar - PEXT">Por Agendar - PEXT</option>
+                                            <option value="Por Agendar - PINT">Por Agendar - PINT</option>
+                                            <option value="Atendido - Solucionado">Atendido - Solucionado</option>
+                                            <option value="Atendido - Pendiente">Atendido - Pendiente</option>
+                                            <option value="Derivado">Derivado</option>
                                             
                                         </select>
                                     </div>
@@ -411,6 +410,7 @@
                         </div>
                         
                     </form>
+                    <div id="alert"></div>
                 </div>
                 
                 
@@ -436,9 +436,11 @@
         let jsondata = JSON.parse(data)
         build(jsondata)
     </script>
+    <script src="{{ url_for('static', filename='js/edit_status.js') }}"></script>
 
-<!-- MODULACION -->
+
 {% elif route == 3 %}
+<!-- MODULACION -->
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sumary.css') }}">
     <div class="container-fluid pb-3" style="padding-top: 4.5rem;">
@@ -476,8 +478,8 @@
         build(jsondata)
     </script>
 
-<!-- CARGA -->
 {% elif route == 4 %}
+<!-- CARGA -->
 
     <script src="../static/js/table2excel.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sumary.css') }}">
@@ -529,8 +531,8 @@
     <script src="{{ url_for('static', filename = 'js/order.js') }}"></script>
     <script src="{{ url_for('static', filename = 'js/upload.js') }}"></script>
 
-<!-- DIARIO -->
 {% elif route == 5 %}
+<!-- DIARIO -->
 
     <script src="{{ url_for('static', filename='js/table2excel.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sumary.css') }}">
@@ -541,9 +543,7 @@
                     <div class="col-sm-10 col-md-9 col-9">
                         <h2 class="fw-bold"> <img src="{{ url_for('static', filename='images/aboutme/i.png') }}" width="35" class="pb-2">&nbspDiario</h2>
                     </div>
-                    <div class="col-sm-2 col-md-3 col-3" style="display: flex ;justify-content: right;">
-                        <button id="daylybutton" class="btn btn-success" style="margin-bottom: 2rem;">Exportar</button>
-                    </div>
+                    
                 </div>
                 <div class="row">
                     <p>La tabla recopila información de los planos afectados por Horas o QoE (Tabla de Prioridad) o Cambios de modulación (Tabla de Modulación) y las clasifica según la siguiente prioridad:</p>
@@ -555,7 +555,7 @@
     - Prioridad <strong>5</strong>: No afectado en la fecha
                     </pre>
                 </div>
-                <hr>
+                <br>
                 <form id="form_sumary" class="needs-validation" novalidate>
                     <div class="row ">
                         
@@ -564,7 +564,7 @@
                                 <label for="exampleFormControlInput1" class="form-label fw-bold fs-5">Fecha</label>
                             </div>
                             <div class="row ms-0 me-0">
-                                <input type="date" class="form-control" name="date" id="dayly_date">
+                                <input type="date" class="form-control" name="dayly_date" id="dayly_date">
                             </div>
                             
                         </div>
@@ -575,35 +575,48 @@
                         
                     </div>
                 </form>
-                <hr>
-                <div id="loading" style="text-align: center;" ></div>
-                <div id="div_dayly_table" class="scrollmenu" style="border-radius:10px;"></div>
                 <br>
+                <div id="loading" style="text-align: center;" ></div>
+                <div id="alert" ></div>
+                <div id="div_dayly_table"></div>
+                <br>
+                
+                <div id="div_statistics"></div>
                 
                 
             </div>
         </div>
     </div>
-    <script>
-        let export_button = document.getElementById("daylybutton")
-        let date_dayly
-        export_button.addEventListener("click", function () {
-            date_dayly = document.getElementById("dayly_date").value
-        })
-
-        document.getElementById('daylybutton').addEventListener('click', function() {
-            var table2excel = new Table2Excel();
-            table2excel.export(document.querySelectorAll("#daylytable"), "Diario_"+date_dayly);
-        });
-    </script>
+    
     <script src="{{ url_for('static', filename='js/dayly.js') }}"></script>
     <script src="{{ url_for('static', filename='js/order.js') }}"></script>
 
-<!-- INFO -->
 {% elif route == 6 %}
+<!-- INFO -->
 
 
+{% elif route == 7 %}
+<!-- CARGA EN PROCESO -->
+
+    <div class="container-fluid pb-3" style="padding-top: 4.5rem;">
+        <div class="row">
+            <div class="col-2 col-xl-4 col-lg-3 col-md-3 col-sm-2"></div>
+            <div class="bg-light col-8 col-xl-4 col-lg-6 col-md-6 col-sm-8" style="padding: 2rem; margin-top: 6rem; border-radius: 2rem;" > 
+                <div>
+                    <div>
+                        <h2 class="fw-bold" style="text-align: center;">Carga de data en proceso</h2>
+                        <div style=" display: flex; justify-content: center;">
+                            <div class="spinner-border text-primary" role="status" >
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 {% endif %}
 
 {% endblock %}
+0

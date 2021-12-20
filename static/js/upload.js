@@ -1,5 +1,6 @@
 const myform = document.getElementById("form_upload");
 let alert = document.getElementById("alert")
+let load = document.getElementById("load")
 let make_question = false
 function verify () {
 	if (make_question == true){
@@ -15,13 +16,23 @@ myform.addEventListener("submit", function (e) {
 	e.preventDefault();
 
 	const formData = new FormData(this);
+	myform.reset()
 	make_question = true
 	verify()
-    document.getElementById("load").innerHTML = `
-        <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
-        </div>
-        `
+	load.innerHTML = ''
+    alert.innerHTML = `
+	<div class="alert alert-primary alert-dismissible fade show" role="alert">
+	<div class="row">
+		<div class="col-2">
+			<div class="spinner-border text-primary" role="status" >
+			<span class="visually-hidden">Loading...</span>
+			</div>
+		</div>
+		<div class="col-10"><strong><p style="text-align:center">Cargando: `+ formData.get('date') +`&nbsp&nbsp</p></strong></div>
+		
+		</div>
+	</div>
+	`
 
 	fetch("/upload" , {
 		method: 'POST',
@@ -31,7 +42,7 @@ myform.addEventListener("submit", function (e) {
 		.then(data => {
 			make_question = false
 			verify()
-            document.getElementById("load").innerHTML = `
+            load.innerHTML = `
             <button type="submit" class="btn btn-primary" style="padding-top: 0.2rem;">Subir data</button>
             `
 			if(data.msg == 'Carga subida con éxito'){
@@ -43,7 +54,7 @@ myform.addEventListener("submit", function (e) {
 				`
 			} else {
 				alert.innerHTML = `
-				<div class="alert alert-warning alert-dismissible fade show" role="alert">
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
 				<strong>`+data.msg+`</strong>
 				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 				</div>
@@ -53,16 +64,14 @@ myform.addEventListener("submit", function (e) {
 		})
 		.catch(err => {
 			alert.innerHTML = `
-				<div class="alert alert-warning alert-dismissible fade show" role="alert">
-				<strong>`+data.msg+`</strong>
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<strong>Ocurrió un error interno. Intente de nuevo</strong>
 				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 				</div>
 				`
-			document.getElementById("load").innerHTML = `
+			load.innerHTML = `
             <button type="submit" class="btn btn-primary" style="padding-top: 0.2rem;">Subir data</button>
             `
-			console.log("There was an error")
-			
 		})
 	}	
 );

@@ -1,5 +1,6 @@
 let load = document.getElementById("loading");
 let table = document.getElementById("my_table");
+let alert = document.getElementById("alert")
 
 const myform = document.getElementById("form_sumary");
 
@@ -12,7 +13,8 @@ myform.addEventListener("submit", function (e) {
 		</div>
 	`
 	const formData = new FormData(this);
-
+	myform.reset()
+	
 	fetch("/analysis" , {
 		method: 'POST',
 		body: formData
@@ -20,6 +22,7 @@ myform.addEventListener("submit", function (e) {
 		.then(response => response.json())
 		.then(data => {
 			if(typeof(data.msg[0]) === 'object') {
+				alert.innerHTML = ''
                 let elements = data.msg[0]
                 let dates = data.msg[1]
                 let id_table = data.msg[2]
@@ -55,13 +58,23 @@ myform.addEventListener("submit", function (e) {
 			}
 			else{
 				load.innerHTML = ''
-				table.innerHTML = '<strong>'+ data.msg +'</strong>'
+				alert.innerHTML = `
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<strong>`+ data.msg +`</strong>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+				`
 			}
 			
 		})
 		.catch(err => {
 			load.innerHTML = ''
-			console.log("There was an error")
+			alert.innerHTML = `
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<strong>Ocurrió un error interno. Intente de nuevo</strong>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+				`
 			
 		})
 	}	

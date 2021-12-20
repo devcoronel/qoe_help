@@ -1,5 +1,6 @@
 let load = document.getElementById("loading")
 let table = document.getElementById("table")
+let alert = document.getElementById("alert")
 
 const myform = document.getElementById("form_detail");
 
@@ -12,13 +13,15 @@ myform.addEventListener("submit", function (e) {
 	`
     table.innerHTML = ''
 	const formData = new FormData(this);
-
+    myform.reset()
+    
 	fetch("/detail" , {
 		method: 'POST',
 		body: formData
 	})
 		.then(response => response.json())
 		.then(data => {
+			alert.innerHTML = ''
             load.innerHTML= ""
             let mydata = data.msg
 
@@ -78,13 +81,23 @@ myform.addEventListener("submit", function (e) {
                 `
                 table.innerHTML = tablehtml
             } else {
-                table.innerHTML = '<strong>'+ mydata +'</strong>'
+                alert.innerHTML = `
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<strong>`+ mydata +`</strong>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+				`
             }
 			
 		})
 		.catch(err => {
             load.innerHTML= ""
-			console.log("There was an error")
+            alert.innerHTML = `
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<strong>Ocurrió un error interno. Intente de nuevo</strong>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+				`
 			
 		})
 	}	

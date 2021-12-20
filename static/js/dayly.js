@@ -1,5 +1,7 @@
 let load = document.getElementById("loading");
 let table = document.getElementById("div_dayly_table");
+let statistics = document.getElementById("div_statistics")
+let alert = document.getElementById("alert")
 
 const myform = document.getElementById("form_sumary");
 
@@ -12,6 +14,7 @@ myform.addEventListener("submit", function (e) {
 		</div>
 	`
 	const formData = new FormData(this);
+	myform.reset()
 
 	fetch("/dayly" , {
 		method: 'POST',
@@ -20,10 +23,26 @@ myform.addEventListener("submit", function (e) {
 		.then(response => response.json())
 		.then(data => {
 			if(typeof(data.msg) === 'object') {
+				alert.innerHTML = ''
 				let elements = data.msg[0]
-				let today = data.msg[1]
-
+				
 				let tablehtml = `
+				<div class="accordion accordion-flush" id="accordionFlushExample">
+                    <div class="accordion-item" style="background-color: F2F5FA;">
+                      <h2 class="accordion-header" id="flush-headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo" style="background-color: EDF0F5;">
+                            <div>
+                                <h4 class="fw-bold">Tabla Diaria `+ formData.get('dayly_date') +`</h4>
+                            </div>
+                        </button>
+                      </h2>
+                      <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">
+							<div style="display: flex ;justify-content: right;">
+								<button id="daylybutton" class="btn btn-success" style="margin-bottom: 2rem;">Exportar</button>
+							</div>
+                            <div class="scrollmenu" style="border-radius:10px;">
+							
                 <table class="table table-hover" id="daylytable">
                 <thead class="table-dark">
                 <td onclick="sortTable(0, 'daylytable')" class="header"><strong>CMTS</strong></td>
@@ -60,21 +79,98 @@ myform.addEventListener("submit", function (e) {
 					}
 
 				}
-				tablehtml += `</tbody></table>`
+				tablehtml += `</tbody></table>
+				</div>
+                        </div>
+                      </div>
+                    </div>
+				</div>`
 				
 				load.innerHTML = ''
 				table.innerHTML = tablehtml
 
+				let body_statistics = `
+				<hr>
+                <br>
+				<div class="row">
+                    <div class="col-sm-10 col-md-9 col-9">
+                        <h2 class="fw-bold"> <img src="../static/images/aboutme/i.png" width="35" class="pb-2">&nbspEstadística</h2>
+                    </div>
+                </div>
+				<br>
+				`
+				
+				let dayly_table = document.getElementById("daylytable")
+				let cell = dayly_table.getElementsByTagName("tr")
+				let p1 = []
+				let p2 = []
+				let p3 = []
+				let p4 = []
+				let p5 = []
+
+				for (let i = 1; i < cell.length; i++) {
+					let priority = parseInt(cell[i].getElementsByTagName("td")[7].innerHTML)
+
+					if (priority == 1) {
+						p1.push(priority)
+					} else if (priority == 2) {
+						p2.push(priority)
+					} else if (priority == 3) {
+						p3.push(priority)
+					} else if (priority == 4) {
+						p4.push(priority)
+					} else if (priority == 5) {
+						p5.push(priority)
+					}
+				}
+
+				body_statistics += `<div class="row">
+				<div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-6">
+				<div class="scrollmenu" style="border-radius:10px;">
+                <table class="table table-hover" id="statistics1">
+                <thead class="table-dark"><tr>
+                <td class="header"><strong>Prioridad</strong></td>
+                <td class="header"><strong>Cantidad</strong></td></tr></head>
+				<tbody>
+                <tr><td>1</td><td>`+ p1.length +`</td></tr>
+                <tr><td>2</td><td>`+ p2.length +`</td></tr>
+                <tr><td>3</td><td>`+ p3.length +`</td></tr>
+                <tr><td>4</td><td>`+ p4.length +`</td></tr>
+                <tr><td>5</td><td>`+ p5.length +`</td></tr>
+				</tbody></table>
+				</div></div>`
+
+				statistics.innerHTML = body_statistics
+
+
+				let export_button = document.getElementById("daylybutton")
+
+				document.getElementById('daylybutton').addEventListener('click', function() {
+					var table2excel = new Table2Excel();
+					table2excel.export(document.querySelectorAll("#daylytable"), "Diario_"+ formData.get('dayly_date'));
+				});
 			}
 			else{
 				load.innerHTML = ''
-				table.innerHTML = '<strong>'+ data.msg +'</strong>'
+				statistics.innerHTML = ''
+				alert.innerHTML = `
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<strong>`+ data.msg +`</strong>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+				`
 			}
 			
 		})
 		.catch(err => {
 			load.innerHTML = ''
-			console.log("There was an error")
+			statistics.innerHTML = ''
+			alert.innerHTML = `
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<strong>Ocurrió un error interno. Intente de nuevo</strong>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+				`
 			
 		})
 	}	
