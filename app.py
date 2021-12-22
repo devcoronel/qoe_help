@@ -2,7 +2,7 @@ from concurrent import futures
 import concurrent
 from datetime import date
 from flask import Flask, render_template, request, jsonify, url_for, redirect
-from main import detail, dayly, insert_status, priority, modulation, analysis
+from main import detail, dayly, insert_status, priority, modulation, analysis, status_node
 from up import upload, verify_upload
 from constants import days_detail, days_modulation
 from xpertrak_login import get_cookie
@@ -73,8 +73,10 @@ def my_post_detail():
 
         data_values = [values_hours, values_qoe, values_period, values_modul]
         dates = (data_hours["msg"])[1]
+
+        status = status_node(node)
         
-        return {"msg":[node, data_values, dates]}
+        return {"msg":[node, data_values, dates, status]}
 
 
 @app.route(r'/detail', methods = ['GET'])
@@ -98,7 +100,9 @@ def my_detail(node = None):
         data_modul = detail(node, days, 'MODULATION')
         values_modul = (((data_modul["msg"])[0])[0])[node]
 
-        return render_template('index.html', route = 1, node = node, data_values = [values_hours, values_qoe, values_period, values_modul], dates = (data_hours["msg"])[1], with_search = with_search)
+        status = status_node(node)
+
+        return render_template('index.html', route = 1, node = node, data_values = [values_hours, values_qoe, values_period, values_modul], dates = (data_hours["msg"])[1], status = status, with_search = with_search)
 
     else:
         with_search = True

@@ -1,6 +1,7 @@
 let load = document.getElementById("loading");
 let table = document.getElementById("div_dayly_table");
 let statistics = document.getElementById("div_statistics")
+let statistics2 = document.getElementById("div_statistics2")
 let alert = document.getElementById("alert")
 
 const myform = document.getElementById("form_sumary");
@@ -99,6 +100,8 @@ myform.addEventListener("submit", function (e) {
                 </div>
 				<br>
 				`
+				statistics.innerHTML = body_statistics
+
 				
 				let dayly_table = document.getElementById("daylytable")
 				let cell = dayly_table.getElementsByTagName("tr")
@@ -124,26 +127,46 @@ myform.addEventListener("submit", function (e) {
 					}
 				}
 
-				body_statistics += `<div class="row">
-				<div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-6">
-				<div class="scrollmenu" style="border-radius:10px;">
-                <table class="table table-hover" id="statistics1">
-                <thead class="table-dark"><tr>
-                <td class="header"><strong>Prioridad</strong></td>
-                <td class="header"><strong>Cantidad</strong></td></tr></head>
-				<tbody>
-                <tr><td>1</td><td>`+ p1.length +`</td></tr>
-                <tr><td>2</td><td>`+ p2.length +`</td></tr>
-                <tr><td>3</td><td>`+ p3.length +`</td></tr>
-                <tr><td>4</td><td>`+ p4.length +`</td></tr>
-                <tr><td>5</td><td>`+ p5.length +`</td></tr>
-				</tbody></table>
-				</div></div>`
+				let p = [p1.length, p2.length, p3.length, p4.length, p5.length]
 
-				statistics.innerHTML = body_statistics
-
-
-				let export_button = document.getElementById("daylybutton")
+				let values = [{
+					x: [1,2,3,4,5],
+					y: p,
+					type: "bar"
+				}]
+				let layout = {
+					title: {
+						text:'Prioridad vs Cantidad',
+						font: {
+						  family: 'Verdana',
+						  size: 16
+						},
+						xref: 'paper',
+						x: 0.5,
+					  },
+					  xaxis: {
+						title: {
+						  text: 'Prioridad',
+						  font: {
+							family: 'Verdana',
+							size: 14,
+							color: '#7f7f7f'
+						  }
+						},
+					  },
+					  yaxis: {
+						title: {
+						  text: 'Cantidad',
+						  font: {
+							family: 'Verdana',
+							size: 14,
+							color: '#7f7f7f'
+						  }
+						}
+					  }
+				}
+				let config = {responsive: true}
+				Plotly.newPlot("div_statistics2", values, layout, config)
 
 				document.getElementById('daylybutton').addEventListener('click', function() {
 					var table2excel = new Table2Excel();
@@ -165,13 +188,13 @@ myform.addEventListener("submit", function (e) {
 		.catch(err => {
 			load.innerHTML = ''
 			statistics.innerHTML = ''
+			statistics2.innerHTML = ''
 			alert.innerHTML = `
 				<div class="alert alert-danger alert-dismissible fade show" role="alert">
 				<strong>Ocurrió un error interno. Intente de nuevo</strong>
 				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 				</div>
 				`
-			
 		})
 	}	
 );

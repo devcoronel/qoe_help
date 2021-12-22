@@ -130,6 +130,8 @@
                 </form>
                 <hr>
                 <div id="loading" style="text-align: center;" ></div>
+                <div class="row" id="status"></div>
+                <br>
                 <div class="row" id="table"></div>
                 <div id="alert" ></div>
                 {% endif %}
@@ -138,8 +140,44 @@
                 <hr>
                 <br>
                 <div class="row">
+                    <div class="col-12">
+                        <div class="scrollmenu" style="border-radius:10px;">
+                            <table class="table table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <td class="header"><strong>CMTS</strong></td>
+                                    <td class="header"><strong>Plano</strong></td>
+                                    <td class="header"><strong>Dependencia</strong></td>
+                                    <td class="header"><strong>Impedimento</strong></td>
+                                    <td class="header"><strong>Revisión</strong></td>
+                                    <td class="header"><strong>Tipo</strong></td>
+                                    <td class="header"><strong>Días</strong></td>
+                                    <td class="header"><strong>Problema</strong></td>
+                                    <td class="header"><strong>Estado</strong></td>
+                                    <td class="header"><strong>Detalle</strong></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>{{ status[0][0] }}</td>
+                                <td>{{ status[0][1] }}</td>
+                                <td>{{ status[0][2] }}</td>
+                                <td>{{ status[0][3] }}</td>
+                                <td>{{ status[0][4] }}</td>
+                                <td>{{ status[0][5] }}</td>
+                                <td>{{ status[0][6] }}</td>
+                                <td>{{ status[0][7] }}</td>
+                                <td>{{ status[0][8] }}</td>
+                                <td>{{ status[0][9] }}</td>
+                            </tr></tbody></table>
+                        </div>
+                    </div>
+                    
+                </div>
+                <br>
+                <div class="row">
                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                            <div class="scrollmenu">
+                            <div class="scrollmenu" style="border-radius: 10px;">
                                 <table class="table table-hover" id="hourstable" data-excel-name="Horas_QoE_afectado" >
                                     <thead class="table-dark">
                                         <tr>
@@ -533,7 +571,7 @@
 
 {% elif route == 5 %}
 <!-- DIARIO -->
-
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="{{ url_for('static', filename='js/table2excel.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sumary.css') }}">
     <div class="container-fluid pb-3" style="padding-top: 4.5rem;">
@@ -582,6 +620,9 @@
                 <br>
                 
                 <div id="div_statistics"></div>
+                <div class="row">
+                    <div class="col-6" id="div_statistics2"></div>
+                </div>
                 
                 
             </div>

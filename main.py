@@ -247,6 +247,54 @@ def detail(my_node, my_days, x):
 
     return {"msg": [value_nodes, dates, x]}
 
+def data_status_node(node, dates):
+
+    sum_dates_general = ""
+    sum_dates_afected = ""
+    for date in dates:
+        sum_dates_general += "`"+ date + "` + "
+        sum_dates_afected += "AFECTED_DAYS.`"+ date + "` + "
+    sum_dates_general =  sum_dates_general[:-2]
+    sum_dates_afected =  sum_dates_afected[:-2]
+
+    query = """SELECT CMTS, PLANO, DEPENDENCIA, IMPEDIMENTO, DATE_FORMAT(REVISION, '%Y-%m-%d') AS REVISION, TIPO, SUM({0}) AS DAYS, PROBLEMA, ESTADO, DETALLE FROM STATUS_NODE
+    INNER JOIN NODES ON NODES.ID = STATUS_NODE.ID_NODE
+    INNER JOIN AFECTED_DAYS ON NODES.ID = AFECTED_DAYS.ID_NODE
+    WHERE STATUS_NODE.ID_NODE = (SELECT ID FROM NODES WHERE PLANO = '{1}')
+    GROUP BY STATUS_NODE.ID_NODE
+    ORDER BY DAYS DESC, ID DESC;""".format(sum_dates_general, node)
+    # cursor = mydb.cursor()
+    cursor.execute(query)
+    result = cursor.fetchall()
+    # cursor.close()
+    return result
+
+def status_node(node):
+
+    days = days_priority
+    dates = []
+    today_utc = dt.datetime.utcnow()
+    today = today_utc - dt.timedelta(hours=5)
+    
+    for day in range(days+1):
+        dates.append((today - dt.timedelta(days = day)).strftime("%d/%m/20%y"))
+    dates.pop(0)
+    
+    new_dates = []
+
+    try:
+        dates = if_column_exists('AFECTED_DAYS', dates, new_dates)
+
+        if dates == []:
+            return "No hay data en estos últimos {} días".format(days)
+        
+        else:
+            status = data_status_node(node, dates)
+            return status
+
+    except:
+        return "Error en la conexión con la Base de Datos"
+
 def data_priority(general_or_especific, table, dates):
 
     sum_dates_general = ""
