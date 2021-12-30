@@ -15,10 +15,10 @@ myform.addEventListener("submit", function (e) {
 	const formData = new FormData(this);
 	myform.reset()
 	
-	fetch("/analysis" , {
+	fetch('/analysis' , {
 		method: 'POST',
 		body: formData
-	})
+	})	
 		.then(response => response.json())
 		.then(data => {
 			if(typeof(data.msg[0]) === 'object') {

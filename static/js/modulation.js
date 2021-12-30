@@ -34,6 +34,6 @@ function build(data) {
 
 		}
 		else{
-			table.innerHTML = '<strong>'+ data.msg[0] +'</strong>'
+			table.innerHTML = '<strong>'+ data.msg +'</strong>'
 		}
 }

@@ -4,7 +4,7 @@ def when_upload_runs(function):
 
     def verify_upload(*args, **kwargs):
 
-        with open("templates\\index.html", "r") as f:
+        with open("C:\\Users\\USUARIO\\Desktop\\Diego\\Python\\QOE\\templates\\index.html", "r") as f:
             lines = f.readlines()
             f.close()
         
