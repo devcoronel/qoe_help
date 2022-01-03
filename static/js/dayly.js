@@ -3,7 +3,6 @@ let table = document.getElementById("div_dayly_table");
 let statistics = document.getElementById("div_statistics")
 let statistics2 = document.getElementById("div_statistics2")
 let alert = document.getElementById("alert")
-
 const myform = document.getElementById("form_sumary");
 
 myform.addEventListener("submit", function (e) {
@@ -111,8 +110,16 @@ myform.addEventListener("submit", function (e) {
 				let p4 = []
 				let p5 = []
 
+				let periodM = []
+				let periodD = []
+				let periodN = []
+				let periodT = []
+				let periodI = []
+				let periodNo = []
+
 				for (let i = 1; i < cell.length; i++) {
 					let priority = parseInt(cell[i].getElementsByTagName("td")[7].innerHTML)
+					let period = cell[i].getElementsByTagName("td")[4].innerHTML
 
 					if (priority == 1) {
 						p1.push(priority)
@@ -125,18 +132,32 @@ myform.addEventListener("submit", function (e) {
 					} else if (priority == 5) {
 						p5.push(priority)
 					}
+
+					if (period == 'MADRUGADA') {
+						periodM.push(period)
+					} else if (period == 'DIA') {
+						periodD.push(period)
+					} else if (period == 'NOCHE') {
+						periodN.push(period)
+					} else if (period == 'TODO EL DIA') {
+						periodT.push(period)
+					} else if (period == 'INTERMITENTE') {
+						periodI.push(period)
+					} else if (period == 'NO AFECTADO') {
+						periodNo.push(period)
+					}
 				}
 
 				let p = [p1.length, p2.length, p3.length, p4.length, p5.length]
 
-				let values = [{
-					x: [1,2,3,4,5],
+				let values_priority = [{
+					x: ['QoE ≤ 70', '70 < QoE ≤ 80', 'Horas ≥ 3', 'Modul ≥ 1', 'No afectado'],
 					y: p,
 					type: "bar"
 				}]
-				let layout = {
+				let layout_priority = {
 					title: {
-						text:'Prioridad vs Cantidad',
+						text:'Prioridad',
 						font: {
 						  family: 'Verdana',
 						  size: 16
@@ -165,8 +186,72 @@ myform.addEventListener("submit", function (e) {
 						}
 					  }
 				}
-				let config = {responsive: true}
-				Plotly.newPlot("div_statistics2", values, layout, config)
+				let config_priority = {responsive: true}
+				Plotly.newPlot("div_statistics1", values_priority, layout_priority, config_priority)
+
+				let data_priority_pastel = [{
+					values: [p1.length, p2.length, p3.length, p4.length, p5.length],
+					labels: ['QoE ≤ 70', '70 < QoE ≤ 80', 'Horas ≥ 3', 'Modul ≥ 1', 'No afectado'],
+					type: 'pie',
+					textinfo: "percent+value"
+				}];
+				  
+				let layout_priority_pastel = {
+					title: {
+						text:'Prioridad',
+						font: {
+						  family: 'Verdana',
+						  size: 16
+						},
+						xref: 'paper',
+						x: 0.5,
+					  },
+					height: 400,
+					width: 500
+				};
+				  
+				Plotly.newPlot('div_statistics2', data_priority_pastel, layout_priority_pastel);
+
+				let periodAll = [periodM.length, periodD.length, periodN.length, periodT.length, periodI.length, periodNo.length]
+
+				let values_period = [{
+					x: ["MADRUGADA","DIA","NOCHE","TODO EL DIA", "INTERMITENTE", "NO AFECTADO"],
+					y: periodAll,
+					type: "bar"
+				}]
+				let layout_period = {
+					title: {
+						text:'Periodo de Afectación',
+						font: {
+						  family: 'Verdana',
+						  size: 16
+						},
+						xref: 'paper',
+						x: 0.5,
+					  },
+					  xaxis: {
+						title: {
+						  text: 'Periodo',
+						  font: {
+							family: 'Verdana',
+							size: 14,
+							color: '#7f7f7f'
+						  }
+						},
+					  },
+					  yaxis: {
+						title: {
+						  text: 'Cantidad',
+						  font: {
+							family: 'Verdana',
+							size: 14,
+							color: '#7f7f7f'
+						  }
+						}
+					  }
+				}
+				let config_period = {responsive: true}
+				Plotly.newPlot("div_statistics3", values_period, layout_period, config_period)
 
 				document.getElementById('daylybutton').addEventListener('click', function() {
 					var table2excel = new Table2Excel();
