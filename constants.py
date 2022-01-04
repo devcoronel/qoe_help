@@ -5,6 +5,7 @@ days_detail = 8
 days_modulation = 8
 days_dayly = 8
 umbral_ch_mod = 2
+days_sampling = 7
 
 umbral_night = 16
 umbral_morning_afternoon = 7

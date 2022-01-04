@@ -20,6 +20,9 @@ if (route == "analysis") {
 } else if (route == "dayly") {
     let dayly = document.getElementById("dayly");
     dayly.innerHTML = `<a class="nav-link fw-bold" href="/dayly">Diario</a>`;
+} else if (route == "sampling") {
+    let sampling = document.getElementById("sampling");
+    sampling.innerHTML = `<a class="nav-link fw-bold" href="/sampling">Muestreo</a>`;
 } else {
     let detail = document.getElementById("detail");
     detail.innerHTML = `<a class="nav-link fw-bold" href="/detail">Detalle</a>`;

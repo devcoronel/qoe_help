@@ -389,7 +389,7 @@ def data_modulation(dates):
         INNER JOIN NODES ON NODES.ID = MODULATION.ID_NODE
         WHERE ID_NODE IN (
         SELECT ID_NODE FROM MODULATION
-        WHERE `{1}` >= 1 AND `{2}` >= 1)
+        WHERE `{1}` >= 2 AND `{2}` >= 2)
         ORDER BY `{1}` DESC;
         """.format(query_dates, dates[0], dates[1])
 
@@ -458,7 +458,7 @@ def data_dayly(dates, mydate):
     WHERE {2} >= 2)
     OR AFECTED_DAYS.ID_NODE IN (
     SELECT ID_NODE FROM MODULATION
-    WHERE `{3}` >= 1 AND `{4}` >= 1)
+    WHERE `{3}` >= 2 AND `{4}` >= 2)
     GROUP BY AFECTED_DAYS.ID_NODE
     ORDER BY DAYS DESC;
     """.format(mydate, sum_dates_afected, sum_dates_general, dates[0], dates[1])
@@ -506,3 +506,47 @@ def dayly(date):
         except:
         # else:
             return "Error en la conexión con la Base de Datos"
+
+def data_sampling(dates):
+
+    sum_dates_general = ""
+    for date in dates:
+        sum_dates_general += "`"+ date + "` , "
+    sum_dates_general =  sum_dates_general[:-2]
+
+    query = """"
+    SELECT CMTS, PLANO, {} FROM SAMPLING
+    INNER JOIN NODES ON NODES.ID = SAMPLING.ID_NODE
+    WHERE  `{}` < 90 OR  `{}` < 90;
+    """.format(sum_dates_general, dates[0], dates[1])
+
+    # cursor = mydb.cursor()
+    cursor.execute(query)
+    result = cursor.fetchall()
+    # cursor.close()
+
+    return result
+
+def sampling():
+
+    days = days_sampling
+    dates = []
+    today_utc = dt.datetime.utcnow()
+    today = today_utc - dt.timedelta(hours=5)
+    
+    for day in range(days+1):
+        dates.append((today - dt.timedelta(days = day)).strftime("%d/%m/20%y"))
+    dates.pop(0)
+    
+    new_dates = []
+
+    try:
+        dates = if_column_exists('SAMPLING', dates, new_dates)
+        if dates == [] or len(dates) == 1:
+            return "Asegurarse cargar data los últimos {} días".format(days_sampling)
+        
+        else:
+            values_sampling = data_sampling(dates)
+            return [values_sampling]
+    except:
+        return "Error en la conexión con la Base de Datos"

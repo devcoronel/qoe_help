@@ -37,14 +37,14 @@ def init():
         return print("Error")
 
 def complete():
-    query = "SELECT ID FROM NODES"
+    query = "SELECT ID FROM NODES;"
     # cursor = mydb.cursor()
     cursor.execute(query)
     result = cursor.fetchall()
-    cursor.close()
+    # cursor.close()
     
     for id in result:
-        for x in ['MODULATION', 'STATUS_NODE', 'NEW_HOURS', 'NEW_QOE', 'PERIOD', 'AFECTED_DAYS']:
+        for x in ['SAMPLING']:#, 'MODULATION', 'STATUS_NODE', 'NEW_HOURS', 'NEW_QOE', 'PERIOD', 'AFECTED_DAYS']:
             query0 = "INSERT INTO {} (ID_NODE) VALUES ({})".format(x, id[0])
             # cursor = mydb.cursor()
             cursor.execute(query0)
@@ -162,6 +162,7 @@ def verify_upload(date, cookie):
     create_column('PERIOD', ytd, 'VARCHAR(20)', "'NO DATA'")
     create_column('AFECTED_DAYS', ytd, 'INT(1)', 0)
     create_column('MODULATION', ytd, 'FLOAT', 0)
+    create_column('SAMPLING', ytd, 'INT', 0)
     my_date_plus = my_date + dt.timedelta(days=1)
 
     return [lima_nodes, ytd, my_date_plus]
@@ -213,11 +214,13 @@ def upload(lima_nodes, ytd, my_date_plus):
 
                     # QOE, HORAS QOE AFECTADO Y PERIODO DE AFECTACIÓN
                     counter = 0
+                    counter_sampling = 0
                     period = []
                     scores = []
 
                     for i in mydata:
                         scores.append(i["qoeScore"])
+                        counter_sampling += 1
 
                         if i["qoeScore"] < min_qoe:
                             counter = counter + 1
@@ -229,7 +232,7 @@ def upload(lima_nodes, ytd, my_date_plus):
                                 period.append("DIA")
                             else:
                                 period.append("MADRUGADA")
-
+                    value_sampling = counter_sampling
                     value_qoe = round(sum(scores)/len(scores), 0)
                     value_hours = (counter*15)/60
 
@@ -242,6 +245,7 @@ def upload(lima_nodes, ytd, my_date_plus):
                     insert_value('NEW_HOURS', ytd, value_hours, node["name"])
                     insert_value('NEW_QOE', ytd, value_qoe, node["name"])
                     insert_value('PERIOD', ytd, value_period, node["name"])
+                    insert_value('SAMPLING', ytd, value_sampling, node["name"])
                 
             elif mydata.status_code == 500:
                 print(contador, node["name"], "500 - Internal Server Error")
@@ -285,6 +289,7 @@ def upload(lima_nodes, ytd, my_date_plus):
             delete_column("PERIOD", ytd)
             delete_column("AFECTED_DAYS", ytd)
             delete_column("MODULATION", ytd)
+            delete_column("SAMPLING", ytd)
             
             lines[-1] = '0'
             with open("templates\\index.html", "w") as f:

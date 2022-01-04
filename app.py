@@ -2,7 +2,7 @@ from concurrent import futures
 import concurrent
 from datetime import date
 from flask import Flask, render_template, request, jsonify, url_for, redirect
-from main import detail, dayly, insert_status, priority, modulation, analysis, status_node
+from main import detail, dayly, insert_status, priority, modulation, analysis, status_node, sampling
 from up import upload, verify_upload
 from constants import days_detail, days_modulation
 from xpertrak_login import get_cookie
@@ -177,6 +177,13 @@ def my_post_dayly():
 def my_dayly():
     return render_template('index.html', route = 5)
 
+@app.route('/sampling')
+@limiter.limit("2/second")
+@when_upload_runs
+def my_sampling():
+    data_sampling = sampling()
+    print(data_sampling)
+    return render_template('index.html', route = 8, data = {'msg': data_sampling})
 
 @app.route('/info')
 @limiter.limit("2/second")

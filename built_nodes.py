@@ -110,4 +110,4 @@ def get_nodes(cookie):
             return {"msg":"Cookie incorrecta"}
 
     except:
-        return {"msg":"Limite excedido de conexiones con Xpertrak"}
+        return {"msg":"Verifique su conexión a Internet o se ha excedido el límite de conexiones con Xpertrak"}
