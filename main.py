@@ -30,8 +30,8 @@ def if_column_exists(x, dates, new_dates):
         query = """
         SELECT IF ( EXISTS (
         SELECT * FROM information_schema.COLUMNS 
-        WHERE TABLE_SCHEMA = 'qoehelp' AND TABLE_NAME = '{}' AND COLUMN_NAME = '{}'),1,0);
-        """.format(x, date)
+        WHERE TABLE_SCHEMA = '{}' AND TABLE_NAME = '{}' AND COLUMN_NAME = '{}'),1,0);
+        """.format(mysql_database, x, date)
 
         # cursor = mydb.cursor()
         cursor.execute(query)
@@ -43,7 +43,7 @@ def if_column_exists(x, dates, new_dates):
     dates = new_dates
     return dates
 
-def data_analysis(dates, table, regex):
+def data_analysis(dates, table, regex, region):
 
     query_dates = ""
     for date in dates:
@@ -51,11 +51,10 @@ def data_analysis(dates, table, regex):
     query_dates =  query_dates[:-2]
 
     query = """
-    SELECT CMTS, PLANO, {0} FROM NODES
+    SELECT REGION, CMTS, PLANO, {0} FROM NODES
     INNER JOIN {1} ON {1}.ID_NODE = NODES.ID
-    WHERE PLANO REGEXP '^{2}';
-    """.format(query_dates, table, regex)
-
+    WHERE PLANO REGEXP '^{2}' AND REGION = '{3}';
+    """.format(query_dates, table, regex, region)
     # cursor = mydb.cursor()
     cursor.execute(query)
     result = cursor.fetchall()
@@ -66,7 +65,7 @@ def data_analysis(dates, table, regex):
         return result
     
 
-def analysis(regex, days, x):
+def analysis(regex, days, x, region):
 
     try:
         regex = str(regex).upper()
@@ -92,7 +91,7 @@ def analysis(regex, days, x):
             return "No hay data en estos últimos {} días".format(days)
         
         else:
-            analysis = data_analysis(dates, x, regex)
+            analysis = data_analysis(dates, x, regex, region)
             if x == 'NEW_HOURS':
                 id_table = 'hourstable'
             elif x == 'NEW_QOE':
@@ -257,7 +256,7 @@ def data_status_node(node, dates):
     sum_dates_general =  sum_dates_general[:-2]
     sum_dates_afected =  sum_dates_afected[:-2]
 
-    query = """SELECT CMTS, PLANO, DEPENDENCIA, IMPEDIMENTO, DATE_FORMAT(REVISION, '%Y-%m-%d') AS REVISION, TIPO, SUM({0}) AS DAYS, PROBLEMA, ESTADO, DETALLE FROM STATUS_NODE
+    query = """SELECT REGION, CMTS, PLANO, DEPENDENCIA, IMPEDIMENTO, DATE_FORMAT(REVISION, '%Y-%m-%d') AS REVISION, TIPO, SUM({0}) AS DAYS, PROBLEMA, ESTADO, DETALLE FROM STATUS_NODE
     INNER JOIN NODES ON NODES.ID = STATUS_NODE.ID_NODE
     INNER JOIN AFECTED_DAYS ON NODES.ID = AFECTED_DAYS.ID_NODE
     WHERE STATUS_NODE.ID_NODE = (SELECT ID FROM NODES WHERE PLANO = '{1}')
@@ -295,7 +294,7 @@ def status_node(node):
     except:
         return "Error en la conexión con la Base de Datos"
 
-def data_priority(general_or_especific, table, dates):
+def data_priority(general_or_especific, table, dates, region):
 
     sum_dates_general = ""
     sum_dates_afected = ""
@@ -315,9 +314,9 @@ def data_priority(general_or_especific, table, dates):
         INNER JOIN AFECTED_DAYS ON NODES.ID = AFECTED_DAYS.ID_NODE
         WHERE STATUS_NODE.ID_NODE IN (
         SELECT ID_NODE FROM AFECTED_DAYS
-        WHERE {0} >= 2)
+        WHERE {0} >= 2) AND REGION = '{1}'
         GROUP BY STATUS_NODE.ID_NODE
-        ORDER BY DAYS DESC, ID DESC;""".format(sum_dates_general)
+        ORDER BY DAYS DESC, ID DESC;""".format(sum_dates_general, region)
 
         # cursor = mydb.cursor()
         cursor.execute(query)
@@ -346,7 +345,8 @@ def data_priority(general_or_especific, table, dates):
         return result
 
 
-def priority():
+# def priority(region = 'LIMA'):
+def priority(region = "-"):
     days = days_priority
     dates = []
     today_utc = dt.datetime.utcnow()
@@ -365,11 +365,11 @@ def priority():
             return "No hay data en estos últimos {} días".format(days)
         
         else:
-            general_priority = data_priority('G', '', dates)
-            especific_priority_qoe =data_priority('E', 'NEW_QOE', dates) 
-            especific_priority_hours =data_priority('E', 'NEW_HOURS', dates) 
-            especific_priority_period =data_priority('E', 'PERIOD', dates) 
-            especific_priority_modulation =data_priority('E', 'MODULATION', dates)
+            general_priority = data_priority('G', '', dates, region)
+            especific_priority_qoe =data_priority('E', 'NEW_QOE', dates, region) 
+            especific_priority_hours =data_priority('E', 'NEW_HOURS', dates, region) 
+            especific_priority_period =data_priority('E', 'PERIOD', dates, region) 
+            especific_priority_modulation =data_priority('E', 'MODULATION', dates, region)
 
             return [general_priority, especific_priority_qoe, especific_priority_hours, especific_priority_period, especific_priority_modulation, dates]
 

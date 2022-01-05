@@ -36,10 +36,11 @@ def error_500(error):
 @limiter.limit("1/2second")
 @when_upload_runs
 def my_post_qoe():
+    region = request.form['region']
     parameter = request.form['type']
     node = request.form['node']
     days = request.form['days']
-    data = analysis(node, days, parameter)
+    data = analysis(node, days, parameter, region)
     return {'msg': data}
 
 
@@ -115,6 +116,16 @@ def my_detail(node = None):
 def my_priority():
     data = priority()
     return render_template('index.html', route = 2, data = {'msg': data})
+
+
+@app.route('/priority', methods=['POST'])
+@limiter.limit("1/2second")
+@when_upload_runs
+def my_post_priority():
+    region = request.data
+    print(region)
+    data = priority(region)
+    return {'msg': data}
     
 
 @app.route('/modulation')
@@ -182,7 +193,6 @@ def my_dayly():
 @when_upload_runs
 def my_sampling():
     data_sampling = sampling()
-    print(data_sampling)
     return render_template('index.html', route = 8, data = {'msg': data_sampling})
 
 @app.route('/info')

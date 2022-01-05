@@ -32,7 +32,7 @@ def normalize(node):
 def get_nodes(cookie):
     lima_nodes = []
     try:
-        print("Getting data's nodes from Xpertrak ...")
+        print("Getting data's nodes from Xpertrak")
         url_nodes = 'http://{}/pathtrak/api/node'.format(url_ext)
         data_nodes = requests.get(url_nodes, cookies={'JSESSIONID': '{}'.format(cookie)})
 
@@ -43,26 +43,35 @@ def get_nodes(cookie):
 
             for node in data_nodes:
 
-                if re.search("^LM", node["name"], re.IGNORECASE):
-                    normalize(node)
-                    if node["cmts"] == None:
-                        node["cmts"] = "-"
-                    lima_nodes.append(node)
-
-                elif re.search("^LAMO", node["name"], re.IGNORECASE):
-                    normalize(node)
-                    if node["cmts"] == None:
-                        node["cmts"] = "-"
-                    lima_nodes.append(node)
-
-                elif re.search("^5", node["name"], re.IGNORECASE):
-                    normalize(node)
-                    if node["cmts"] == None:
-                        node["cmts"] = "-"
-                    lima_nodes.append(node)
-
-                else:
+                if re.search("^RPM", node["name"], re.IGNORECASE):
                     pass
+                
+                else:
+                    normalize(node)
+                    if node["cmts"] == None:
+                        node["cmts"] = "-"
+                    lima_nodes.append(node)
+
+                # if re.search("^LM", node["name"], re.IGNORECASE):
+                #     normalize(node)
+                #     if node["cmts"] == None:
+                #         node["cmts"] = "-"
+                #     lima_nodes.append(node)
+
+                # elif re.search("^LAMO", node["name"], re.IGNORECASE):
+                #     normalize(node)
+                #     if node["cmts"] == None:
+                #         node["cmts"] = "-"
+                #     lima_nodes.append(node)
+
+                # elif re.search("^5", node["name"], re.IGNORECASE):
+                #     normalize(node)
+                #     if node["cmts"] == None:
+                #         node["cmts"] = "-"
+                #     lima_nodes.append(node)
+
+                # else:
+                #     pass
             
             name_nodes = []
             for node in lima_nodes:

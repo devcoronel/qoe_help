@@ -1,0 +1,15 @@
+1. Crear base de datos
+2. Asegurarse que la tabla nodos tenga la columna región con default "-"
+3. Observación, la carga de data será a nivel nacional
+   Si no se quiere ello, descomentar lo comentado y comentar
+   la sentencia if else que tiene built_nodes.py
+
+4. AGREGADOS AL PROYECTO
+- Construir las gráficas pedidas por Micael
+- Seguir con la clasificación por región
+- Hacer funcionar la app en Apache
+
+5. Cuando esté lista la clasificación por región
+- Cambiar Linea 28 de index.html
+- Cambiar Linea 260 de index.html
+- Cambiar Linea 349 de main.py

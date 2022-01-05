@@ -90,6 +90,7 @@ myform.addEventListener("submit", function (e) {
                 <table class="table table-hover">
                 <thead class="table-dark">
                     <tr>
+                        <td class="header"><strong>REGION</strong></td>
                         <td class="header"><strong>CMTS</strong></td>
                         <td class="header"><strong>Plano</strong></td>
                         <td class="header"><strong>Dependencia</strong></td>
@@ -114,6 +115,7 @@ myform.addEventListener("submit", function (e) {
                     <td>`+ mydata[3][0][7] +`</td>
                     <td>`+ mydata[3][0][8] +`</td>
                     <td>`+ mydata[3][0][9] +`</td>
+                    <td>`+ mydata[3][0][10] +`</td>
                 </tr></tbody></table></div></div>`
 
                 status_node.innerHTML = table_status

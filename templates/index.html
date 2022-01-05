@@ -21,6 +21,21 @@
                     <div class="row ">
                         <div class="mb-1 col-xl-2 col-lg-3 col-md-4 col-sm-5 col-12">
                             <div class="row">
+                                <label for="exampleFormControlInput1" class="form-label fw-bold fs-5">Región</label>
+                            </div>
+                            <div class="row ms-0 me-0">
+                                <select name="region" id="region" class="form-select">
+                                    <!-- <option value="LIMA">LIMA</option> -->
+                                    <option value="-">LIMA</option>
+                                    <option value="CENTRO">CENTRO</option>
+                                    <option value="NORTE">NORTE</option>
+                                    <option value="SUR">SUR</option>
+                                </select>
+                            </div>
+                            
+                        </div>
+                        <div class="mb-1 col-xl-2 col-lg-3 col-md-4 col-sm-5 col-12">
+                            <div class="row">
                                 <label for="exampleFormControlInput1" class="form-label fw-bold fs-5">Parámetro</label>
                             </div>
                             <div class="row ms-0 me-0">
@@ -145,6 +160,7 @@
                             <table class="table table-hover">
                             <thead class="table-dark">
                                 <tr>
+                                    <td class="header"><strong>REGION</strong></td>
                                     <td class="header"><strong>CMTS</strong></td>
                                     <td class="header"><strong>Plano</strong></td>
                                     <td class="header"><strong>Dependencia</strong></td>
@@ -169,6 +185,7 @@
                                 <td>{{ status[0][7] }}</td>
                                 <td>{{ status[0][8] }}</td>
                                 <td>{{ status[0][9] }}</td>
+                                <td>{{ status[0][10] }}</td>
                             </tr></tbody></table>
                         </div>
                     </div>
@@ -233,7 +250,20 @@
     <div class="container-fluid pb-3" style="padding-top: 4.5rem;">
         <div class="container bg-light rounded pt-2">
             <div class="p-3">
-                <h2 class="fw-bold"> <img src="{{ url_for('static', filename='images/aboutme/i.png') }}" width="35" class="pb-2">&nbspPrioridad&nbsp</h2>
+                <div class="row">
+                    <div class="col-sm-7 col-xl-9 col-6">
+                        <h2 class="fw-bold"> <img src="{{ url_for('static', filename='images/aboutme/i.png') }}" width="35" class="pb-2">&nbspPrioridad&nbsp</h2>
+                    </div>
+                    <div class="col-sm-5 col-xl-3 col-6">
+                        <select name="region" id="region" class="form-select">
+                            <!-- <option value="LIMA">Región LIMA</option> -->
+                            <option value="-">Región LIMA</option>
+                            <option value="CENTRO">Región CENTRO</option>
+                            <option value="NORTE">Región NORTE</option>
+                            <option value="SUR">Región SUR</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="row">
                     <p>La tabla recopila información de los planos afectados por Horas (mayor o igual a 3 horas) o QoE (Menor que 80 de puntuación promedio diaria)</p>
                 </div>
@@ -476,6 +506,7 @@
         build(jsondata)
     </script>
     <script src="{{ url_for('static', filename='js/edit_status.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/priority_per_region.js') }}"></script>
 
 
 {% elif route == 3 %}

@@ -29,12 +29,39 @@ def init():
             # cursor = mydb.cursor()
             cursor.execute(query)
             mydb.commit()
-            cursor.close()
+            # cursor.close()
         return print("======== ¡SUCCESS! ========")
 
     except:
     # else:
         return print("Error")
+
+def add_region():
+
+    query = "SET SQL_SAFE_UPDATES = 0;"
+    cursor.execute(query)
+    mydb.commit()
+
+    with open('planoxzona.json', 'r') as file:
+        f = file.read()
+        python_file = json.loads(f)
+
+    region_nodes = []
+    for node in python_file:
+        node.pop('cmts_fuera_de_rango')
+        node.pop('ZONA')
+        node.pop('DEPARTAMENTO')
+        region_nodes.append(node)
+    
+    for item in region_nodes:
+
+        query1= """UPDATE NODES SET REGION = "{0}" WHERE PLANO = "{1}";
+        """.format(item["ZONA_2"], item["NODO"])
+
+        print(query1)
+
+        cursor.execute(query1)
+        mydb.commit()
 
 def complete():
     query = "SELECT ID FROM NODES;"
@@ -44,7 +71,7 @@ def complete():
     # cursor.close()
     
     for id in result:
-        for x in ['SAMPLING']:#, 'MODULATION', 'STATUS_NODE', 'NEW_HOURS', 'NEW_QOE', 'PERIOD', 'AFECTED_DAYS']:
+        for x in ['SAMPLING', 'MODULATION', 'STATUS_NODE', 'NEW_HOURS', 'NEW_QOE', 'PERIOD', 'AFECTED_DAYS']:
             query0 = "INSERT INTO {} (ID_NODE) VALUES ({})".format(x, id[0])
             # cursor = mydb.cursor()
             cursor.execute(query0)
@@ -145,8 +172,8 @@ def verify_upload(date, cookie):
         query0 = """
         SELECT IF ( EXISTS (
         SELECT * FROM information_schema.COLUMNS 
-        WHERE TABLE_SCHEMA = 'qoehelp' AND TABLE_NAME = '{}' AND COLUMN_NAME = '{}'),1,0);
-        """.format(bool, ytd)
+        WHERE TABLE_SCHEMA = '{}' AND TABLE_NAME = '{}' AND COLUMN_NAME = '{}'),1,0);
+        """.format(mysql_database, bool, ytd)
 
         # cursor = mydb.cursor()
         cursor.execute(query0)

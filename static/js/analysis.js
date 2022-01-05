@@ -29,21 +29,23 @@ myform.addEventListener("submit", function (e) {
 
                 let tablehtml = `<table class="table table-hover" id="`+ id_table +`">
                 <thead class="table-dark">
-                <td onclick="sortTable(0, '`+ id_table +`')" class="header"><strong>CMTS</strong></td>
-                <td onclick="sortTable(1, '`+ id_table +`')" class="header"><strong>Plano</strong></td>`
+                <td onclick="sortTable(0, '`+ id_table +`')" class="header"><strong>REGION</strong></td>
+                <td onclick="sortTable(1, '`+ id_table +`')" class="header"><strong>CMTS</strong></td>
+                <td onclick="sortTable(2, '`+ id_table +`')" class="header"><strong>Plano</strong></td>`
                             
                 for (let i in dates) {
-                    let a = parseInt(i)+2
+                    let a = parseInt(i)+3
                     tablehtml += `<td onclick="sortTable(`+ a +`, '`+ id_table +`')" class="header"><strong>`+ dates[i] +`</strong></td>`
                 }
                 tablehtml += '</thead><tbody>'
                 
                 for(let i in elements){
                     tablehtml += `<td>`+ elements[i][0] +`</td>
-                    <td><a href="/detail/`+ elements[i][1] +`" target= "_blank">`+ elements[i][1] +`</a></td>`
+                    <td>`+ elements[i][1] +`</td>
+					<td><a href="/detail/`+ elements[i][2] +`" target= "_blank">`+ elements[i][2] +`</a></td>`
                     
                     for (j in elements[i]) {
-                        if (!(j == 0 || j == 1)) {
+                        if (!(j == 0 || j == 1 || j == 2)) {
                             tablehtml += '<td>'+ elements[i][j] +'</td>'
                         }
                     }
@@ -57,13 +59,22 @@ myform.addEventListener("submit", function (e) {
 
 			}
 			else{
-				load.innerHTML = ''
-				alert.innerHTML = `
-				<div class="alert alert-danger alert-dismissible fade show" role="alert">
-				<strong>`+ data.msg +`</strong>
-				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-				</div>
-				`
+				if(typeof(data.msg) === 'string') {
+					load.innerHTML = ''
+					alert.innerHTML = `
+					<div class="alert alert-danger alert-dismissible fade show" role="alert">
+					<strong>`+ data.msg +`</strong>
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+					`
+				} else{
+					load.innerHTML = ''
+					alert.innerHTML = `
+					<div class="alert alert-danger alert-dismissible fade show" role="alert">
+					<strong>`+ data.msg[0] +`</strong>
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>`
+				}
 			}
 			
 		})
