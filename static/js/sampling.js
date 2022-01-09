@@ -1,6 +1,7 @@
 let table = document.getElementById("table_sampling")
 
 function build(data) {
+
     if(typeof(data.msg) === 'object') {
         
     } else{

@@ -376,7 +376,7 @@ def data_priority(general_or_especific, table, dates, region):
 
 
 # def priority(region = 'LIMA'):
-def priority(region = "-"):
+def priority(region):
     days = days_priority
     dates = []
     today_utc = dt.datetime.utcnow()
@@ -463,7 +463,7 @@ def modulation():
         return "Error en la conexión con la Base de Datos"
 
 
-def data_dayly(dates, mydate):
+def data_dayly(dates, mydate, region):
 
     sum_dates_general = ""
     sum_dates_afected = ""
@@ -490,15 +490,15 @@ def data_dayly(dates, mydate):
     INNER JOIN PERIOD ON PERIOD.ID_NODE = NODES.ID
     INNER JOIN MODULATION ON MODULATION.ID_NODE = NODES.ID
     INNER JOIN AFECTED_DAYS ON NODES.ID = AFECTED_DAYS.ID_NODE
-    WHERE AFECTED_DAYS.ID_NODE IN (
+    WHERE (AFECTED_DAYS.ID_NODE IN (
     SELECT ID_NODE FROM AFECTED_DAYS
     WHERE {2} >= 2)
     OR AFECTED_DAYS.ID_NODE IN (
     SELECT ID_NODE FROM MODULATION
-    WHERE `{3}` >= 2 AND `{4}` >= 2)
+    WHERE `{3}` >= 2 AND `{4}` >= 2)) AND REGION = "{5}"
     GROUP BY AFECTED_DAYS.ID_NODE
     ORDER BY DAYS DESC;
-    """.format(mydate, sum_dates_afected, sum_dates_general, dates[0], dates[1])
+    """.format(mydate, sum_dates_afected, sum_dates_general, dates[0], dates[1], region)
 
     # cursor = mydb.cursor()
     cursor.execute(query)
@@ -508,7 +508,7 @@ def data_dayly(dates, mydate):
     return result
 
 
-def dayly(date):
+def dayly(date, region):
     days = days_modulation
     dates = []
     today_utc = dt.datetime.utcnow()
@@ -537,25 +537,26 @@ def dayly(date):
                 return "No hay data para la fecha {}".format(my_date.strftime("%d/%m/20%y"))
             
             else:
-                values_dayly = data_dayly(dates, my_date.strftime("%d/%m/20%y"))
+                values_dayly = data_dayly(dates, my_date.strftime("%d/%m/20%y"), region)
                 return [values_dayly]
 
         except:
         # else:
             return "Error en la conexión con la Base de Datos"
 
-def data_sampling(dates):
+def data_sampling(dates, region):
 
     sum_dates_general = ""
     for date in dates:
         sum_dates_general += "`"+ date + "` , "
     sum_dates_general =  sum_dates_general[:-2]
 
-    query = """"
-    SELECT CMTS, PLANO, {} FROM SAMPLING
+    query = """
+    SELECT CMTS, PLANO, {0} FROM SAMPLING
     INNER JOIN NODES ON NODES.ID = SAMPLING.ID_NODE
-    WHERE  `{}` < 90 OR  `{}` < 90;
-    """.format(sum_dates_general, dates[0], dates[1])
+    WHERE  ((`{1}` < 90 AND `{1}` > 0) OR  (`{2}` < 90 AND `{2}` > 0)) AND REGION = "{3}"
+    ORDER BY `{1}` ASC;
+    """.format(sum_dates_general, dates[0], dates[1], region)
 
     # cursor = mydb.cursor()
     cursor.execute(query)
@@ -564,7 +565,7 @@ def data_sampling(dates):
 
     return result
 
-def sampling():
+def sampling(region):
 
     days = days_sampling
     dates = []
@@ -579,11 +580,12 @@ def sampling():
 
     try:
         dates = if_column_exists('SAMPLING', dates, new_dates)
+
         if dates == [] or len(dates) == 1:
             return "Asegurarse cargar data los últimos {} días".format(days_sampling)
         
         else:
-            values_sampling = data_sampling(dates)
+            values_sampling = data_sampling(dates, region)
             return [values_sampling]
     except:
         return "Error en la conexión con la Base de Datos"

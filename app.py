@@ -138,7 +138,6 @@ def my_priority():
 @when_upload_runs
 def my_post_priority():
     region = request.data
-    print(region)
     data = priority(region)
     return {'msg': data}
     
@@ -188,12 +187,13 @@ def my_upload():
 @limiter.limit("1/2second")
 @when_upload_runs
 def my_post_dayly():
+    region = request.form["region"]
     date = request.form["dayly_date"]
     
     if date == '':
         return {'msg': 'No se ha especificado ninguna fecha'}
     else:
-        data = dayly(date)
+        data = dayly(date, region)
         return {'msg': data}
 
 
@@ -207,7 +207,7 @@ def my_dayly():
 @limiter.limit("2/second")
 @when_upload_runs
 def my_sampling():
-    data_sampling = sampling()
+    data_sampling = sampling("LIMA")
     return render_template('index.html', route = 8, data = {'msg': data_sampling})
 
 @app.route('/info')

@@ -33,7 +33,7 @@ myform.addEventListener("submit", function (e) {
                       <h2 class="accordion-header" id="flush-headingTwo">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo" style="background-color: EDF0F5;">
                             <div>
-                                <h4 class="fw-bold">Tabla Diaria `+ formData.get('dayly_date') +`</h4>
+                                <h4 class="fw-bold">Tabla Diaria `+ formData.get('dayly_date') +` - Región `+ formData.get('region') +`</h4>
                             </div>
                         </button>
                       </h2>
@@ -198,11 +198,11 @@ myform.addEventListener("submit", function (e) {
 				let periodList = [periodM.length, periodD.length, periodN.length, periodT.length, periodI.length, periodMod.length]
 				let sumPeriodPlanes = periodM.length + periodD.length + periodN.length + periodT.length + periodI.length + periodMod.length
 
-				console.log("qoe < 70: "+cA.length)
-				console.log("horas >= 3: "+cB.length)
-				console.log("qoe entre 70 y 80: "+cC.length)
-				console.log("modulacion: "+cD.length)
-				console.log("no afectado: "+cE.length)
+				// console.log("qoe < 70: "+cA.length)
+				// console.log("horas >= 3: "+cB.length)
+				// console.log("qoe entre 70 y 80: "+cC.length)
+				// console.log("modulacion: "+cD.length)
+				// console.log("no afectado: "+cE.length)
 
 
 				tablehtml += `</tbody></table>
@@ -273,7 +273,7 @@ myform.addEventListener("submit", function (e) {
 							},
 							labels:{
 								render: (context) => {
-									const percentage = context.value / showData(chart2) *100
+									const percentage = context.value / showData(chart1) *100
 									return percentage.toFixed(0)+'%'
 								},
 								fontColor: '#fff',
