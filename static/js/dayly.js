@@ -49,12 +49,48 @@ myform.addEventListener("submit", function (e) {
                 <td onclick="sortTable(0, 'daylytable')" class="header"><strong>CMTS</strong></td>
                 <td onclick="sortTable(1, 'daylytable')" class="header"><strong>Plano</strong></td>
 				<td onclick="sortTable(2, 'daylytable')" class="header"><strong>QoE</strong></td>
-				<td onclick="sortTable(3, 'daylytable')" class="header"><strong>Horas</strong></td>
-				<td onclick="sortTable(4, 'daylytable')" class="header"><strong>Periodo</strong></td>
-				<td onclick="sortTable(5, 'daylytable')" class="header"><strong>Cambios Modulación</strong></td>
-				<td onclick="sortTable(6, 'daylytable')" class="header"><strong>Días</strong></td>
-				<td onclick="sortTable(7, 'daylytable')" class="header"><strong>Prioridad</strong></td>`
+				<td onclick="sortTable(3, 'daylytable')" class="header"><strong>CMs Afectados</strong></td>
+				<td onclick="sortTable(4, 'daylytable')" class="header"><strong>CMs Estresados</strong></td>
+				<td onclick="sortTable(5, 'daylytable')" class="header"><strong>Horas</strong></td>
+				<td onclick="sortTable(6, 'daylytable')" class="header"><strong>Periodo</strong></td>
+				<td onclick="sortTable(7, 'daylytable')" class="header"><strong>Cambio Modulación</strong></td>
+				<td onclick="sortTable(8, 'daylytable')" class="header"><strong>Días</strong></td>
+				<td onclick="sortTable(9, 'daylytable')" class="header"><strong>Prioridad</strong></td>`
 				tablehtml += '</thead><tbody>'
+				
+				let cA = []
+				let cB = []
+				let cC = []
+				let cD = []
+				let cE = []
+
+				let periodM = []
+				let periodD = []
+				let periodN = []
+				let periodT = []
+				let periodI = []
+				let periodNo = []
+				let periodMod = []
+
+				let cA_greaterThan150 = []
+				let cA_between50and150 = []
+				let cA_between20and50 = []
+				let cA_lessThan20 = []
+
+				let cB_greaterThan150 = []
+				let cB_between50and150 = []
+				let cB_between20and50 = []
+				let cB_lessThan20 = []
+
+				let cC_greaterThan150 = []
+				let cC_between50and150 = []
+				let cC_between20and50 = []
+				let cC_lessThan20 = []
+
+				let cD_greaterThan150 = []
+				let cD_between50and150 = []
+				let cD_between20and50 = []
+				let cD_lessThan20 = []
 				
 				for(let i in elements){
 
@@ -65,20 +101,110 @@ myform.addEventListener("submit", function (e) {
 					<td>`+ elements[i][3] +`</td>
 					<td>`+ elements[i][4] +`</td>
 					<td>`+ elements[i][5] +`</td>
-					<td>`+ elements[i][6] +`</td>`
+					<td>`+ elements[i][6] +`</td>
+					<td>`+ elements[i][7] +`</td>
+					<td>`+ elements[i][8] +`</td>`
 
 					if (elements[i][2] < 70 && elements[i][2] >= 0) {
-						tablehtml += `<td>1</td></tr>`
+						cA.push(i)
+						tablehtml += `<td> Con Afectación</td></tr>`
 					} else if (elements[i][2] >= 70 && elements[i][2] < 80) {
-						tablehtml += `<td>2</td></tr>`
-					} else if (elements[i][3] >= 3) {
-						tablehtml += `<td>3</td></tr>`
-					} else if (elements[i][5] >= 2 && elements[i][3] >= 0) {
-						tablehtml += `<td>4</td></tr>`
+						cC.push(i)
+						tablehtml += `<td>Preventivo</td></tr>`
+					} else if (elements[i][5] >= 3) {
+						cB.push(i)
+						tablehtml += `<td>Preventivo</td></tr>`
+					} else if (elements[i][7] >= 2 && elements[i][5] >= 0) {
+						cD.push(i)
+						tablehtml += `<td>Preventivo</td></tr>`
 					} else {
-						tablehtml += `<td>5</td></tr>`
+						cE.push(i)
+						tablehtml += `<td>Monitoreo</td></tr>`
+					}
+
+					if (elements[i][6] == 'MADRUGADA') {
+						periodM.push(i)
+					} else if (elements[i][6] == 'DIA') {
+						periodD.push(i)
+					} else if (elements[i][6] == 'NOCHE') {
+						periodN.push(i)
+					} else if (elements[i][6] == 'TODO EL DIA') {
+						periodT.push(i)
+					} else if (elements[i][6] == 'INTERMITENTE') {
+						periodI.push(i)
+					} else if (elements[i][6] == 'NO AFECTADO') {
+						if (elements[i][7] >= 2 && elements[i][5] >= 0) {
+							periodMod.push(i)
+						} else {
+							periodNo.push(i)
+						}
 					}
 				}
+
+				for (let j in cA) {
+
+					if(elements[cA[j]][3] > 150){
+						cA_greaterThan150.push(cA[j])
+					} else if(elements[cA[j]][3] > 50 && elements[cA[j]][3] <= 150){
+						cA_between50and150.push(cA[j])
+					} else if(elements[cA[j]][3] > 20 && elements[cA[j]][3] <= 50){
+						cA_between20and50.push(cA[j])
+					} else if(elements[cA[j]][3] <= 20){
+						cA_lessThan20.push(cA[j])
+					}
+				}
+
+				for (let k in cB) {
+
+					if(elements[cB[k]][3] > 150){
+						cB_greaterThan150.push(cB[k])
+					} else if(elements[cB[k]][3] > 50 && elements[cB[k]][3] <= 150){
+						cB_between50and150.push(cB[k])
+					} else if(elements[cB[k]][3] > 20 && elements[cB[k]][3] <= 50){
+						cB_between20and50.push(cB[k])
+					} else if(elements[cB[k]][3] <= 20){
+						cB_lessThan20.push(cB[k])
+					}
+
+				}
+				for (let l in cC) {
+
+					if(elements[cC[l]][3] > 150){
+						cC_greaterThan150.push(cC[l])
+					} else if(elements[cC[l]][3] > 50 && elements[cC[l]][3] <= 150){
+						cC_between50and150.push(cC[l])
+					} else if(elements[cC[l]][3] > 20 && elements[cC[l]][3] <= 50){
+						cC_between20and50.push(cC[l])
+					} else if(elements[cC[l]][3] <= 20){
+						cC_lessThan20.push(cC[l])
+					}
+
+				}
+				for (let m in cD) {
+					
+					if(elements[cD[m]][3] > 150){
+						cD_greaterThan150.push(cD[m])
+					} else if(elements[cD[m]][3] > 50 && elements[cD[m]][3] <= 150){
+						cD_between50and150.push(cD[m])
+					} else if(elements[cD[m]][3] > 20 && elements[cD[m]][3] <= 50){
+						cD_between20and50.push(cD[m])
+					} else if(elements[cD[m]][3] <= 20){
+						cD_lessThan20.push(cD[m])
+					}
+
+				}
+
+				let claseList = [cA.length, cB.length, cC.length, cD.length]
+				let periodList = [periodM.length, periodD.length, periodN.length, periodT.length, periodI.length, periodMod.length]
+				let sumPeriodPlanes = periodM.length + periodD.length + periodN.length + periodT.length + periodI.length + periodMod.length
+
+				console.log("qoe < 70: "+cA.length)
+				console.log("horas >= 3: "+cB.length)
+				console.log("qoe entre 70 y 80: "+cC.length)
+				console.log("modulacion: "+cD.length)
+				console.log("no afectado: "+cE.length)
+
+
 				tablehtml += `</tbody></table>
 				</div>
                         </div>
@@ -101,154 +227,50 @@ myform.addEventListener("submit", function (e) {
 				statistics.innerHTML += `
 				<div class="container">
 				<div class="row container">
-                    <div class="col-3 m-2" style="background-color:#EBEDEF; border-radius: 1.5rem;">
-						<pre style="padding:0.5rem">
-Prioridad 1: QoE < 70
-Prioridad 2: 70 ≤ QoE < 80
-Prioridad 3: Horas ≥ 3
-Prioridad 4: Cambios de Modulación ≥ 2
-Prioridad 5: No afectado en la fecha</pre>
+                    <div class="col-4 m-2" style="background-color:#EBEDEF; border-radius: 1.5rem;">
+						<h4 style="padding:0.5rem;text-align:center">Total Planos por Tipo de Afectación</h4>
                         <canvas id="canvas1"></canvas>
                     </div>
-                    <div class="col-3 m-2" style="background-color:#EBEDEF; border-radius: 1.5rem;">
-                        <canvas id="canvas2"></canvas>
-                    </div>
-					<div class="col-5 m-2" style="background-color:#EBEDEF; border-radius: 1.5rem;">
-                        <canvas id="canvasA"></canvas>
+                    <div class="col-7 m-2" style="background-color:#EBEDEF; border-radius: 1.5rem;">
+						<h4 style="padding:0.5rem;text-align:center">Total Planos por Periodo de Afectación</h4>
+                        <canvas id="canvas2" style="padding:1rem"></canvas>
+						<h6 style="padding:0.5rem;text-align:center">Total Planos = `+ sumPeriodPlanes +`</h6>
                     </div>
 				</div>
 				</div>
 				<div class="container">
 				<div class="row container">
-					<div class="col-3 m-2" style="background-color:#EBEDEF; border-radius: 1.5rem;">
-						<pre style="padding:0.5rem">
-MAD: Madrugada
-DIA: Día
-NOC: Noche
-TED: Todo el día
-INT: Intermitente
-MOD: Cambios de Modulación ≥ 3
-NAF: No afectado en la fecha</pre>
-						<canvas id="canvas3"></canvas>
-                    </div>
-					<div class="col-3 m-2" style="background-color:#EBEDEF; border-radius: 1.5rem;">
-                        <canvas id="canvas4"></canvas>
-                    </div>
-					<div class="col-5 m-2" style="background-color:#EBEDEF; border-radius: 1.5rem;">
-                        <canvas id="canvasB"></canvas>
-                    </div>
-                </div>
+					<div class="col-12" style="background-color:#EBEDEF; border-radius: 1.5rem;">
+						<h4 style="padding:0.5rem;text-align:center">Tipo de Afectación por cantidad de Clientes Afectados</h4>
+						<div id="impactedByTypeTable"></div>
+					</div>
+				</div>
+				</hr>
 				</div>`
 
-				
-				let dayly_table = document.getElementById("daylytable")
-				let cell = dayly_table.getElementsByTagName("tr")
-				let p1 = []
-				let p2 = []
-				let p3 = []
-				let p4 = []
-				let p5 = []
-
-				let periodM = []
-				let periodD = []
-				let periodN = []
-				let periodT = []
-				let periodI = []
-				let periodNo = []
-				let periodMod = []
-
-				for (let i = 1; i < cell.length; i++) {
-					let priority = parseInt(cell[i].getElementsByTagName("td")[7].innerHTML)
-					let period = cell[i].getElementsByTagName("td")[4].innerHTML
-
-					if (priority == 1) {
-						p1.push(priority)
-					} else if (priority == 2) {
-						p2.push(priority)
-					} else if (priority == 3) {
-						p3.push(priority)
-					} else if (priority == 4) {
-						p4.push(priority)
-					} else if (priority == 5) {
-						p5.push(priority)
-					}
-
-					if (period == 'MADRUGADA') {
-						periodM.push(period)
-					} else if (period == 'DIA') {
-						periodD.push(period)
-					} else if (period == 'NOCHE') {
-						periodN.push(period)
-					} else if (period == 'TODO EL DIA') {
-						periodT.push(period)
-					} else if (period == 'INTERMITENTE') {
-						periodI.push(period)
-					} else if (period == 'NO AFECTADO') {
-						if (priority == 4){
-							periodMod.push(period)
-						} else{
-							periodNo.push(period)
-						}
-					}
-				}
-
-				let priorityList = [p1.length, p2.length, p3.length, p4.length, p5.length]
-				let periodList = [periodM.length, periodD.length, periodN.length, periodT.length, periodI.length, periodMod.length, periodNo.length]
 
 				let canvas1 = document.getElementById("canvas1").getContext("2d")
 				var chart1 = new Chart(canvas1, {
-					type: "bar",
-					data: {
-						labels: ["P1","P2","P3","P4","P5"],
-						datasets:[
-							{
-								label:"Prioridad",
-								backgroundColor: [
-									'rgba(231, 76, 60, 0.5)',
-									'rgba(241, 196, 15, 0.5)',
-									'rgba(88, 214, 141, 0.5)',
-									'rgba(52, 152, 219, 0.5)',
-									'rgba(189, 195, 199, 0.5)'
-								],
-								data: priorityList
-							}
-						]
-					},
-					options: {
-						plugins:{
-							labels:{
-								render: 'value'
-							}
-						},
-						scales: {
-							y: {
-								beginAtZero: true
-							}
-						}
-					}
-				})
-
-				let canvas2 = document.getElementById("canvas2").getContext("2d")
-				var chart2 = new Chart(canvas2, {
 					type: "pie",
 					data: {
-						labels: ["Prioridad 1","Prioridad 2","Prioridad 3","Prioridad 4","Prioridad 5"],
+						labels: ["QoE < 70","Horas ≥ 3","70 ≤ QoE < 80","Cambios de Mod ≥ 2"],
 						datasets:[
 							{
-								label: "Prioridad",
 								backgroundColor: [
 									'rgba(231, 76, 60, 0.5)',
+									'rgba(230, 126, 34, 0.5)',
 									'rgba(241, 196, 15, 0.5)',
-									'rgba(88, 214, 141, 0.5)',
-									'rgba(52, 152, 219, 0.5)',
-									'rgba(189, 195, 199, 0.5)'
+									'rgba(88, 214, 141, 0.5)'
 								],
-								data: priorityList
+								data: claseList
 							}
 						]
 					},
 					options:{
 						plugins:{
+							legend: {
+								position: 'bottom'
+							},
 							labels:{
 								render: (context) => {
 									const percentage = context.value / showData(chart2) *100
@@ -258,7 +280,6 @@ NAF: No afectado en la fecha</pre>
 								shadowColor: '#fff'
 							},
 						},
-
 					},
 				})
 				function showData(chart){
@@ -272,11 +293,11 @@ NAF: No afectado en la fecha</pre>
 					return totalsum
 				}
 
-				let canvas3 = document.getElementById("canvas3").getContext("2d")
-				var chart3 = new Chart(canvas3, {
+				let canvas2 = document.getElementById("canvas2").getContext("2d")
+				var chart2 = new Chart(canvas2, {
 					type: "bar",
 					data: {
-						labels: ["MAD", "DIA", "NOC", "TED", "INT", "MOD", "NAF"],
+						labels: ["MADRUGADA", "DIA", "NOCHE", "TODO EL DÍA", "INTERMITENTE", "MODULACIÓN"],
 						datasets:[
 							{
 								label:"Periodo",
@@ -285,15 +306,16 @@ NAF: No afectado en la fecha</pre>
 									'rgba(52, 152, 219, 0.5)', // azul
 									'rgba(52, 73, 94, 0.5)', // azul oscuro
 									'rgba(231, 76, 60, 0.5)', //rojo
-									'rgba(88, 214, 141, 0.5)', // verde
 									'rgba(142, 68, 173, 0.5)', // morado
-									'rgba(189, 195, 199, 0.5)' // gris
+									'rgba(88, 214, 141, 0.5)' // verde
+									// 'rgba(189, 195, 199, 0.5)' // gris
 								],
 								data: periodList
 							}
 						]
 					},
 					options: {
+						indexAxis: 'y',
 						plugins:{
 							labels:{
 								render: 'value'
@@ -307,41 +329,107 @@ NAF: No afectado en la fecha</pre>
 					}
 				})
 
-				let canvas4 = document.getElementById("canvas4").getContext("2d")
-				var chart4 = new Chart(canvas4, {
-					type: "pie",
-					data: {
-						labels: ["Madrugada","Día","Noche","Todo el día","Intermitente", "Modulación", "No Afectado"],
-						datasets:[
-							{
-								label: "Periodo",
-								backgroundColor: [
-									'rgba(241, 196, 15, 0.5)', // amarillo
-									'rgba(52, 152, 219, 0.5)', // azul
-									'rgba(52, 73, 94, 0.5)', // azul oscuro
-									'rgba(231, 76, 60, 0.5)', //rojo
-									'rgba(88, 214, 141, 0.5)', // verde
-									'rgba(142, 68, 173, 0.5)', // morado
-									'rgba(189, 195, 199, 0.5)' // gris
-								],
-								data: periodList
-							}
-						]
-					},
-					options:{
-						plugins:{
-							labels:{
-								render: (context) => {
-									const percentage = context.value / showData(chart4) *100
-									return percentage.toFixed(0)+'%'
-								},
-								fontColor: '#fff',
-								shadowColor: '#fff'
-							},
-						},
 
-					},
-				})
+
+
+				
+
+				let impactedByTypeTable = document.getElementById("impactedByTypeTable")
+				let impactedByTypeTableHTML = '<div class="scrollmenu" style="border-radius:10px;"><table class="table table-hover"><thead class="table-dark">'
+				impactedByTypeTableHTML += `
+				<tr>
+					<td></td>
+					<td></td>
+					<td>Prioridad 1</td>
+					<td>Prioridad 2</td>
+					<td>Prioridad 3</td>
+					<td>Prioridad 4</td>
+					<td>Total General</td>
+				</tr>
+				<tr>
+					<td>Estado de plano</td>
+					<td>Estado</td>
+					<td>150 < CMs Afectados</td>
+					<td>50 < CMs Afectados ≤ 150</td>
+					<td>20 < CMs Afectados ≤ 50</td>
+					<td>CMs Afectados ≤ 20</td>
+					<td></td>
+				</tr>
+				</thead>
+				<tbody>
+				<tr>
+					<td rowspan="2">Con Afectación</td>
+					<td>QoE < 70</td>
+					<td>`+ cA_greaterThan150.length +`</td>
+					<td>`+ cA_between50and150.length +`</td>
+					<td>`+ cA_between20and50.length +`</td>
+					<td>`+ cA_lessThan20.length +`</td>
+					<td>`+ (cA_greaterThan150.length + cA_between50and150.length + cA_between20and50.length + cA_lessThan20.length) +`</td>
+				</tr>
+				<tr>
+					<td>Horas ≥ 3</td>
+					<td>`+ cB_greaterThan150.length +`</td>
+					<td>`+ cB_between50and150.length +`</td>
+					<td>`+ cB_between20and50.length +`</td>
+					<td>`+ cB_lessThan20.length +`</td>
+					<td>`+ (cB_greaterThan150.length + cB_between50and150.length + cB_between20and50.length + cB_lessThan20.length) +`</td>
+				</tr>
+				<tr>
+					<td>Total</td>
+					<td></td>
+					<td>`+ (cA_greaterThan150.length + cB_greaterThan150.length) +`</td>
+					<td>`+ (cA_between50and150.length + cB_between50and150.length) +`</td>
+					<td>`+ (cA_between20and50.length + cB_between20and50.length) +`</td>
+					<td>`+ (cA_lessThan20.length + cB_lessThan20.length) +`</td>
+					<td>`+ (cA_greaterThan150.length + cA_between50and150.length + cA_between20and50.length + cA_lessThan20.length + cB_greaterThan150.length + cB_between50and150.length + cB_between20and50.length + cB_lessThan20.length) +`</td>
+				</tr>
+
+				<tr>
+					<td rowspan="2">Preventivo</td>
+					<td>70 ≤ QoE < 80</td>
+					<td>`+ cC_greaterThan150.length +`</td>
+					<td>`+ cC_between50and150.length +`</td>
+					<td>`+ cC_between20and50.length +`</td>
+					<td>`+ cC_lessThan20.length +`</td>
+					<td>`+ (cC_greaterThan150.length + cC_between50and150.length + cC_between20and50.length + cC_lessThan20.length) +`</td>
+				</tr>
+				<tr>
+					<td>Cambios de Modul ≥ 2</td>
+					<td>`+ cD_greaterThan150.length +`</td>
+					<td>`+ cD_between50and150.length +`</td>
+					<td>`+ cD_between20and50.length +`</td>
+					<td>`+ cD_lessThan20.length +`</td>
+					<td>`+ (cD_greaterThan150.length + cD_between50and150.length + cD_between20and50.length + cD_lessThan20.length) +`</td>
+				</tr>
+				<tr>
+					<td>Total</td>
+					<td></td>
+					<td>`+ (cC_greaterThan150.length + cD_greaterThan150.length) +`</td>
+					<td>`+ (cC_between50and150.length + cD_between50and150.length) +`</td>
+					<td>`+ (cC_between20and50.length + cD_between20and50.length) +`</td>
+					<td>`+ (cC_lessThan20.length + cD_lessThan20.length) +`</td>
+					<td>`+ (cC_greaterThan150.length + cC_between50and150.length + cC_between20and50.length + cC_lessThan20.length + cD_greaterThan150.length + cD_between50and150.length + cD_between20and50.length + cD_lessThan20.length) +`</td>
+				</tr>
+				<tr>
+					<td>Total General</td>
+					<td></td>
+					<td>`+ (cA_greaterThan150.length + cB_greaterThan150.length + cC_greaterThan150.length + cD_greaterThan150.length) +`</td>
+					<td>`+ (cA_between50and150.length + cB_between50and150.length + cC_between50and150.length + cD_between50and150.length) +`</td>
+					<td>`+ (cA_between20and50.length + cB_between20and50.length + cC_between20and50.length + cD_between20and50.length) +`</td>
+					<td>`+ (cA_lessThan20.length + cB_lessThan20.length + cC_lessThan20.length + cD_lessThan20.length) +`</td>
+					<td>`+ (cA_greaterThan150.length + cB_greaterThan150.length + cC_greaterThan150.length + cD_greaterThan150.length + cA_between50and150.length + cB_between50and150.length + cC_between50and150.length + cD_between50and150.length + cA_between20and50.length + cB_between20and50.length + cC_between20and50.length + cD_between20and50.length + cA_lessThan20.length + cB_lessThan20.length + cC_lessThan20.length + cD_lessThan20.length) +`</td>
+					
+				</tr>
+				</div>
+				`
+				
+				//Clase A: QoE < 70
+				// Clase B: Horas ≥ 3
+				// Clase C: 70 ≤ QoE < 80
+				// Clase D: Cambios de Modulación ≥ 2
+				// Clase E: No afectado en la fecha
+
+				impactedByTypeTable.innerHTML = impactedByTypeTableHTML
 
 				document.getElementById('daylybutton').addEventListener('click', function() {
 					var table2excel = new Table2Excel();

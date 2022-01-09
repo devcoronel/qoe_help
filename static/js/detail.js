@@ -77,6 +77,30 @@ myform.addEventListener("submit", function (e) {
                 }
                 tablehtml += `
                 </tr>
+                <tr>
+                    <td><strong>CMs Afectados</strong></td>
+                `
+				for(let j in mydata[1][4]){
+                    tablehtml +=  `<td>`+ mydata[1][4][j] +`</td>`
+                }
+                tablehtml += `
+                </tr>
+                <tr>
+                    <td><strong>CMs Estresados</strong></td>
+                `
+				for(let j in mydata[1][5]){
+                    tablehtml +=  `<td>`+ mydata[1][5][j] +`</td>`
+                }
+                tablehtml += `
+                </tr>
+                <tr>
+                    <td><strong>N° Muestras</strong></td>
+                `
+				for(let j in mydata[1][6]){
+                    tablehtml +=  `<td>`+ mydata[1][6][j] +`</td>`
+                }
+                tablehtml += `
+                </tr>
                                 </tbody>
                             </table>
                         </div>

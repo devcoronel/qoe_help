@@ -71,7 +71,7 @@ def complete():
     # cursor.close()
     
     for id in result:
-        for x in ['SAMPLING', 'MODULATION', 'STATUS_NODE', 'NEW_HOURS', 'NEW_QOE', 'PERIOD', 'AFECTED_DAYS']:
+        for x in ['STRESSEDMODEMS', 'IMPACTEDMODEMS','SAMPLING', 'MODULATION', 'STATUS_NODE', 'NEW_HOURS', 'NEW_QOE', 'PERIOD', 'AFECTED_DAYS']:
             query0 = "INSERT INTO {} (ID_NODE) VALUES ({})".format(x, id[0])
             # cursor = mydb.cursor()
             cursor.execute(query0)
@@ -167,7 +167,7 @@ def verify_upload(date, cookie):
     if isinstance(lima_nodes, dict):
         return lima_nodes
 
-    for bool in ['MODULATION', 'NEW_HOURS', 'NEW_QOE', 'PERIOD', 'AFECTED_DAYS']:
+    for bool in ['STRESSEDMODEMS', 'IMPACTEDMODEMS','SAMPLING', 'MODULATION', 'NEW_HOURS', 'NEW_QOE', 'PERIOD', 'AFECTED_DAYS']:
 
         query0 = """
         SELECT IF ( EXISTS (
@@ -190,6 +190,8 @@ def verify_upload(date, cookie):
     create_column('AFECTED_DAYS', ytd, 'INT(1)', 0)
     create_column('MODULATION', ytd, 'FLOAT', 0)
     create_column('SAMPLING', ytd, 'INT', 0)
+    create_column('IMPACTEDMODEMS', ytd, 'INT', 0)
+    create_column('STRESSEDMODEMS', ytd, 'INT', 0)
     my_date_plus = my_date + dt.timedelta(days=1)
 
     return [lima_nodes, ytd, my_date_plus]
@@ -210,17 +212,14 @@ def upload(lima_nodes, ytd, my_date_plus):
     for node in lima_nodes:
     # if True:
         contador += 1
-        link = 'http://{}/pathtrak/api/node/{}/qoe/metric/history?duration=1440&sampleResponse=false&startdatetime={}-{}-{}T05:00:00.000Z'.format(url_ext ,str(node["nodeId"]), my_date_plus.year, str(my_date_plus.month).zfill(2), str(my_date_plus.day).zfill(2))
+        # link = 'http://{}/pathtrak/api/node/{}/qoe/metric/history?duration=1440&sampleResponse=false&startdatetime={}-{}-{}T05:00:00.000Z'.format(url_ext ,str(node["nodeId"]), my_date_plus.year, str(my_date_plus.month).zfill(2), str(my_date_plus.day).zfill(2))
+        link = 'http://{}/pathtrak/api/qoesummary?duration=1440&limit=96&nodeId={}&nodeLimit=1&startTime={}-{}-{}T05:00:00Z'.format(url_ext ,str(node["nodeId"]), my_date_plus.year, str(my_date_plus.month).zfill(2), str(my_date_plus.day).zfill(2))
         link_modul = 'http://{}/pathtrak/api/node/{}/capacity/channels/history?duration=1440&sampleResponse=false&startdatetime={}-{}-{}T05:00:00.000Z'.format(url_ext ,str(node["nodeId"]), my_date_plus.year, str(my_date_plus.month).zfill(2), str(my_date_plus.day).zfill(2))
         try:
         # if True:
             mydata = requests.get(link)
 
-            value_qoe = -1
-            value_hours = -1
-            value_period = "NO DATA"
             value_afected = 0
-            value_modulation = 0
 
             if mydata.status_code == 200:
                 mydata = mydata.content
@@ -229,11 +228,6 @@ def upload(lima_nodes, ytd, my_date_plus):
                 if mydata == []:
                     print(contador, node["name"], "200 - Without data")
                     print(link)
-
-                    insert_value('NEW_HOURS', ytd, value_hours, node["name"])
-                    insert_value('NEW_QOE', ytd, value_qoe, node["name"])
-                    insert_value('PERIOD', ytd, value_period, node["name"])
-                    insert_value('AFECTED_DAYS', ytd, value_afected, node["name"])
 
                 else:
                     print(contador, node["name"], "200 - OK")
@@ -244,6 +238,12 @@ def upload(lima_nodes, ytd, my_date_plus):
                     counter_sampling = 0
                     period = []
                     scores = []
+
+                    total_modems = int(mydata[0]["totalModems"])
+                    offline_modems = []
+                    impacted_modems = []
+                    stressed_modems = []
+                    chronic_modems = []
 
                     for i in mydata:
                         scores.append(i["qoeScore"])
@@ -259,6 +259,14 @@ def upload(lima_nodes, ytd, my_date_plus):
                                 period.append("DIA")
                             else:
                                 period.append("MADRUGADA")
+                        
+                        offline_modems.append(i["offlineModems"])
+                        impacted_modems.append(i["impactedModems"])
+                        stressed_modems.append(i["stressedModems"])
+                        chronic_modems.append(i["chronicModems"])
+                    
+                    value_impacted_modems = max(impacted_modems)
+                    value_stressed_modems = stressed_modems[impacted_modems.index(value_impacted_modems)]
                     value_sampling = counter_sampling
                     value_qoe = round(sum(scores)/len(scores), 0)
                     value_hours = (counter*15)/60
@@ -273,6 +281,8 @@ def upload(lima_nodes, ytd, my_date_plus):
                     insert_value('NEW_QOE', ytd, value_qoe, node["name"])
                     insert_value('PERIOD', ytd, value_period, node["name"])
                     insert_value('SAMPLING', ytd, value_sampling, node["name"])
+                    insert_value('IMPACTEDMODEMS', ytd, value_impacted_modems, node["name"])
+                    insert_value('STRESSEDMODEMS', ytd, value_stressed_modems, node["name"])
                 
             elif mydata.status_code == 500:
                 print(contador, node["name"], "500 - Internal Server Error")
@@ -317,6 +327,8 @@ def upload(lima_nodes, ytd, my_date_plus):
             delete_column("AFECTED_DAYS", ytd)
             delete_column("MODULATION", ytd)
             delete_column("SAMPLING", ytd)
+            delete_column("IMPACTEDMODEMS", ytd)
+            delete_column("STRESSEDMODEMS", ytd)
             
             lines[-1] = '0'
             with open("templates\\index.html", "w") as f:
@@ -328,102 +340,6 @@ def upload(lima_nodes, ytd, my_date_plus):
     with open("templates\\index.html", "w") as f:
         for line in lines:
             f.write(line)
-    
-    print("======== ¡SUCCESS! ========")
-    return {"msg":"Carga subida con éxito"}
-
-
-def new_upload(node, ytd, my_date_plus):
-
-    link = 'http://{}/pathtrak/api/node/{}/qoe/metric/history?duration=1440&sampleResponse=false&startdatetime={}-{}-{}T05:00:00.000Z'.format(url_ext ,str(node["nodeId"]), my_date_plus.year, str(my_date_plus.month).zfill(2), str(my_date_plus.day).zfill(2))
-    link_modul = 'http://{}/pathtrak/api/node/{}/capacity/channels/history?duration=1440&sampleResponse=false&startdatetime={}-{}-{}T05:00:00.000Z'.format(url_ext ,str(node["nodeId"]), my_date_plus.year, str(my_date_plus.month).zfill(2), str(my_date_plus.day).zfill(2))
-    try:
-    # if True:
-        mydata = requests.get(link)
-        value_qoe = -1
-        value_hours = -1
-        value_period = "NO DATA"
-        value_afected = 0
-        value_modulation = 0
-
-        if mydata.status_code == 200:
-            mydata = mydata.content
-            mydata = json.loads(mydata)
-            
-            if mydata == []:
-                print(node["name"], "200 - Without data")
-                print(link)
-                insert_value('NEW_HOURS', ytd, value_hours, node["name"])
-                insert_value('NEW_QOE', ytd, value_qoe, node["name"])
-                insert_value('PERIOD', ytd, value_period, node["name"])
-                insert_value('AFECTED_DAYS', ytd, value_afected, node["name"])
-            else:
-                print(node["name"], "200 - OK")
-                print(link)
-                # QOE, HORAS QOE AFECTADO Y PERIODO DE AFECTACIÓN
-                counter = 0
-                period = []
-                scores = []
-                for i in mydata:
-                    scores.append(i["qoeScore"])
-                    if i["qoeScore"] < min_qoe:
-                        counter = counter + 1
-                        ts = i["timestamp"]
-                        hour = int((dt.datetime(int(ts[0:4]), int(ts[5:7]), int(ts[8:10]), int(ts[11:13])) - dt.timedelta(hours=5)).strftime("%H"))
-                        if hour > umbral_night:
-                            period.append("NOCHE")
-                        elif hour > umbral_morning_afternoon:
-                            period.append("DIA")
-                        else:
-                            period.append("MADRUGADA")
-                value_qoe = round(sum(scores)/len(scores), 0)
-                value_hours = (counter*15)/60
-                noche = period.count("NOCHE")
-                dia = period.count("DIA")
-                madrugada = period.count("MADRUGADA")
-                value_period = get_period(dia, noche, madrugada, value_hours)
-                insert_value('NEW_HOURS', ytd, value_hours, node["name"])
-                insert_value('NEW_QOE', ytd, value_qoe, node["name"])
-                insert_value('PERIOD', ytd, value_period, node["name"])
-            
-        elif mydata.status_code == 500:
-            print(node["name"], "500 - Internal Server Error")
-            print(link)
-
-        mydata_modul = requests.get(link_modul)
-		
-        if mydata_modul.status_code == 200:
-            print(node["name"], "200 - OK")
-            print(link_modul)
-            mydata_modul = mydata_modul.content
-            mydata_modul = json.loads(mydata_modul)
-            change_modul_group = []
-            modul_node_dayly = []
-            modul_node_dayly.append(mydata_modul["upstreamTotalChannels"])
-            modul_node_dayly.append(mydata_modul["upstreamChannelCapacityHistory"])
-            for modul in modul_node_dayly[1]:
-                if modul["modChanged"] == True and modul["modType"] != "qam64":
-                    change_modul_group.append(modul)
-            value_modulation = len(change_modul_group)
-            insert_value('MODULATION', ytd, value_modulation, node["name"])
-
-        elif mydata_modul.status_code == 500:
-            print(node["name"], "500 - Internal Server Error")
-            print(link_modul)
-        # DIAS AFECTADO
-        if (value_qoe < min_qoe and value_qoe >= 0) or (value_hours >= min_afected_hours):
-            value_afected = 1
-        insert_value('AFECTED_DAYS', ytd, value_afected, node["name"])
-
-    except:
-    # else:
-        print("Error connecting with Xpertrak")
-        delete_column("NEW_HOURS", ytd)
-        delete_column("NEW_QOE", ytd)
-        delete_column("PERIOD", ytd)
-        delete_column("AFECTED_DAYS", ytd)
-        delete_column("MODULATION", ytd)
-        return {"msg": "Error en la conexión con Xpertrak"}
     
     print("======== ¡SUCCESS! ========")
     return {"msg":"Carga subida con éxito"}

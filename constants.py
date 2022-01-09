@@ -17,7 +17,7 @@ url_ext = '190.117.108.84:1380'
 mysql_host = '127.0.0.1'
 mysql_user = 'diego_remote'
 mysql_password = 'Mysqldiego10'
-mysql_database = 'qoehelp'
+mysql_database = 'qoe_help'
 mysql_auth_plugin='mysql_native_password'
 
 # consult_interfaces = 'netsh interface ipv4 show interfaces'

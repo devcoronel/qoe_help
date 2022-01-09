@@ -62,6 +62,9 @@ def my_post_detail():
     data_qoe = detail(node, days, 'NEW_QOE')
     data_period = detail(node, days, 'PERIOD')
     data_modul = detail(node, days, 'MODULATION')
+    data_impacted = detail(node, days, 'IMPACTEDMODEMS')
+    data_stressed = detail(node, days, 'STRESSEDMODEMS')
+    data_sampling = detail(node, days, 'SAMPLING')
 
     if isinstance(data_hours["msg"], str):
         return data_hours
@@ -71,8 +74,11 @@ def my_post_detail():
         values_qoe = (((data_qoe["msg"])[0])[0])[node]
         values_period = (((data_period["msg"])[0])[0])[node]
         values_modul = (((data_modul["msg"])[0])[0])[node]
+        values_impacted = (((data_impacted["msg"])[0])[0])[node]
+        values_stressed = (((data_stressed["msg"])[0])[0])[node]
+        values_sampling = (((data_sampling["msg"])[0])[0])[node]
 
-        data_values = [values_hours, values_qoe, values_period, values_modul]
+        data_values = [values_hours, values_qoe, values_period, values_modul, values_impacted, values_stressed, values_sampling]
         dates = (data_hours["msg"])[1]
 
         status = status_node(node)
@@ -101,9 +107,18 @@ def my_detail(node = None):
         data_modul = detail(node, days, 'MODULATION')
         values_modul = (((data_modul["msg"])[0])[0])[node]
 
+        data_impacted = detail(node, days, 'IMPACTEDMODEMS')
+        values_impacted = (((data_impacted["msg"])[0])[0])[node]
+
+        data_stressed = detail(node, days, 'STRESSEDMODEMS')
+        values_stressed = (((data_stressed["msg"])[0])[0])[node]
+
+        data_sampling = detail(node, days, 'SAMPLING')
+        values_sampling = (((data_sampling["msg"])[0])[0])[node]
+
         status = status_node(node)
 
-        return render_template('index.html', route = 1, node = node, data_values = [values_hours, values_qoe, values_period, values_modul], dates = (data_hours["msg"])[1], status = status, with_search = with_search)
+        return render_template('index.html', route = 1, node = node, data_values = [values_hours, values_qoe, values_period, values_modul, values_impacted, values_stressed, values_sampling], dates = (data_hours["msg"])[1], status = status, with_search = with_search)
 
     else:
         with_search = True
@@ -114,7 +129,7 @@ def my_detail(node = None):
 @limiter.limit("2/second")
 @when_upload_runs
 def my_priority():
-    data = priority()
+    data = priority("LIMA")
     return render_template('index.html', route = 2, data = {'msg': data})
 
 

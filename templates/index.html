@@ -25,8 +25,8 @@
                             </div>
                             <div class="row ms-0 me-0">
                                 <select name="region" id="region" class="form-select">
-                                    <!-- <option value="LIMA">LIMA</option> -->
-                                    <option value="-">LIMA</option>
+                                    <option value="LIMA">LIMA</option>
+                                    <!-- <option value="-">LIMA</option> -->
                                     <option value="CENTRO">CENTRO</option>
                                     <option value="NORTE">NORTE</option>
                                     <option value="SUR">SUR</option>
@@ -44,6 +44,9 @@
                                     <option value="NEW_HOURS">Horas</option>
                                     <option value="PERIOD">Periodo</option>
                                     <option value="MODULATION">Modulación</option>
+                                    <option value="IMPACTEDMODEMS">CMs Afectados</option>
+                                    <option value="STRESSEDMODEMS">CMs Estresados</option>
+                                    <option value="SAMPLING">N° Muestras</option>
                                 </select>
                             </div>
                             
@@ -94,6 +97,12 @@
                 name = "Horas_Análisis"
             } else if (name_id_table == 'periodtable'){
                 name = "Periodo_Análisis"
+            } else if (name_id_table == 'impactedtable'){
+                name = "CMs_Afectados_Análisis"
+            } else if (name_id_table == 'stressedtable'){
+                name = "CMs_Estresados_Análisis"
+            } else if (name_id_table == 'samplingtable'){
+                name = "Numero_Muestras_Análisis"
             } else if (name_id_table == 'modulationtable'){
                 name = "Modulación_Análisis"
             }
@@ -123,7 +132,7 @@
                                 <label for="exampleFormControlInput1" class="form-label fw-bold fs-5">Plano</label>
                             </div>
                             <div class="row ms-0 me-0">
-                                <input type="text" class="form-control" name="node" placeholder="LMLO066 o LMLO">
+                                <input type="text" class="form-control" name="node" placeholder="LMLO066">
                             </div>
                             
                         </div>
@@ -229,6 +238,24 @@
                                                 <td>{{data}}</td>
                                             {% endfor %}
                                         </tr>
+                                        <tr>
+                                            <td><strong>CMs Afectados</strong></td>
+                                            {% for data in data_values[4] %}
+                                                <td>{{data}}</td>
+                                            {% endfor %}
+                                        </tr>
+                                        <tr>
+                                            <td><strong>CMs Estresados</strong></td>
+                                            {% for data in data_values[5] %}
+                                                <td>{{data}}</td>
+                                            {% endfor %}
+                                        </tr>
+                                        <tr>
+                                            <td><strong>N° Muestras</strong></td>
+                                            {% for data in data_values[6] %}
+                                                <td>{{data}}</td>
+                                            {% endfor %}
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -256,8 +283,8 @@
                     </div>
                     <div class="col-sm-5 col-xl-3 col-6">
                         <select name="region" id="region" class="form-select">
-                            <!-- <option value="LIMA">Región LIMA</option> -->
-                            <option value="-">Región LIMA</option>
+                            <option value="LIMA">Región LIMA</option>
+                            <!-- <option value="-">Región LIMA</option> -->
                             <option value="CENTRO">Región CENTRO</option>
                             <option value="NORTE">Región NORTE</option>
                             <option value="SUR">Región SUR</option>
@@ -308,6 +335,9 @@
                                         <option value="hours">Horas</option>
                                         <option value="period">Periodo</option>
                                         <option value="modulation">Modulación</option>
+                                        <option value="impacted">CMs Afectados</option>
+                                        <option value="stressed">CMs Estresados</option>
+                                        <option value="sampling">N° Muestras</option>
                                     </select>
                                 </div>
                                 <div class="col-xl-8 col-lg-7 col-md-5 col-sm-4 col-3" style="display: flex ;justify-content: right;">

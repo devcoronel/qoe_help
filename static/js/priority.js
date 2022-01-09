@@ -9,7 +9,10 @@ function build(data) {
         let hours_values = mydata[2]
         let period_values = mydata[3]
         let modulation_values = mydata[4]
-        let dates = mydata[5]
+        let impacted_values = mydata[5]
+        let stressed_values = mydata[6]
+        let sampling_values = mydata[7]
+        let dates = mydata[8]
 
         // TABLA GENERAL
 
@@ -228,6 +231,99 @@ function build(data) {
                 }
                 especific_body += `</tbody></table>`
                 div_especifictable.innerHTML = especific_head + especific_body
+            } else if (select.value == 'impacted') {
+                for (let e_value in impacted_values) {
+                    especific_body += `<tr>
+                    <td>`+ impacted_values[e_value][0] +`</td>
+                    <td><a href="/detail/`+ impacted_values[e_value][1] +`" target= "_blank">`+ impacted_values[e_value][1] +`</a></td>
+                    <td>` + impacted_values[e_value][2] + `</td>
+                    <td>` + impacted_values[e_value][3] + `</td>
+                    <td>` + impacted_values[e_value][4] + `</td>
+                    <td>` + impacted_values[e_value][5] + `</td>
+                    `
+                    
+                    for (let i in impacted_values[e_value]) {
+                        if (i > 5) {
+                            especific_body += `<td>`+ impacted_values[e_value][i] +`</td>`
+                            // if (impacted_values[e_value][i] == 'DIA') {
+                            //     especific_body += `<td style="background-color: 7BE0EA;">`+ impacted_values[e_value][i] +`</td>`
+                            // } else if (impacted_values[e_value][i] == 'NOCHE') {
+                            //     especific_body += `<td style="background-color: 647EB9">`+ impacted_values[e_value][i] +`</td>`
+                            // } else if (impacted_values[e_value][i] == 'TODO EL DIA'){
+                            //     especific_body += `<td style="background-color: FB7D4D">`+ impacted_values[e_value][i] +`</td>`
+                            // } else if (impacted_values[e_value][i] == 'MADRUGADA'){
+                            //     especific_body += `<td style="background-color: F3DE5B">`+ impacted_values[e_value][i] +`</td>`
+                            // } else {
+                            //     especific_body += `<td>`+ impacted_values[e_value][i] +`</td>`
+                            // }
+                        }
+                    }
+                }
+                especific_body += `</tbody></table>`
+                div_especifictable.innerHTML = especific_head + especific_body
+
+            } else if (select.value == 'stressed') {
+                for (let e_value in stressed_values) {
+                    especific_body += `<tr>
+                    <td>`+ stressed_values[e_value][0] +`</td>
+                    <td><a href="/detail/`+ stressed_values[e_value][1] +`" target= "_blank">`+ stressed_values[e_value][1] +`</a></td>
+                    <td>` + stressed_values[e_value][2] + `</td>
+                    <td>` + stressed_values[e_value][3] + `</td>
+                    <td>` + stressed_values[e_value][4] + `</td>
+                    <td>` + stressed_values[e_value][5] + `</td>
+                    `
+                    
+                    for (let i in stressed_values[e_value]) {
+                        if (i > 5) {
+                            especific_body += `<td>`+ stressed_values[e_value][i] +`</td>`
+                            // if (impacted_values[e_value][i] == 'DIA') {
+                            //     especific_body += `<td style="background-color: 7BE0EA;">`+ impacted_values[e_value][i] +`</td>`
+                            // } else if (impacted_values[e_value][i] == 'NOCHE') {
+                            //     especific_body += `<td style="background-color: 647EB9">`+ impacted_values[e_value][i] +`</td>`
+                            // } else if (impacted_values[e_value][i] == 'TODO EL DIA'){
+                            //     especific_body += `<td style="background-color: FB7D4D">`+ impacted_values[e_value][i] +`</td>`
+                            // } else if (impacted_values[e_value][i] == 'MADRUGADA'){
+                            //     especific_body += `<td style="background-color: F3DE5B">`+ impacted_values[e_value][i] +`</td>`
+                            // } else {
+                            //     especific_body += `<td>`+ impacted_values[e_value][i] +`</td>`
+                            // }
+                        }
+                    }
+                }
+                especific_body += `</tbody></table>`
+                div_especifictable.innerHTML = especific_head + especific_body
+
+            } else if (select.value == 'sampling') {
+                for (let e_value in sampling_values) {
+                    especific_body += `<tr>
+                    <td>`+ sampling_values[e_value][0] +`</td>
+                    <td><a href="/detail/`+ sampling_values[e_value][1] +`" target= "_blank">`+ sampling_values[e_value][1] +`</a></td>
+                    <td>` + sampling_values[e_value][2] + `</td>
+                    <td>` + sampling_values[e_value][3] + `</td>
+                    <td>` + sampling_values[e_value][4] + `</td>
+                    <td>` + sampling_values[e_value][5] + `</td>
+                    `
+                    
+                    for (let i in sampling_values[e_value]) {
+                        if (i > 5) {
+                            especific_body += `<td>`+ sampling_values[e_value][i] +`</td>`
+                            // if (impacted_values[e_value][i] == 'DIA') {
+                            //     especific_body += `<td style="background-color: 7BE0EA;">`+ impacted_values[e_value][i] +`</td>`
+                            // } else if (impacted_values[e_value][i] == 'NOCHE') {
+                            //     especific_body += `<td style="background-color: 647EB9">`+ impacted_values[e_value][i] +`</td>`
+                            // } else if (impacted_values[e_value][i] == 'TODO EL DIA'){
+                            //     especific_body += `<td style="background-color: FB7D4D">`+ impacted_values[e_value][i] +`</td>`
+                            // } else if (impacted_values[e_value][i] == 'MADRUGADA'){
+                            //     especific_body += `<td style="background-color: F3DE5B">`+ impacted_values[e_value][i] +`</td>`
+                            // } else {
+                            //     especific_body += `<td>`+ impacted_values[e_value][i] +`</td>`
+                            // }
+                        }
+                    }
+                }
+                especific_body += `</tbody></table>`
+                div_especifictable.innerHTML = especific_head + especific_body
+
             }
         })
     } else {

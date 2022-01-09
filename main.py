@@ -70,7 +70,7 @@ def analysis(regex, days, x, region):
     try:
         regex = str(regex).upper()
         days = int(days)
-        if days == 0 or x not in ['NEW_QOE', 'NEW_HOURS', 'PERIOD', 'MODULATION']:
+        if days == 0 or x not in ['SAMPLING', 'STRESSEDMODEMS', 'IMPACTEDMODEMS', 'NEW_QOE', 'NEW_HOURS', 'PERIOD', 'MODULATION']:
             return "Dato(s) incorrectos"
     except:
         return "Dato(s) incorrectos"
@@ -98,6 +98,12 @@ def analysis(regex, days, x, region):
                 id_table = 'qoetable'
             elif x == 'PERIOD':
                 id_table = 'periodtable'
+            elif x == 'IMPACTEDMODEMS':
+                id_table = 'impactedtable'
+            elif x == 'STRESSEDMODEMS':
+                id_table = 'stressedtable'
+            elif x == 'SAMPLING':
+                id_table = 'samplingtable'
             else:
                 id_table = 'modulationtable'
             return [analysis, dates, id_table]
@@ -136,10 +142,11 @@ def detail(my_node, my_days, x):
     
     def create_link(nodeid, duration, date, x = True):
         if x:
-            link = 'http://{}/pathtrak/api/node/{}/qoe/metric/history?duration={}&sampleResponse=false&startdatetime={}-{}-{}T{}:{}:00.000Z'.format(url_ext, nodeid, duration, date.year, str(date.month).zfill(2), str(date.day).zfill(2), str(date.hour).zfill(2), str(date.minute).zfill(2))
+            # link = 'http://{}/pathtrak/api/node/{}/qoe/metric/history?duration={}&sampleResponse=false&startdatetime={}-{}-{}T{}:{}:00.000Z'.format(url_ext, nodeid, duration, date.year, str(date.month).zfill(2), str(date.day).zfill(2), str(date.hour).zfill(2), str(date.minute).zfill(2))
+            link = 'http://{}/pathtrak/api/qoesummary?duration={}&limit=96&nodeId={}&nodeLimit=1&startTime={}-{}-{}T{}:{}:59Z'.format(url_ext, duration, nodeid, date.year, str(date.month).zfill(2), str(date.day).zfill(2), str(date.hour).zfill(2), str(date.minute).zfill(2))
             return link
         else:
-            link_modul = 'http://{}/pathtrak/api/node/{}/capacity/channels/history?duration={}&sampleResponse=false&startdatetime={}-{}-{}T05:00:00.000Z'.format(url_ext ,nodeid, duration, date.year, str(date.month).zfill(2), str(date.day).zfill(2), str(date.hour).zfill(2), str(date.minute).zfill(2))
+            link_modul = 'http://{}/pathtrak/api/node/{}/capacity/channels/history?duration={}&sampleResponse=false&startdatetime={}-{}-{}T{}:{}:59.000Z'.format(url_ext ,nodeid, duration, date.year, str(date.month).zfill(2), str(date.day).zfill(2), str(date.hour).zfill(2), str(date.minute).zfill(2))
             return link_modul
     
     for day in range(days+1):
@@ -223,6 +230,29 @@ def detail(my_node, my_days, x):
 
                     value_period = get_period(dia, noche, madrugada, hours)
                     value_node.append(value_period)
+                
+                elif x == 'IMPACTEDMODEMS':
+                    impacted_modems = []
+                    for j in data:
+                        impacted_modems.append(j["impactedModems"])
+                    value_impacted_modems = max(impacted_modems)
+                    value_node.append(value_impacted_modems)
+                
+                elif x == 'STRESSEDMODEMS':
+                    impacted_modems = []
+                    stressed_modems = []
+                    for j in data:
+                        impacted_modems.append(j["impactedModems"])
+                        stressed_modems.append(j["stressedModems"])
+                    value_impacted_modems = max(impacted_modems)
+                    value_stressed_modems = stressed_modems[impacted_modems.index(value_impacted_modems)]
+                    value_node.append(value_stressed_modems)
+
+                elif x == 'SAMPLING':
+                    counter = 0
+                    for j in data:
+                        counter += 1
+                    value_node.append(counter)
             
             else:
                 value_node.append("NO DATA")
@@ -333,9 +363,9 @@ def data_priority(general_or_especific, table, dates, region):
         INNER JOIN AFECTED_DAYS ON NODES.ID = AFECTED_DAYS.ID_NODE
         WHERE {2}.ID_NODE IN (
         SELECT ID_NODE FROM AFECTED_DAYS
-        WHERE {3} >= 2)
+        WHERE {3} >= 2) AND REGION = '{4}'
         GROUP BY STATUS_NODE.ID_NODE
-        ORDER BY DAYS DESC, ID DESC;""".format(sum_dates_afected, sum_dates_especific, table, sum_dates_general)
+        ORDER BY DAYS DESC, ID DESC;""".format(sum_dates_afected, sum_dates_especific, table, sum_dates_general, region)
 
         # cursor = mydb.cursor()
         cursor.execute(query)
@@ -370,8 +400,11 @@ def priority(region = "-"):
             especific_priority_hours =data_priority('E', 'NEW_HOURS', dates, region) 
             especific_priority_period =data_priority('E', 'PERIOD', dates, region) 
             especific_priority_modulation =data_priority('E', 'MODULATION', dates, region)
+            especific_priority_impacted =data_priority('E', 'IMPACTEDMODEMS', dates, region)
+            especific_priority_stressed =data_priority('E', 'STRESSEDMODEMS', dates, region)
+            especific_priority_sampling =data_priority('E', 'SAMPLING', dates, region)
 
-            return [general_priority, especific_priority_qoe, especific_priority_hours, especific_priority_period, especific_priority_modulation, dates]
+            return [general_priority, especific_priority_qoe, especific_priority_hours, especific_priority_period, especific_priority_modulation, especific_priority_impacted, especific_priority_stressed, especific_priority_sampling, dates]
 
     except:
         return "Error en la conexión con la Base de Datos"
@@ -443,12 +476,16 @@ def data_dayly(dates, mydate):
     query = """
     SELECT CMTS, PLANO,
     NEW_QOE.`{0}` AS QOE,
+    IMPACTEDMODEMS.`{0}` AS IMPACTED,
+    STRESSEDMODEMS.`{0}` AS STRESSED,
     NEW_HOURS.`{0}` AS HOURS,
     PERIOD.`{0}` AS PERIOD,
     MODULATION.`{0}` AS MODULATION,
     SUM({1}) AS DAYS
     FROM NODES
     INNER JOIN NEW_QOE ON NEW_QOE.ID_NODE = NODES.ID
+    INNER JOIN IMPACTEDMODEMS ON IMPACTEDMODEMS.ID_NODE = NODES.ID
+    INNER JOIN STRESSEDMODEMS ON STRESSEDMODEMS.ID_NODE = NODES.ID
     INNER JOIN NEW_HOURS ON NEW_HOURS.ID_NODE = NODES.ID
     INNER JOIN PERIOD ON PERIOD.ID_NODE = NODES.ID
     INNER JOIN MODULATION ON MODULATION.ID_NODE = NODES.ID
