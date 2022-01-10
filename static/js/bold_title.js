@@ -10,7 +10,7 @@ if (route == "analysis") {
     info.innerHTML = `<a class="nav-link fw-bold" href="/info">Info</a>`;
 } else if (route == "priority") {
     let priority = document.getElementById("priority");
-    priority.innerHTML = `<a class="nav-link fw-bold" href="/priority">Prioridad</a>`;
+    priority.innerHTML = `<a class="nav-link fw-bold" href="/priority">Seguimiento</a>`;
 }  else if (route == "upload") {
     let upload = document.getElementById("upload");
     upload.innerHTML = `<a class="nav-link fw-bold" href="/upload">Carga</a>`;

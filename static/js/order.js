@@ -206,6 +206,34 @@ function sortTable(n, name_table) {
                     }
                     
                 }
+            } else if (myroute == 'sampling'){
+                if (n == 0 || n == 1){
+                    if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break
+                        }
+                    } else if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break
+                        }
+                    }
+    
+                } else {
+                    if (dir == "desc") {
+                        if (parseFloat(x.innerHTML.toLowerCase()) > parseFloat(y.innerHTML.toLowerCase())) {
+                            shouldSwitch = true;
+                            break
+                        }
+                    } else if (dir == "asc") {
+                        if (parseFloat(x.innerHTML.toLowerCase()) < parseFloat(y.innerHTML.toLowerCase())) {
+                            shouldSwitch = true;
+                            break
+                        }
+                    }
+                    
+                }
             }
                 
         }
