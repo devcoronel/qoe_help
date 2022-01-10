@@ -1,6 +1,7 @@
 from concurrent import futures
 import concurrent
 from datetime import date
+import re
 from flask import Flask, render_template, request, jsonify, url_for, redirect
 from main import detail, dayly, insert_status, priority, modulation, analysis, status_node, sampling
 from up import upload, verify_upload
@@ -134,20 +135,31 @@ def my_priority():
 
 
 @app.route('/priority', methods=['POST'])
-@limiter.limit("1/2second")
+@limiter.limit("1/second")
 @when_upload_runs
 def my_post_priority():
     region = request.data
+    region = (str(region, 'UTF-8'))[1:-1]
     data = priority(region)
     return {'msg': data}
     
 
-@app.route('/modulation')
+@app.route('/modulation', methods=['GET'])
 @limiter.limit("2/second")
 @when_upload_runs
 def my_modulation():
-    data = modulation()
+    data = modulation("LIMA")
     return render_template('index.html', route = 3, data = {'msg': data})
+
+
+@app.route('/modulation', methods=['POST'])
+@limiter.limit("1/second")
+@when_upload_runs
+def my_post_modulation():
+    region = request.data
+    region = (str(region, 'UTF-8'))[1:-1]
+    data = modulation(region)
+    return {'msg': data}
     
 
 @app.route('/upload', methods=['POST', 'GET'])
@@ -197,18 +209,30 @@ def my_post_dayly():
         return {'msg': data}
 
 
-@app.route('/dayly', methods = ['GET', 'POST'])
+@app.route('/dayly', methods = ['GET'])
 @limiter.limit("2/second")
 @when_upload_runs
 def my_dayly():
     return render_template('index.html', route = 5)
 
-@app.route('/sampling')
+
+@app.route('/sampling', methods = ['GET'])
 @limiter.limit("2/second")
 @when_upload_runs
 def my_sampling():
     data_sampling = sampling("LIMA")
     return render_template('index.html', route = 8, data = {'msg': data_sampling})
+
+
+@app.route('/sampling', methods = ['POST'])
+@limiter.limit("1/second")
+@when_upload_runs
+def my_post_sampling():
+    region = request.data
+    region = (str(region, 'UTF-8'))[1:-1]
+    data = sampling(region)
+    return {'msg': data}
+
 
 @app.route('/info')
 @limiter.limit("2/second")

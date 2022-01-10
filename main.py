@@ -409,7 +409,7 @@ def priority(region):
     except:
         return "Error en la conexión con la Base de Datos"
 
-def data_modulation(dates):
+def data_modulation(dates, region):
 
     query_dates = ""
     for date in dates:
@@ -420,11 +420,11 @@ def data_modulation(dates):
         query = """
         SELECT CMTS, PLANO, {0} FROM MODULATION
         INNER JOIN NODES ON NODES.ID = MODULATION.ID_NODE
-        WHERE ID_NODE IN (
+        WHERE (ID_NODE IN (
         SELECT ID_NODE FROM MODULATION
-        WHERE `{1}` >= 2 AND `{2}` >= 2)
+        WHERE `{1}` >= 2 AND `{2}` >= 2)) AND REGION = '{3}'
         ORDER BY `{1}` DESC;
-        """.format(query_dates, dates[0], dates[1])
+        """.format(query_dates, dates[0], dates[1], region)
 
         # cursor = mydb.cursor()
         cursor.execute(query)
@@ -437,7 +437,7 @@ def data_modulation(dates):
         return "Error en la conexión con la Base de Datos"
 
 
-def modulation():
+def modulation(region):
     days = days_modulation
     dates = []
     today_utc = dt.datetime.utcnow()
@@ -456,8 +456,11 @@ def modulation():
             return "No hay data en estos últimos {} días".format(days)
         
         else:
-            values_modulation = data_modulation(dates)
-            return [values_modulation, dates]
+            values_modulation = data_modulation(dates, region)
+            if isinstance(values_modulation, str):
+                return values_modulation
+            else:
+                return [values_modulation, dates]
 
     except:
         return "Error en la conexión con la Base de Datos"
@@ -586,6 +589,6 @@ def sampling(region):
         
         else:
             values_sampling = data_sampling(dates, region)
-            return [values_sampling]
+            return [values_sampling, dates]
     except:
         return "Error en la conexión con la Base de Datos"

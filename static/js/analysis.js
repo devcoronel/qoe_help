@@ -29,7 +29,7 @@ myform.addEventListener("submit", function (e) {
 
                 let tablehtml = `<table class="table table-hover" id="`+ id_table +`">
                 <thead class="table-dark">
-                <td onclick="sortTable(0, '`+ id_table +`')" class="header"><strong>REGION</strong></td>
+                <td class="header"><strong>REGION</strong></td>
                 <td onclick="sortTable(1, '`+ id_table +`')" class="header"><strong>CMTS</strong></td>
                 <td onclick="sortTable(2, '`+ id_table +`')" class="header"><strong>Plano</strong></td>`
                             

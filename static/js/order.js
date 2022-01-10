@@ -31,7 +31,7 @@ function sortTable(n, name_table) {
                         }
                     }
                 } else {
-                    if (n == 0 || n == 1){
+                    if (n == 0 || n == 1 || n == 2){
                         if (dir == "desc") {
                             if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
                                 shouldSwitch = true;
@@ -117,37 +117,69 @@ function sortTable(n, name_table) {
                         
                     }
                 } else if (name_table == 'especifictable') {
-                    if (n !== 3){
-                        if (dir == "desc") {
-                            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                                shouldSwitch = true;
-                                break;
+                    let select = document.getElementById("type")
+
+                    if (select.value == 'period'){
+                        if (n != 3){
+                            if (dir == "desc") {
+                                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                                    shouldSwitch = true;
+                                    break
+                                }
+                            } else if (dir == "asc") {
+                                if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                                    shouldSwitch = true;
+                                    break
+                                }
                             }
-                        } else if (dir == "asc") {
-                            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-                                shouldSwitch = true;
-                                break;
+            
+                        } else {
+                            if (dir == "desc") {
+                                if (parseFloat(x.innerHTML.toLowerCase()) > parseFloat(y.innerHTML.toLowerCase())) {
+                                    shouldSwitch = true;
+                                    break
+                                }
+                            } else if (dir == "asc") {
+                                if (parseFloat(x.innerHTML.toLowerCase()) < parseFloat(y.innerHTML.toLowerCase())) {
+                                    shouldSwitch = true;
+                                    break
+                                }
                             }
+                            
                         }
-        
                     } else {
-                        if (dir == "desc") {
-                            if (parseFloat(x.innerHTML.toLowerCase()) > parseFloat(y.innerHTML.toLowerCase())) {
-                                shouldSwitch = true;
-                                break;
+                        if (n == 0 || n == 1 || n == 2 || n == 4 || n == 5){
+                            if (dir == "desc") {
+                                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                                    shouldSwitch = true;
+                                    break
+                                }
+                            } else if (dir == "asc") {
+                                if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                                    shouldSwitch = true;
+                                    break
+                                }
                             }
-                        } else if (dir == "asc") {
-                            if (parseFloat(x.innerHTML.toLowerCase()) < parseFloat(y.innerHTML.toLowerCase())) {
-                                shouldSwitch = true;
-                                break;
+            
+                        } else {
+                            if (dir == "desc") {
+                                if (parseFloat(x.innerHTML.toLowerCase()) > parseFloat(y.innerHTML.toLowerCase())) {
+                                    shouldSwitch = true;
+                                    break
+                                }
+                            } else if (dir == "asc") {
+                                if (parseFloat(x.innerHTML.toLowerCase()) < parseFloat(y.innerHTML.toLowerCase())) {
+                                    shouldSwitch = true;
+                                    break
+                                }
                             }
+                            
                         }
-                        
                     }
                 }
 
             } else if (myroute == 'dayly'){
-                if (n == 0 || n == 1 || n == 4){
+                if (n == 0 || n == 1 || n == 6 || n == 9){
                     if (dir == "desc") {
                         if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
                             shouldSwitch = true;

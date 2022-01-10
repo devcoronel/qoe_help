@@ -547,10 +547,19 @@
         <div class="container bg-light rounded pt-2">
             <div class="p-3">
                 <div class="row">
-                    <div class= "col-xl-11 col-lg-10 col-md-10 col-sm-9 col-12">
+                    <div class= "col-xl-8 col-lg-8 col-md-7 col-sm-12 col-12">
                         <div class="row"><h2 class="fw-bold"> <img src="{{ url_for('static', filename='images/aboutme/i.png') }}" width="35" class="pb-2">&nbspCambios de Modulación</h2></div>
                     </div>
-                    <div class="col-xl-1 col-lg-2 col-md-2 col-sm-3 col-12" >
+                    <div class="col-xl-2 col-lg-2 col-md-3 col-sm-6 col-6">
+                        <select name="region" id="region" class="form-select">
+                            <option value="LIMA">Región LIMA</option>
+                            <!-- <option value="-">LIMA</option> -->
+                            <option value="CENTRO">Región CENTRO</option>
+                            <option value="NORTE">Región NORTE</option>
+                            <option value="SUR">Región SUR</option>
+                        </select>
+                    </div>
+                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-6 col-6" >
                         <div class="row"><button id="modulationbutton" class="btn btn-success" style="margin-bottom: 2rem;">Exportar</button></div>
                     </div>
                 </div>
@@ -577,6 +586,8 @@
         let jsondata = JSON.parse(data)
         build(jsondata)
     </script>
+    <script src="{{ url_for('static', filename='js/modulation_per_region.js') }}"></script>
+
 
 {% elif route == 4 %}
 <!-- CARGA -->
@@ -726,29 +737,51 @@
     </div>
 
 {% elif route == 8 %}
+<!-- MUESTREO -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sumary.css') }}">
+    <script src="{{ url_for('static', filename='js/table2excel.js') }}"></script>
     <div class="container-fluid pb-3" style="padding-top: 4.5rem;">
         <div class="container bg-light rounded pt-2" style="padding-bottom: 5rem;">
             <div class="p-3">
                 <div class="row">
-                    <div class="col-sm-10 col-md-9 col-9">
-                        <h2 class="fw-bold"> <img src="{{ url_for('static', filename='images/aboutme/i.png') }}" width="35" class="pb-2">&nbspMuestreo</h2>
+                    <div class= "col-xl-8 col-lg-8 col-md-7 col-sm-12 col-12">
+                        <div class="row"><h2 class="fw-bold"> <img src="{{ url_for('static', filename='images/aboutme/i.png') }}" width="35" class="pb-2">&nbspMuestreo</h2></div>
                     </div>
-                    
+                    <div class="col-xl-2 col-lg-2 col-md-3 col-sm-6 col-6">
+                        <select name="region" id="region" class="form-select">
+                            <option value="LIMA">Región LIMA</option>
+                            <!-- <option value="-">LIMA</option> -->
+                            <option value="CENTRO">Región CENTRO</option>
+                            <option value="NORTE">Región NORTE</option>
+                            <option value="SUR">Región SUR</option>
+                        </select>
+                    </div>
+                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-6 col-6" >
+                        <div class="row"><button id="samplingbutton" class="btn btn-success" style="margin-bottom: 2rem;">Exportar</button></div>
+                    </div>
                 </div>
                 <div class="row">
-                    <p>La tabla recopila información de la cantidad de muestras que Xpertrak toma de forma diaria, con el objetivo de detectar aquellos planos que no estén teniendo la correcta cantidad de muestras para un reporte inmediato. Solo muestra aquellos planos los cuales en los dos últimos días han tenido una cantidad de muestras menores a 90</p>
+                    <p>La tabla recopila información de la cantidad de muestras que Xpertrak toma de forma diaria, con el objetivo de detectar aquellos planos que no estén teniendo la correcta cantidad de muestras para un reporte inmediato. Solo muestra aquellos planos los cuales en al menos uno de los dos últimos días han tenido una cantidad de muestras menores a 90</p>
                 </div>
                 <br>
-                <div id="table_sampling"></div>
+                <div id="table_sampling" class="scrollmenu" style="border-radius:10px;" data-excel-name="Cambios_Modulacion"></div>
             </div>
-        </div>    
+        </div>
     </div>
+    <script>
+        document.getElementById('samplingbutton').addEventListener('click', function() {
+            var table2excel = new Table2Excel();
+            table2excel.export(document.querySelectorAll("#mytable"), "Muestreos");
+        });
+    </script>
     <script src="{{ url_for('static', filename='js/sampling.js') }}"></script>
     <script>
         let data = '{{ data|tojson|safe }}'
         let jsondata = JSON.parse(data)
         build(jsondata)
     </script>
+    <script src="{{ url_for('static', filename='js/sampling_per_region.js') }}"></script>
+
 
 
 {% endif %}

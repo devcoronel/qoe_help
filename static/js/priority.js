@@ -62,7 +62,8 @@ function build(data) {
                 <td onclick="sortTable(5, 'especifictable')" class="header"><strong>Estado</strong></td>
         `
         for (let date in dates) {
-            especific_head += `<td class="header"><strong>`+ dates[date] +`</strong></td>`
+            let a = parseInt(date)+6
+            especific_head += `<td onclick="sortTable(`+ a +`, 'especifictable')" class="header"><strong>`+ dates[date] +`</strong></td>`
         }
         especific_head += `</tr></thead><tbody>`
         
@@ -114,7 +115,8 @@ function build(data) {
                     <td onclick="sortTable(5, 'especifictable')" class="header"><strong>Estado</strong></td>
             `
             for (let date in dates) {
-                especific_head += `<td class="header"><strong>`+ dates[date] +`</strong></td>`
+                let b = parseInt(date)+6
+                especific_head += `<td onclick="sortTable(`+ b +`, 'especifictable')" class="header"><strong>`+ dates[date] +`</strong></td>`
             }
             especific_head += `</tr></thead><tbody>`
             
@@ -328,7 +330,15 @@ function build(data) {
         })
     } else {
 
-        div_generaltable.innerHTML = data.msg
-        div_especifictable.innerHTML = data.msg
+        div_generaltable.innerHTML = `
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>`+data.msg+`</strong>
+        </div>
+        `
+        div_especifictable.innerHTML = `
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>`+data.msg+`</strong>
+        </div>
+        `
     }
 }
