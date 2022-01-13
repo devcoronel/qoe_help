@@ -4,6 +4,7 @@ let statistics = document.getElementById("div_statistics")
 let alert = document.getElementById("alert")
 const myform = document.getElementById("form_sumary");
 
+
 myform.addEventListener("submit", function (e) {
 	e.preventDefault();
 	table.innerHTML = ''
@@ -77,7 +78,7 @@ myform.addEventListener("submit", function (e) {
 				let cA_between20and50 = []
 				let cA_lessThan20 = []
 
-				let cB_greaterThan150 = []
+				var cB_greaterThan150 = []
 				let cB_between50and150 = []
 				let cB_between20and50 = []
 				let cB_lessThan20 = []
@@ -107,13 +108,13 @@ myform.addEventListener("submit", function (e) {
 
 					if (elements[i][2] < 70 && elements[i][2] >= 0) {
 						cA.push(i)
-						tablehtml += `<td> Con Afectación</td></tr>`
+						tablehtml += `<td>Con Afectación</td></tr>`
 					} else if (elements[i][2] >= 70 && elements[i][2] < 80) {
 						cC.push(i)
 						tablehtml += `<td>Preventivo</td></tr>`
 					} else if (elements[i][5] >= 3) {
 						cB.push(i)
-						tablehtml += `<td>Preventivo</td></tr>`
+						tablehtml += `<td>Con Afectación</td></tr>`
 					} else if (elements[i][7] >= 2 && elements[i][5] >= 0) {
 						cD.push(i)
 						tablehtml += `<td>Preventivo</td></tr>`
@@ -246,6 +247,37 @@ myform.addEventListener("submit", function (e) {
 					</div>
 				</div>
 				</hr>
+				</div>
+
+				<div data-bs-backdrop="static" class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-scrollable">
+				<div class="modal-dialog">
+					<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="modalTitle">Modal title</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body" id="modalBody">
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+					</div>
+					</div>
+				</div>
+				</div>
+				</div>
+
+				<div class="container">
+				<div class="row container">
+                    <div class="col-5 m-2" style="background-color:#EBEDEF; border-radius: 1.5rem;">
+						<h4 style="padding:0.5rem;text-align:center">Planos Afectados con más de 150 Clientes</h4>
+                        <canvas id="canvas3"></canvas>
+                    </div>
+                    <div class="col-5 m-2" style="background-color:#EBEDEF; border-radius: 1.5rem;">
+						<h4 style="padding:0.5rem;text-align:center">Planos Afectados de 50 a 150 Clientes</h4>
+                        <canvas id="canvas4" style="padding:1rem"></canvas>
+                    </div>
+				</div>
 				</div>`
 
 
@@ -293,6 +325,8 @@ myform.addEventListener("submit", function (e) {
 					return totalsum
 				}
 
+				
+
 				let canvas2 = document.getElementById("canvas2").getContext("2d")
 				var chart2 = new Chart(canvas2, {
 					type: "bar",
@@ -327,15 +361,11 @@ myform.addEventListener("submit", function (e) {
 							}
 						}
 					}
-				})
+				})				
 
-
-
-
-				
 
 				let impactedByTypeTable = document.getElementById("impactedByTypeTable")
-				let impactedByTypeTableHTML = '<div class="scrollmenu" style="border-radius:10px;"><table class="table table-hover"><thead class="table-dark">'
+				let impactedByTypeTableHTML = '<div class="scrollmenu" style="border-radius:10px;"><table class="table table-hover"><thead  class="table-dark">'
 				impactedByTypeTableHTML += `
 				<tr>
 					<td></td>
@@ -360,18 +390,50 @@ myform.addEventListener("submit", function (e) {
 				<tr>
 					<td rowspan="2">Con Afectación</td>
 					<td>QoE < 70</td>
-					<td>`+ cA_greaterThan150.length +`</td>
-					<td>`+ cA_between50and150.length +`</td>
-					<td>`+ cA_between20and50.length +`</td>
-					<td>`+ cA_lessThan20.length +`</td>
+					<td id="t22">
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+						`+ cA_greaterThan150.length +`
+						</button>
+					</td>
+					<td id="t23">
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+						`+ cA_between50and150.length +`
+						</button>
+					</td>
+					<td id="t24">
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+						`+ cA_between20and50.length +`
+						</button>
+					</td>
+					<td id="t25">
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+						`+ cA_lessThan20.length +`
+						</button>
+					</td>
 					<td>`+ (cA_greaterThan150.length + cA_between50and150.length + cA_between20and50.length + cA_lessThan20.length) +`</td>
 				</tr>
 				<tr>
 					<td>Horas ≥ 3</td>
-					<td>`+ cB_greaterThan150.length +`</td>
-					<td>`+ cB_between50and150.length +`</td>
-					<td>`+ cB_between20and50.length +`</td>
-					<td>`+ cB_lessThan20.length +`</td>
+					<td id="t32">
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+						`+ cB_greaterThan150.length +`
+						</button>
+					</td>
+					<td id="t33">
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+						`+ cB_between50and150.length +`
+						</button>
+					</td>
+					<td id="t34">
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+						`+ cB_between20and50.length +`
+						</button>
+					</td>
+					<td id="t35">
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+						`+ cB_lessThan20.length +`
+						</button>
+					</td>
 					<td>`+ (cB_greaterThan150.length + cB_between50and150.length + cB_between20and50.length + cB_lessThan20.length) +`</td>
 				</tr>
 				<tr>
@@ -387,18 +449,50 @@ myform.addEventListener("submit", function (e) {
 				<tr>
 					<td rowspan="2">Preventivo</td>
 					<td>70 ≤ QoE < 80</td>
-					<td>`+ cC_greaterThan150.length +`</td>
-					<td>`+ cC_between50and150.length +`</td>
-					<td>`+ cC_between20and50.length +`</td>
-					<td>`+ cC_lessThan20.length +`</td>
+					<td id="t42">
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+						`+ cC_greaterThan150.length +`
+						</button>
+					</td>
+					<td id="t43">
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+						`+ cC_between50and150.length +`
+						</button>
+					</td>
+					<td id="t44">
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+						`+ cC_between20and50.length +`
+						</button>
+					</td>
+					<td id="t45">
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+						`+ cC_lessThan20.length +`
+						</button>
+					</td>
 					<td>`+ (cC_greaterThan150.length + cC_between50and150.length + cC_between20and50.length + cC_lessThan20.length) +`</td>
 				</tr>
 				<tr>
 					<td>Cambios de Modul ≥ 2</td>
-					<td>`+ cD_greaterThan150.length +`</td>
-					<td>`+ cD_between50and150.length +`</td>
-					<td>`+ cD_between20and50.length +`</td>
-					<td>`+ cD_lessThan20.length +`</td>
+					<td id="t52">
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+						`+ cD_greaterThan150.length +`
+						</button>
+					</td>
+					<td id="t53">
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+						`+ cD_between50and150.length +`
+						</button>
+					</td>
+					<td id="t54">
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+						`+ cD_between20and50.length +`
+						</button>
+					</td>
+					<td id="t55">
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+						`+ cD_lessThan20.length +`
+						</button>
+					</td>
 					<td>`+ (cD_greaterThan150.length + cD_between50and150.length + cD_between20and50.length + cD_lessThan20.length) +`</td>
 				</tr>
 				<tr>
@@ -422,14 +516,321 @@ myform.addEventListener("submit", function (e) {
 				</tr>
 				</div>
 				`
+				impactedByTypeTable.innerHTML = impactedByTypeTableHTML
+
+
+				let modalTitle = document.getElementById("modalTitle")
+				let modalBody = document.getElementById("modalBody")
+
+				function createModalTable(indexList){
+					let modalTable = `
+					<table class="table table-hover">
+					<thead>
+						<tr>
+							<td>Plano</td>
+							<td>Días</td>
+						</tr>
+					</thead>
+					<tbody>`
+					for (let a in indexList) {
+						modalTable += `
+						<tr>
+							<td>`+ elements[indexList[a]][1] +`</td>
+							<td>`+ elements[indexList[a]][8] +`</td>
+						</tr>
+						`
+					}
+					modalTable += `</tbody></table>`
+					modalBody.innerHTML = modalTable
+				}
 				
+				let t22 = document.getElementById("t22")
+				t22.addEventListener("click", function(){
+					modalTitle.innerHTML = "QoE < 70 | 150 < CMs Afectados"
+					if (cA_greaterThan150.length == 0) {
+						modalBody.innerHTML = "No hay planos por mostrar"
+					} else {
+						createModalTable(cA_greaterThan150)
+					}
+				})
+				let t23 = document.getElementById("t23")
+				t23.addEventListener("click", function(){
+					modalTitle.innerHTML = "QoE < 70 | 50 < CMs Afectados ≤ 150"
+					if (cA_between50and150.length == 0) {
+						modalBody.innerHTML = "No hay planos por mostrar"
+					} else {
+						createModalTable(cA_between50and150)
+					}
+				})
+				let t24 = document.getElementById("t24")
+				t24.addEventListener("click", function(){
+					modalTitle.innerHTML = "QoE < 70 | 20 < CMs Afectados ≤ 50"
+					if (cA_between20and50.length == 0) {
+						modalBody.innerHTML = "No hay planos por mostrar"
+					} else {
+						createModalTable(cA_between20and50)
+					}
+				})
+				let t25 = document.getElementById("t25")
+				t25.addEventListener("click", function(){
+					modalTitle.innerHTML = "QoE < 70 | CMs Afectados ≤ 20"
+					if (cA_lessThan20.length == 0) {
+						modalBody.innerHTML = "No hay planos por mostrar"
+					} else {
+						createModalTable(cA_lessThan20)
+					}
+				})
+
+
+				let t32 = document.getElementById("t32")
+				t32.addEventListener("click", function(){
+					modalTitle.innerHTML = "Horas ≥ 3 | 150 < CMs Afectados"
+					if (cB_greaterThan150.length == 0) {
+						modalBody.innerHTML = "No hay planos por mostrar"
+					} else {
+						createModalTable(cB_greaterThan150)
+					}
+				})
+				let t33 = document.getElementById("t33")
+				t33.addEventListener("click", function(){
+					modalTitle.innerHTML = "Horas ≥ 3 | 50 < CMs Afectados ≤ 150"
+					if (cB_between50and150.length == 0) {
+						modalBody.innerHTML = "No hay planos por mostrar"
+					} else {
+						createModalTable(cB_between50and150)
+					}
+				})
+				let t34 = document.getElementById("t34")
+				t34.addEventListener("click", function(){
+					modalTitle.innerHTML = "Horas ≥ 3 | 20 < CMs Afectados ≤ 50"
+					if (cB_between20and50.length == 0) {
+						modalBody.innerHTML = "No hay planos por mostrar"
+					} else {
+						createModalTable(cB_between20and50)
+					}
+				})
+				let t35 = document.getElementById("t35")
+				t35.addEventListener("click", function(){
+					modalTitle.innerHTML = "Horas ≥ 3 | CMs Afectados ≤ 20"
+					if (cB_lessThan20.length == 0) {
+						modalBody.innerHTML = "No hay planos por mostrar"
+					} else {
+						createModalTable(cB_lessThan20)
+					}
+				})
+
+
+				let t42 = document.getElementById("t42")
+				t42.addEventListener("click", function(){
+					modalTitle.innerHTML = "70 ≤ QoE < 80 | 150 < CMs Afectados"
+					if (cC_greaterThan150.length == 0) {
+						modalBody.innerHTML = "No hay planos por mostrar"
+					} else {
+						createModalTable(cC_greaterThan150)
+					}
+				})
+				let t43 = document.getElementById("t43")
+				t43.addEventListener("click", function(){
+					modalTitle.innerHTML = "70 ≤ QoE < 80 | 50 < CMs Afectados ≤ 150"
+					if (cC_between50and150.length == 0) {
+						modalBody.innerHTML = "No hay planos por mostrar"
+					} else {
+						createModalTable(cC_between50and150)
+					}
+				})
+				let t44 = document.getElementById("t44")
+				t44.addEventListener("click", function(){
+					modalTitle.innerHTML = "70 ≤ QoE < 80 | 20 < CMs Afectados ≤ 50"
+					if (cC_between20and50.length == 0) {
+						modalBody.innerHTML = "No hay planos por mostrar"
+					} else {
+						createModalTable(cC_between20and50)
+					}
+				})
+				let t45 = document.getElementById("t45")
+				t45.addEventListener("click", function(){
+					modalTitle.innerHTML = "70 ≤ QoE < 80 | CMs Afectados ≤ 20"
+					if (cC_lessThan20.length == 0) {
+						modalBody.innerHTML = "No hay planos por mostrar"
+					} else {
+						createModalTable(cC_lessThan20)
+					}
+				})
+
+
+				let t52 = document.getElementById("t52")
+				t52.addEventListener("click", function(){
+					modalTitle.innerHTML = "Cambios Modul ≥ 2 | 150 < CMs Afectados"
+					if (cD_greaterThan150.length == 0) {
+						modalBody.innerHTML = "No hay planos por mostrar"
+					} else {
+						createModalTable(cD_greaterThan150)
+					}
+				})
+				let t53 = document.getElementById("t53")
+				t53.addEventListener("click", function(){
+					modalTitle.innerHTML = "Cambios Modul ≥ 2 | 50 < CMs Afectados ≤ 150"
+					if (cD_between50and150.length == 0) {
+						modalBody.innerHTML = "No hay planos por mostrar"
+					} else {
+						createModalTable(cD_between50and150)
+					}
+				})
+				let t54 = document.getElementById("t54")
+				t54.addEventListener("click", function(){
+					modalTitle.innerHTML = "Cambios Modul ≥ 2 | 20 < CMs Afectados ≤ 50"
+					if (cD_between20and50.length == 0) {
+						modalBody.innerHTML = "No hay planos por mostrar"
+					} else {
+						createModalTable(cD_between20and50)
+					}
+				})
+				let t55 = document.getElementById("t55")
+				t55.addEventListener("click", function(){
+					modalTitle.innerHTML = "Cambios Modul ≥ 2 | CMs Afectados ≤ 20"
+					if (cD_lessThan20.length == 0) {
+						modalBody.innerHTML = "No hay planos por mostrar"
+					} else {
+						createModalTable(cD_lessThan20)
+					}
+				})
+
+
+
+
+
 				//Clase A: QoE < 70
 				// Clase B: Horas ≥ 3
 				// Clase C: 70 ≤ QoE < 80
 				// Clase D: Cambios de Modulación ≥ 2
 				// Clase E: No afectado en la fecha
 
-				impactedByTypeTable.innerHTML = impactedByTypeTableHTML
+
+				let allGreaterThan150 = ((cA_greaterThan150.concat(cB_greaterThan150)).concat(cC_greaterThan150)).concat(cD_greaterThan150)
+				let greaterThan150Day = []
+				let greaterThan150Night = []
+				let greaterThan150AllDay = []
+				let greaterThan150EarlyMorning = []
+				let greaterThan150Intermittent = []
+				let greaterThan150NotAffected = []
+
+				for(let n in allGreaterThan150){
+					if(elements[allGreaterThan150[n]][6] == 'DIA'){
+						greaterThan150Day.push(allGreaterThan150[n])
+					} else if(elements[allGreaterThan150[n]][6] == 'NOCHE'){
+						greaterThan150Night.push(allGreaterThan150[n])
+					} else if(elements[allGreaterThan150[n]][6] == 'TODO EL DIA'){
+						greaterThan150AllDay.push(allGreaterThan150[n])
+					} else if(elements[allGreaterThan150[n]][6] == 'MADRUGADA'){
+						greaterThan150EarlyMorning.push(allGreaterThan150[n])
+					} else if(elements[allGreaterThan150[n]][6] == 'INTERMITENTE'){
+						greaterThan150Intermittent.push(allGreaterThan150[n])
+					} else if(elements[allGreaterThan150[n]][6] == 'NO AFECTADO'){
+						greaterThan150NotAffected.push(allGreaterThan150[n])
+					}
+				}
+
+				let greaterThan150PeriodList = [greaterThan150EarlyMorning.length, greaterThan150Day.length, greaterThan150Night.length, greaterThan150AllDay.length, greaterThan150Intermittent.length, greaterThan150NotAffected.length]
+
+				let canvas3 = document.getElementById("canvas3").getContext("2d")
+				var chart3 = new Chart(canvas3, {
+					type: "bar",
+					data: {
+						labels: ["MADRUGADA", "DIA", "NOCHE", "TODO EL DÍA", "INTERMITENTE", "NO AFECTADO"],
+						datasets:[
+							{
+								label:"Periodo",
+								backgroundColor: [
+									'rgba(241, 196, 15, 0.5)', // amarillo
+									'rgba(52, 152, 219, 0.5)', // azul
+									'rgba(52, 73, 94, 0.5)', // azul oscuro
+									'rgba(231, 76, 60, 0.5)', //rojo
+									'rgba(142, 68, 173, 0.5)', // morado
+									'rgba(88, 214, 141, 0.5)' // verde
+									// 'rgba(189, 195, 199, 0.5)' // gris
+								],
+								data: greaterThan150PeriodList
+							}
+						]
+					},
+					options: {
+						
+						plugins:{
+							labels:{
+								render: 'value'
+							}
+						},
+						scales: {
+							y: {
+								beginAtZero: true
+							}
+						}
+					}
+				})
+
+				let all50and150 = ((cA_between50and150.concat(cB_between50and150)).concat(cC_between50and150)).concat(cD_between50and150)
+				let between50and150Day = []
+				let between50and150Night = []
+				let between50and150AllDay = []
+				let between50and150EarlyMorning = []
+				let between50and150Intermittent = []
+				let between50and150NotAffected = []
+
+				for(let o in all50and150){
+					if(elements[all50and150[o]][6] == 'DIA'){
+						between50and150Day.push(all50and150[o])
+					} else if(elements[all50and150[o]][6] == 'NOCHE'){
+						between50and150Night.push(all50and150[o])
+					} else if(elements[all50and150[o]][6] == 'TODO EL DIA'){
+						between50and150AllDay.push(all50and150[o])
+					} else if(elements[all50and150[o]][6] == 'MADRUGADA'){
+						between50and150EarlyMorning.push(all50and150[o])
+					} else if(elements[all50and150[o]][6] == 'INTERMITENTE'){
+						between50and150Intermittent.push(all50and150[o])
+					} else if(elements[all50and150[o]][6] == 'NO AFECTADO'){
+						between50and150NotAffected.push(all50and150[o])
+					}
+				}
+
+				let between50and150PeriodList = [between50and150EarlyMorning.length, between50and150Day.length, between50and150Night.length, between50and150AllDay.length, between50and150Intermittent.length, between50and150NotAffected.length]
+
+				let canvas4 = document.getElementById("canvas4").getContext("2d")
+				var chart4 = new Chart(canvas4, {
+					type: "bar",
+					data: {
+						labels: ["MADRUGADA", "DIA", "NOCHE", "TODO EL DÍA", "INTERMITENTE", "NO AFECTADO"],
+						datasets:[
+							{
+								label:"Periodo",
+								backgroundColor: [
+									'rgba(241, 196, 15, 0.5)', // amarillo
+									'rgba(52, 152, 219, 0.5)', // azul
+									'rgba(52, 73, 94, 0.5)', // azul oscuro
+									'rgba(231, 76, 60, 0.5)', //rojo
+									'rgba(142, 68, 173, 0.5)', // morado
+									'rgba(88, 214, 141, 0.5)' // verde
+									// 'rgba(189, 195, 199, 0.5)' // gris
+								],
+								data: between50and150PeriodList
+							}
+						]
+					},
+					options: {
+						
+						plugins:{
+							labels:{
+								render: 'value'
+							}
+						},
+						scales: {
+							y: {
+								beginAtZero: true
+							}
+						}
+					}
+				})
+
+				
 
 				document.getElementById('daylybutton').addEventListener('click', function() {
 					var table2excel = new Table2Excel();
