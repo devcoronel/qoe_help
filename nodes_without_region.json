@@ -1,0 +1,1454 @@
+[
+ {
+   "ID": 1,
+   "PLANO": "LMSQ039",
+   "CMTS": "-",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 267,
+   "PLANO": "LMMF077",
+   "CMTS": "HIGUERETA_04",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 356,
+   "PLANO": "LMHU009",
+   "CMTS": "HUACHO_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 405,
+   "PLANO": "LMLM156",
+   "CMTS": "OLT_COLONIAL_05",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 451,
+   "PLANO": "PIUS002",
+   "CMTS": "OLT_SULLANA_01",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 452,
+   "PLANO": "PIUS001",
+   "CMTS": "OLT_SULLANA_01",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 462,
+   "PLANO": "PIUS004",
+   "CMTS": "OLT_SULLANA_01",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 463,
+   "PLANO": "PIUS003",
+   "CMTS": "OLT_SULLANA_01",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 465,
+   "PLANO": "PIUS006",
+   "CMTS": "OLT_SULLANA_01",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 466,
+   "PLANO": "PIUS005",
+   "CMTS": "OLT_SULLANA_01",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 477,
+   "PLANO": "LMBN047",
+   "CMTS": "OLT_COLONIAL_05",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 483,
+   "PLANO": "LMBN045",
+   "CMTS": "OLT_COLONIAL_05",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 484,
+   "PLANO": "LMBN046",
+   "CMTS": "OLT_COLONIAL_05",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 493,
+   "PLANO": "AQAQ016",
+   "CMTS": "AREQUIPA_05",
+   "REGION": "SUR"
+ },
+ {
+   "ID": 498,
+   "PLANO": "AQAQ015",
+   "CMTS": "AREQUIPA_05",
+   "REGION": "SUR"
+ },
+ {
+   "ID": 501,
+   "PLANO": "PIUS011",
+   "CMTS": "OLT_SULLANA_01",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 502,
+   "PLANO": "PIUS010",
+   "CMTS": "OLT_SULLANA_01",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 503,
+   "PLANO": "PIUS013",
+   "CMTS": "OLT_SULLANA_01",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 505,
+   "PLANO": "PIUS012",
+   "CMTS": "OLT_SULLANA_01",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 513,
+   "PLANO": "PIUS007",
+   "CMTS": "OLT_SULLANA_01",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 515,
+   "PLANO": "PIUS015",
+   "CMTS": "OLT_SULLANA_01",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 516,
+   "PLANO": "PIUS014",
+   "CMTS": "OLT_SULLANA_01",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 518,
+   "PLANO": "PIUS017",
+   "CMTS": "OLT_SULLANA_01",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 520,
+   "PLANO": "PIUS016",
+   "CMTS": "OLT_SULLANA_01",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 521,
+   "PLANO": "PIUS022",
+   "CMTS": "OLT_SULLANA_01",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 522,
+   "PLANO": "PIUS021",
+   "CMTS": "OLT_SULLANA_01",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 523,
+   "PLANO": "PIUS023",
+   "CMTS": "OLT_SULLANA_01",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 524,
+   "PLANO": "PIUS009",
+   "CMTS": "OLT_SULLANA_01",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 525,
+   "PLANO": "PIUS008",
+   "CMTS": "OLT_SULLANA_01",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 526,
+   "PLANO": "PIUS019",
+   "CMTS": "OLT_SULLANA_01",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 528,
+   "PLANO": "PIUS018",
+   "CMTS": "OLT_SULLANA_01",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 532,
+   "PLANO": "PIUS020",
+   "CMTS": "OLT_SULLANA_01",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 540,
+   "PLANO": "AQSA033",
+   "CMTS": "AREQUIPA_05",
+   "REGION": "SUR"
+ },
+ {
+   "ID": 547,
+   "PLANO": "AQSA035",
+   "CMTS": "AREQUIPA_05",
+   "REGION": "SUR"
+ },
+ {
+   "ID": 618,
+   "PLANO": "AQAQ024",
+   "CMTS": "AREQUIPA_05",
+   "REGION": "SUR"
+ },
+ {
+   "ID": 684,
+   "PLANO": "5518G04-B",
+   "CMTS": "OCHARAN_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 691,
+   "PLANO": "LMSC236",
+   "CMTS": "MONTERRICO_04",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 726,
+   "PLANO": "HYCH013",
+   "CMTS": "HUANCAYO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 728,
+   "PLANO": "LMSC276",
+   "CMTS": "HIGUERETA_04",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 729,
+   "PLANO": "HYCH012",
+   "CMTS": "HUANCAYO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 732,
+   "PLANO": "HYCH001",
+   "CMTS": "HUANCAYO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 740,
+   "PLANO": "HYCH006",
+   "CMTS": "HUANCAYO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 741,
+   "PLANO": "LMSC275",
+   "CMTS": "HIGUERETA_04",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 758,
+   "PLANO": "MQMN028",
+   "CMTS": "MOQUEGUA_03",
+   "REGION": "SUR"
+ },
+ {
+   "ID": 796,
+   "PLANO": "MQMN016",
+   "CMTS": "MOQUEGUA_03",
+   "REGION": "SUR"
+ },
+ {
+   "ID": 803,
+   "PLANO": "MQMN014",
+   "CMTS": "MOQUEGUA_03",
+   "REGION": "SUR"
+ },
+ {
+   "ID": 811,
+   "PLANO": "MQMN013",
+   "CMTS": "MOQUEGUA_03",
+   "REGION": "SUR"
+ },
+ {
+   "ID": 911,
+   "PLANO": "TBTB020",
+   "CMTS": "TUMBES_03",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 915,
+   "PLANO": "TBTB027",
+   "CMTS": "TUMBES_03",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 923,
+   "PLANO": "TBTB025",
+   "CMTS": "TUMBES_03",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 934,
+   "PLANO": "TBTB009",
+   "CMTS": "TUMBES_03",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 1007,
+   "PLANO": "LMSC116",
+   "CMTS": "MONTERRICO_04",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1017,
+   "PLANO": "LMSC109",
+   "CMTS": "MONTERRICO_04",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1034,
+   "PLANO": "LMSC104",
+   "CMTS": "MONTERRICO_04",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1053,
+   "PLANO": "5020000",
+   "CMTS": "OLT_SAN_FELIPE_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1073,
+   "PLANO": "LMSC130",
+   "CMTS": "MONTERRICO_04",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1076,
+   "PLANO": "LMSC131",
+   "CMTS": "MONTERRICO_04",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1125,
+   "PLANO": "MDPM012",
+   "CMTS": "PUERTO_MALDONADO_02",
+   "REGION": "SUR"
+ },
+ {
+   "ID": 1126,
+   "PLANO": "MDPM003",
+   "CMTS": "PUERTO_MALDONADO_02",
+   "REGION": "SUR"
+ },
+ {
+   "ID": 1183,
+   "PLANO": "54200000",
+   "CMTS": "OCHARAN_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1275,
+   "PLANO": "AQCC044",
+   "CMTS": "AREQUIPA_05",
+   "REGION": "SUR"
+ },
+ {
+   "ID": 1277,
+   "PLANO": "512000",
+   "CMTS": "OLT_AVIACION_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1278,
+   "PLANO": "HCHC020",
+   "CMTS": "HUANUCO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 1306,
+   "PLANO": "LMMP121",
+   "CMTS": "AEROPUERTO_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1308,
+   "PLANO": "LMMP122",
+   "CMTS": "AEROPUERTO_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1319,
+   "PLANO": "LMSC036",
+   "CMTS": "HIGUERETA_04",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1333,
+   "PLANO": "LMSC034",
+   "CMTS": "HIGUERETA_04",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1339,
+   "PLANO": "LMMP158",
+   "CMTS": "AEROPUERTO_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1345,
+   "PLANO": "LMSC023",
+   "CMTS": "HIGUERETA_04",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1352,
+   "PLANO": "LMSC027",
+   "CMTS": "HIGUERETA_04",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1356,
+   "PLANO": "LMSC025",
+   "CMTS": "HIGUERETA_04",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1367,
+   "PLANO": "LMVT011",
+   "CMTS": "VENTANILLA_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1382,
+   "PLANO": "LMMP163",
+   "CMTS": "AEROPUERTO_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1391,
+   "PLANO": "LMSC011",
+   "CMTS": "HIGUERETA_04",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1395,
+   "PLANO": "CPMN001",
+   "CMTS": "PUCALLPA_04",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 1399,
+   "PLANO": "LMVT009",
+   "CMTS": "VENTANILLA_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1407,
+   "PLANO": "LMMP196",
+   "CMTS": "AEROPUERTO_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1414,
+   "PLANO": "LMSC081",
+   "CMTS": "MONTERRICO_04",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1436,
+   "PLANO": "LMSC067",
+   "CMTS": "MONTERRICO_04",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1437,
+   "PLANO": "LMSC077",
+   "CMTS": "MONTERRICO_04",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1448,
+   "PLANO": "LMSC066",
+   "CMTS": "MONTERRICO_04",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1457,
+   "PLANO": "MDPM020",
+   "CMTS": "PUERTO_MALDONADO_02",
+   "REGION": "SUR"
+ },
+ {
+   "ID": 1466,
+   "PLANO": "LMSC060",
+   "CMTS": "MONTERRICO_04",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1488,
+   "PLANO": "MDPM030",
+   "CMTS": "PUERTO_MALDONADO_02",
+   "REGION": "SUR"
+ },
+ {
+   "ID": 1499,
+   "PLANO": "LMSC055",
+   "CMTS": "MONTERRICO_04",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1544,
+   "PLANO": "LMSC094",
+   "CMTS": "MONTERRICO_04",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1545,
+   "PLANO": "LMSC096",
+   "CMTS": "MONTERRICO_04",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1561,
+   "PLANO": "AQSB024",
+   "CMTS": "AREQUIPA_05",
+   "REGION": "SUR"
+ },
+ {
+   "ID": 1577,
+   "PLANO": "TRHC007",
+   "CMTS": "TRUJILLO_04",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 1589,
+   "PLANO": "LMLC001",
+   "CMTS": "NUEVO_SAN_FELIPE_02",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1631,
+   "PLANO": "LMSL017-A",
+   "CMTS": "SAN_LUIS_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1636,
+   "PLANO": "LMSL017-B",
+   "CMTS": "SAN_LUIS_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1640,
+   "PLANO": "LMMP038",
+   "CMTS": "AEROPUERTO_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1641,
+   "PLANO": "LMMP039",
+   "CMTS": "AEROPUERTO_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1642,
+   "PLANO": "PIUR155",
+   "CMTS": "OLT_PIURA_04",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 1651,
+   "PLANO": "LMMP029",
+   "CMTS": "AEROPUERTO_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1652,
+   "PLANO": "LMMP041",
+   "CMTS": "AEROPUERTO_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1654,
+   "PLANO": "LMMP042",
+   "CMTS": "AEROPUERTO_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1665,
+   "PLANO": "AQYA013",
+   "CMTS": "AREQUIPA_05",
+   "REGION": "SUR"
+ },
+ {
+   "ID": 1709,
+   "PLANO": "LMCO171",
+   "CMTS": "SANTA_LUZMILA_06",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1748,
+   "PLANO": "LMSQ035",
+   "CMTS": "HIGUERETA_04",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1764,
+   "PLANO": "LMSQ086",
+   "CMTS": "HIGUERETA_04",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1770,
+   "PLANO": "LMSQ088",
+   "CMTS": "HIGUERETA_04",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1787,
+   "PLANO": "AQCC015",
+   "CMTS": "AREQUIPA_05",
+   "REGION": "SUR"
+ },
+ {
+   "ID": 1795,
+   "PLANO": "HYTB009",
+   "CMTS": "HUANCAYO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 1808,
+   "PLANO": "HYTB005",
+   "CMTS": "HUANCAYO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 1809,
+   "PLANO": "HYTB006",
+   "CMTS": "HUANCAYO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 1810,
+   "PLANO": "HYTB007",
+   "CMTS": "HUANCAYO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 1811,
+   "PLANO": "HYTB008",
+   "CMTS": "HUANCAYO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 1812,
+   "PLANO": "HYTB001",
+   "CMTS": "HUANCAYO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 1813,
+   "PLANO": "HYTB003",
+   "CMTS": "HUANCAYO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 1814,
+   "PLANO": "HYTB004",
+   "CMTS": "HUANCAYO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 1835,
+   "PLANO": "LMCA023",
+   "CMTS": "AEROPUERTO_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1852,
+   "PLANO": "LMSA044",
+   "CMTS": "OLT_ZARATE_07",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1870,
+   "PLANO": "AQBR023",
+   "CMTS": "AREQUIPA_05",
+   "REGION": "SUR"
+ },
+ {
+   "ID": 1872,
+   "PLANO": "AQBR029",
+   "CMTS": "AREQUIPA_05",
+   "REGION": "SUR"
+ },
+ {
+   "ID": 1873,
+   "PLANO": "LMIN039",
+   "CMTS": "LOS_OLIVOS_05",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1875,
+   "PLANO": "HYHY012",
+   "CMTS": "HUANCAYO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 1876,
+   "PLANO": "HYHY013",
+   "CMTS": "HUANCAYO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 1877,
+   "PLANO": "HYHY011",
+   "CMTS": "HUANCAYO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 1878,
+   "PLANO": "HYHY003",
+   "CMTS": "HUANCAYO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 1880,
+   "PLANO": "HYHY001",
+   "CMTS": "HUANCAYO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 1883,
+   "PLANO": "HYHY002",
+   "CMTS": "HUANCAYO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 1887,
+   "PLANO": "HYHY005",
+   "CMTS": "HUANCAYO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 1888,
+   "PLANO": "HYHY035",
+   "CMTS": "HUANCAYO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 1889,
+   "PLANO": "HYHY034",
+   "CMTS": "HUANCAYO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 1890,
+   "PLANO": "HYHY036",
+   "CMTS": "HUANCAYO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 1891,
+   "PLANO": "HYHY033",
+   "CMTS": "HUANCAYO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 1894,
+   "PLANO": "HYHY037",
+   "CMTS": "HUANCAYO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 1895,
+   "PLANO": "LMIN013",
+   "CMTS": "SANTA_LUZMILA_06",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1897,
+   "PLANO": "HYHY021",
+   "CMTS": "HUANCAYO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 1898,
+   "PLANO": "HYHY020",
+   "CMTS": "HUANCAYO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 1904,
+   "PLANO": "LMIN018",
+   "CMTS": "SANTA_LUZMILA_06",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 1924,
+   "PLANO": "AQYA004",
+   "CMTS": "AREQUIPA_05",
+   "REGION": "SUR"
+ },
+ {
+   "ID": 1931,
+   "PLANO": "AQBR030",
+   "CMTS": "AREQUIPA_05",
+   "REGION": "SUR"
+ },
+ {
+   "ID": 1992,
+   "PLANO": "AQPP040",
+   "CMTS": "AREQUIPA_05",
+   "REGION": "SUR"
+ },
+ {
+   "ID": 2060,
+   "PLANO": "5220000",
+   "CMTS": "OCHARAN_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2061,
+   "PLANO": "RFOG_023",
+   "CMTS": "ASIA_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2153,
+   "PLANO": "AQMM006",
+   "CMTS": "AREQUIPA_05",
+   "REGION": "SUR"
+ },
+ {
+   "ID": 2169,
+   "PLANO": "LMSL013",
+   "CMTS": "-",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2171,
+   "PLANO": "LMSQ060",
+   "CMTS": "-",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2173,
+   "PLANO": "MAQ SL",
+   "CMTS": "-",
+   "REGION": "-"
+ },
+ {
+   "ID": 2174,
+   "PLANO": "LMCY001",
+   "CMTS": "-",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2175,
+   "PLANO": "LMJR071",
+   "CMTS": "-",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2176,
+   "PLANO": "LMMG001",
+   "CMTS": "SAN_MIGUEL_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2177,
+   "PLANO": "LMMG006",
+   "CMTS": "SAN_MIGUEL_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2178,
+   "PLANO": "LMMG002",
+   "CMTS": "SAN_MIGUEL_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2179,
+   "PLANO": "LMMG015",
+   "CMTS": "SAN_MIGUEL_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2186,
+   "PLANO": "CPCL007",
+   "CMTS": "PUCALLPA_04",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 2188,
+   "PLANO": "CPCL008",
+   "CMTS": "PUCALLPA_04",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 2232,
+   "PLANO": "LMSC198",
+   "CMTS": "MONTERRICO_04",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2315,
+   "PLANO": "PIUC135",
+   "CMTS": "OLT_PIURA_04",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 2317,
+   "PLANO": "PIUC132",
+   "CMTS": "OLT_PIURA_04",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 2320,
+   "PLANO": "PIUC133",
+   "CMTS": "OLT_PIURA_04",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 2321,
+   "PLANO": "PIUC131",
+   "CMTS": "OLT_PIURA_04",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 2322,
+   "PLANO": "PIUC134",
+   "CMTS": "OLT_PIURA_04",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 2370,
+   "PLANO": "AQSA017",
+   "CMTS": "AREQUIPA_05",
+   "REGION": "SUR"
+ },
+ {
+   "ID": 2377,
+   "PLANO": "AQSA016",
+   "CMTS": "AREQUIPA_05",
+   "REGION": "SUR"
+ },
+ {
+   "ID": 2605,
+   "PLANO": "PIUR156",
+   "CMTS": "OLT_PIURA_04",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 2653,
+   "PLANO": "LMSL007",
+   "CMTS": "SAN_LUIS_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2736,
+   "PLANO": "LAMO067-B",
+   "CMTS": "OLT_LA_MOLINA_02",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2739,
+   "PLANO": "LAMO067-A",
+   "CMTS": "OLT_LA_MOLINA_02",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2771,
+   "PLANO": "LMAR066",
+   "CMTS": "OLT_CAMACHO_02",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2777,
+   "PLANO": "CPMN003",
+   "CMTS": "PUCALLPA_04",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 2779,
+   "PLANO": "LMCO176",
+   "CMTS": "SANTA_LUZMILA_06",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2784,
+   "PLANO": "LMAT011",
+   "CMTS": "SAN_LUIS_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2792,
+   "PLANO": "LMAT001",
+   "CMTS": "SAN_LUIS_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2802,
+   "PLANO": "LMSQ057-2",
+   "CMTS": "OCHARAN_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2803,
+   "PLANO": "LMSL014",
+   "CMTS": "-",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2807,
+   "PLANO": "LMCA126",
+   "CMTS": "CALLAO_02",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2811,
+   "PLANO": "LMCA075",
+   "CMTS": "CALLAO_02",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2812,
+   "PLANO": "LMCA030",
+   "CMTS": "CALLAO_02",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2813,
+   "PLANO": "LMCA032",
+   "CMTS": "CALLAO_02",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2848,
+   "PLANO": "HYHY010",
+   "CMTS": "HUANCAYO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 2850,
+   "PLANO": "ICAX047",
+   "CMTS": "ICA_03",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 2856,
+   "PLANO": "LMMP140",
+   "CMTS": "AEROPUERTO_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2954,
+   "PLANO": "ICAX063",
+   "CMTS": "ICA_03",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 2972,
+   "PLANO": "LMLR002",
+   "CMTS": "LURIN_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2983,
+   "PLANO": "LMAT010",
+   "CMTS": "SAN_LUIS_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2989,
+   "PLANO": "LMHU034",
+   "CMTS": "HUACHO_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2998,
+   "PLANO": "LMVT022",
+   "CMTS": "VENTANILLA_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 2999,
+   "PLANO": "LMVT021",
+   "CMTS": "VENTANILLA_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3003,
+   "PLANO": "LMMG020",
+   "CMTS": "PANDO_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3017,
+   "PLANO": "LMSQ057-1",
+   "CMTS": "OCHARAN_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3071,
+   "PLANO": "LMMG018",
+   "CMTS": "PANDO_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3090,
+   "PLANO": "HCHC017",
+   "CMTS": "HUANUCO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 3094,
+   "PLANO": "HCHC015",
+   "CMTS": "HUANUCO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 3098,
+   "PLANO": "HCHC009",
+   "CMTS": "HUANUCO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 3113,
+   "PLANO": "HCAM013",
+   "CMTS": "HUANUCO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 3120,
+   "PLANO": "HUPM006",
+   "CMTS": "HUANUCO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 3123,
+   "PLANO": "HUPM002",
+   "CMTS": "HUANUCO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 3125,
+   "PLANO": "HUPM004",
+   "CMTS": "HUANUCO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 3150,
+   "PLANO": "HUPM008",
+   "CMTS": "HUANUCO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 3152,
+   "PLANO": "LMCA125",
+   "CMTS": "CALLAO_02",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3153,
+   "PLANO": "ICTG013",
+   "CMTS": "ICA_03",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 3154,
+   "PLANO": "ICTG010",
+   "CMTS": "ICA_03",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 3155,
+   "PLANO": "ICTG011",
+   "CMTS": "ICA_03",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 3157,
+   "PLANO": "LMMG027",
+   "CMTS": "PANDO_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3158,
+   "PLANO": "LMMG019",
+   "CMTS": "PANDO_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3161,
+   "PLANO": "LMMG030",
+   "CMTS": "PANDO_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3162,
+   "PLANO": "LMSQ050",
+   "CMTS": "OCHARAN_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3170,
+   "PLANO": "LMLV050",
+   "CMTS": "OLT_AVIACION_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3186,
+   "PLANO": "LMAT005",
+   "CMTS": "SAN_LUIS_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3195,
+   "PLANO": "LMCA127",
+   "CMTS": "CALLAO_02",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3269,
+   "PLANO": "LMMP040",
+   "CMTS": "AEROPUERTO_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3270,
+   "PLANO": "HUPM007",
+   "CMTS": "HUANUCO_04",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 3271,
+   "PLANO": "ICTG012",
+   "CMTS": "ICA_03",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 3277,
+   "PLANO": "LMAT051",
+   "CMTS": "OLT_SANTA_ANITA_02",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3278,
+   "PLANO": "LMAT048",
+   "CMTS": "OLT_SANTA_ANITA_02",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3279,
+   "PLANO": "LMAT045",
+   "CMTS": "OLT_SANTA_ANITA_02",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3280,
+   "PLANO": "LMAT034",
+   "CMTS": "OLT_SANTA_ANITA_02",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3281,
+   "PLANO": "LMAT042",
+   "CMTS": "OLT_SANTA_ANITA_02",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3282,
+   "PLANO": "RFOG_012",
+   "CMTS": "ASIA_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3283,
+   "PLANO": "RFOG_009",
+   "CMTS": "ASIA_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3284,
+   "PLANO": "RFOG_008",
+   "CMTS": "ASIA_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3285,
+   "PLANO": "LMAG010",
+   "CMTS": "OLT_SANTA_ANITA_02",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3286,
+   "PLANO": "LMCY003",
+   "CMTS": "SANTA_ANITA_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3289,
+   "PLANO": "LMMP044",
+   "CMTS": "AEROPUERTO_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3292,
+   "PLANO": "LMAT050",
+   "CMTS": "OLT_SANTA_ANITA_02",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3293,
+   "PLANO": "LMAT047",
+   "CMTS": "OLT_SANTA_ANITA_02",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3307,
+   "PLANO": "AQYA014",
+   "CMTS": "AREQUIPA_05",
+   "REGION": "SUR"
+ },
+ {
+   "ID": 3343,
+   "PLANO": "AYAY026-1",
+   "CMTS": "AYACUCHO_01",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 3368,
+   "PLANO": "LMAT039",
+   "CMTS": "-",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3371,
+   "PLANO": "LMLM137",
+   "CMTS": "-",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3392,
+   "PLANO": "LMBN048",
+   "CMTS": "OLT_COLONIAL_05",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3396,
+   "PLANO": "CHI074",
+   "CMTS": "CHICLAYO_03",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 3397,
+   "PLANO": "TRLH015-B�",
+   "CMTS": "OLT_TRUJILLO_06",
+   "REGION": "NORTE"
+ },
+ {
+   "ID": 3398,
+   "PLANO": "LMLM158�",
+   "CMTS": "OLT_SAN_FELIPE_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3406,
+   "PLANO": "AYAY026-2",
+   "CMTS": "AYACUCHO_01",
+   "REGION": "CENTRO"
+ },
+ {
+   "ID": 3407,
+   "PLANO": "AQSB026",
+   "CMTS": "AREQUIPA_05",
+   "REGION": "SUR"
+ },
+ {
+   "ID": 3419,
+   "PLANO": "LMMP123",
+   "CMTS": "AEROPUERTO_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3421,
+   "PLANO": "LMMP146",
+   "CMTS": "AEROPUERTO_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3423,
+   "PLANO": "LMMP059",
+   "CMTS": "AEROPUERTO_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3433,
+   "PLANO": "LMMG023",
+   "CMTS": "PANDO_01",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3439,
+   "PLANO": "LMCA046",
+   "CMTS": "CALLAO_02",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3475,
+   "PLANO": "LMHU011",
+   "CMTS": "HUACHO_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3477,
+   "PLANO": "LMHU007",
+   "CMTS": "HUACHO_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3482,
+   "PLANO": "LMSL015",
+   "CMTS": "-",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3488,
+   "PLANO": "LMMP050",
+   "CMTS": "AEROPUERTO_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3492,
+   "PLANO": "LMMP054",
+   "CMTS": "AEROPUERTO_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3494,
+   "PLANO": "LMMP047",
+   "CMTS": "AEROPUERTO_03",
+   "REGION": "LIMA"
+ },
+ {
+   "ID": 3620,
+   "PLANO": "LMIN009",
+   "CMTS": "LOS_OLIVOS_05",
+   "REGION": "LIMA"
+ }
+]

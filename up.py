@@ -58,8 +58,24 @@ def add_region():
         query1= """UPDATE NODES SET REGION = "{0}" WHERE PLANO = "{1}";
         """.format(item["ZONA_2"], item["NODO"])
 
-        print(query1)
+        cursor.execute(query1)
+        mydb.commit()
 
+def add_custom_region():
+
+    query = "SET SQL_SAFE_UPDATES = 0;"
+    cursor.execute(query)
+    mydb.commit()
+
+    with open('nodes_without_region.json', 'r') as file:
+        f = file.read()
+        python_file = json.loads(f)
+
+    for item in python_file:
+        query1 = """
+        UPDATE NODES SET REGION = "{0}" WHERE PLANO = "{1}";
+        """.format(item["REGION"], item["PLANO"])
+        print(query1)
         cursor.execute(query1)
         mydb.commit()
 
