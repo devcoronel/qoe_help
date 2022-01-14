@@ -52,11 +52,12 @@ myform.addEventListener("submit", function (e) {
 				<td onclick="sortTable(2, 'daylytable')" class="header"><strong>QoE</strong></td>
 				<td onclick="sortTable(3, 'daylytable')" class="header"><strong>CMs Afectados</strong></td>
 				<td onclick="sortTable(4, 'daylytable')" class="header"><strong>CMs Estresados</strong></td>
-				<td onclick="sortTable(5, 'daylytable')" class="header"><strong>Horas</strong></td>
-				<td onclick="sortTable(6, 'daylytable')" class="header"><strong>Periodo</strong></td>
-				<td onclick="sortTable(7, 'daylytable')" class="header"><strong>Cambio Modulación</strong></td>
-				<td onclick="sortTable(8, 'daylytable')" class="header"><strong>Días</strong></td>
-				<td onclick="sortTable(9, 'daylytable')" class="header"><strong>Prioridad</strong></td>`
+				<td onclick="sortTable(5, 'daylytable')" class="header"><strong>CMs</strong></td>
+				<td onclick="sortTable(6, 'daylytable')" class="header"><strong>Horas</strong></td>
+				<td onclick="sortTable(7, 'daylytable')" class="header"><strong>Periodo</strong></td>
+				<td onclick="sortTable(8, 'daylytable')" class="header"><strong>Cambio Modulación</strong></td>
+				<td onclick="sortTable(9, 'daylytable')" class="header"><strong>Días</strong></td>
+				<td onclick="sortTable(10, 'daylytable')" class="header"><strong>Prioridad</strong></td>`
 				tablehtml += '</thead><tbody>'
 				
 				let cA = []
@@ -104,7 +105,8 @@ myform.addEventListener("submit", function (e) {
 					<td>`+ elements[i][5] +`</td>
 					<td>`+ elements[i][6] +`</td>
 					<td>`+ elements[i][7] +`</td>
-					<td>`+ elements[i][8] +`</td>`
+					<td>`+ elements[i][8] +`</td>
+					<td>`+ elements[i][9] +`</td>`
 
 					if (elements[i][2] < 70 && elements[i][2] >= 0) {
 						cA.push(i)
@@ -112,10 +114,10 @@ myform.addEventListener("submit", function (e) {
 					} else if (elements[i][2] >= 70 && elements[i][2] < 80) {
 						cC.push(i)
 						tablehtml += `<td>Preventivo</td></tr>`
-					} else if (elements[i][5] >= 3) {
+					} else if (elements[i][6] >= 3) {
 						cB.push(i)
 						tablehtml += `<td>Con Afectación</td></tr>`
-					} else if (elements[i][7] >= 2 && elements[i][5] >= 0) {
+					} else if (elements[i][8] >= 2 && elements[i][6] >= 0) {
 						cD.push(i)
 						tablehtml += `<td>Preventivo</td></tr>`
 					} else {
@@ -123,18 +125,18 @@ myform.addEventListener("submit", function (e) {
 						tablehtml += `<td>Monitoreo</td></tr>`
 					}
 
-					if (elements[i][6] == 'MADRUGADA') {
+					if (elements[i][7] == 'MADRUGADA') {
 						periodM.push(i)
-					} else if (elements[i][6] == 'DIA') {
+					} else if (elements[i][7] == 'DIA') {
 						periodD.push(i)
-					} else if (elements[i][6] == 'NOCHE') {
+					} else if (elements[i][7] == 'NOCHE') {
 						periodN.push(i)
-					} else if (elements[i][6] == 'TODO EL DIA') {
+					} else if (elements[i][7] == 'TODO EL DIA') {
 						periodT.push(i)
-					} else if (elements[i][6] == 'INTERMITENTE') {
+					} else if (elements[i][7] == 'INTERMITENTE') {
 						periodI.push(i)
-					} else if (elements[i][6] == 'NO AFECTADO') {
-						if (elements[i][7] >= 2 && elements[i][5] >= 0) {
+					} else if (elements[i][7] == 'NO AFECTADO') {
+						if (elements[i][8] >= 2 && elements[i][6] >= 0) {
 							periodMod.push(i)
 						} else {
 							periodNo.push(i)
@@ -536,7 +538,7 @@ myform.addEventListener("submit", function (e) {
 						modalTable += `
 						<tr>
 							<td>`+ elements[indexList[a]][1] +`</td>
-							<td>`+ elements[indexList[a]][8] +`</td>
+							<td>`+ elements[indexList[a]][9] +`</td>
 						</tr>
 						`
 					}
@@ -715,17 +717,17 @@ myform.addEventListener("submit", function (e) {
 				let greaterThan150NotAffected = []
 
 				for(let n in allGreaterThan150){
-					if(elements[allGreaterThan150[n]][6] == 'DIA'){
+					if(elements[allGreaterThan150[n]][7] == 'DIA'){
 						greaterThan150Day.push(allGreaterThan150[n])
-					} else if(elements[allGreaterThan150[n]][6] == 'NOCHE'){
+					} else if(elements[allGreaterThan150[n]][7] == 'NOCHE'){
 						greaterThan150Night.push(allGreaterThan150[n])
-					} else if(elements[allGreaterThan150[n]][6] == 'TODO EL DIA'){
+					} else if(elements[allGreaterThan150[n]][7] == 'TODO EL DIA'){
 						greaterThan150AllDay.push(allGreaterThan150[n])
-					} else if(elements[allGreaterThan150[n]][6] == 'MADRUGADA'){
+					} else if(elements[allGreaterThan150[n]][7] == 'MADRUGADA'){
 						greaterThan150EarlyMorning.push(allGreaterThan150[n])
-					} else if(elements[allGreaterThan150[n]][6] == 'INTERMITENTE'){
+					} else if(elements[allGreaterThan150[n]][7] == 'INTERMITENTE'){
 						greaterThan150Intermittent.push(allGreaterThan150[n])
-					} else if(elements[allGreaterThan150[n]][6] == 'NO AFECTADO'){
+					} else if(elements[allGreaterThan150[n]][7] == 'NO AFECTADO'){
 						greaterThan150NotAffected.push(allGreaterThan150[n])
 					}
 				}
@@ -777,17 +779,17 @@ myform.addEventListener("submit", function (e) {
 				let between50and150NotAffected = []
 
 				for(let o in all50and150){
-					if(elements[all50and150[o]][6] == 'DIA'){
+					if(elements[all50and150[o]][7] == 'DIA'){
 						between50and150Day.push(all50and150[o])
-					} else if(elements[all50and150[o]][6] == 'NOCHE'){
+					} else if(elements[all50and150[o]][7] == 'NOCHE'){
 						between50and150Night.push(all50and150[o])
-					} else if(elements[all50and150[o]][6] == 'TODO EL DIA'){
+					} else if(elements[all50and150[o]][7] == 'TODO EL DIA'){
 						between50and150AllDay.push(all50and150[o])
-					} else if(elements[all50and150[o]][6] == 'MADRUGADA'){
+					} else if(elements[all50and150[o]][7] == 'MADRUGADA'){
 						between50and150EarlyMorning.push(all50and150[o])
-					} else if(elements[all50and150[o]][6] == 'INTERMITENTE'){
+					} else if(elements[all50and150[o]][7] == 'INTERMITENTE'){
 						between50and150Intermittent.push(all50and150[o])
-					} else if(elements[all50and150[o]][6] == 'NO AFECTADO'){
+					} else if(elements[all50and150[o]][7] == 'NO AFECTADO'){
 						between50and150NotAffected.push(all50and150[o])
 					}
 				}

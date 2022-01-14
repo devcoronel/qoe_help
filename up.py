@@ -63,6 +63,7 @@ def add_region():
         cursor.execute(query1)
         mydb.commit()
 
+
 def complete():
     query = "SELECT ID FROM NODES;"
     # cursor = mydb.cursor()
@@ -71,11 +72,12 @@ def complete():
     # cursor.close()
     
     for id in result:
-        for x in ['STRESSEDMODEMS', 'IMPACTEDMODEMS','SAMPLING', 'MODULATION', 'STATUS_NODE', 'NEW_HOURS', 'NEW_QOE', 'PERIOD', 'AFECTED_DAYS']:
+        for x in ['TOTALMODEMS','STRESSEDMODEMS', 'IMPACTEDMODEMS','SAMPLING', 'MODULATION', 'STATUS_NODE', 'NEW_HOURS', 'NEW_QOE', 'PERIOD', 'AFECTED_DAYS']:
             query0 = "INSERT INTO {} (ID_NODE) VALUES ({})".format(x, id[0])
             # cursor = mydb.cursor()
             cursor.execute(query0)
             mydb.commit()
+
 
 def insert_value(tabla, fecha, valor, plano):
     # cursor = mydb.cursor()
@@ -152,6 +154,20 @@ def get_period(dia, noche, madrugada, hours):
 
     return value_period
 
+def update_totalmodems(n_modems, plano):
+
+    query = """
+    UPDATE TOTALMODEMS
+    SET CANTIDAD = {}
+    WHERE ID_NODE = (SELECT ID FROM NODES WHERE PLANO = '{}');
+    """.format(n_modems, plano)
+
+    # cursor = mydb.cursor()
+    cursor.execute(query)
+    mydb.commit()
+    # cursor.close()
+
+
 def verify_upload(date, cookie):
     today = dt.datetime.utcnow() - dt.timedelta(hours=5)
     my_date = dt.datetime(int(date[0:4]), int(date[5:7]), int(date[8:10]))
@@ -183,7 +199,7 @@ def verify_upload(date, cookie):
         if result[0][0] == 1:
             print("Column {} already exists in {} table".format(ytd, bool))
             return {"msg": "Ya existe data cargada en {}".format(ytd)}
-        
+    
     create_column('NEW_HOURS', ytd, 'FLOAT', -1)
     create_column('NEW_QOE', ytd, 'FLOAT', -1)
     create_column('PERIOD', ytd, 'VARCHAR(20)', "'NO DATA'")
@@ -239,11 +255,13 @@ def upload(lima_nodes, ytd, my_date_plus):
                     period = []
                     scores = []
 
-                    total_modems = int(mydata[0]["totalModems"])
-                    offline_modems = []
+                    total_modems = mydata[0]["totalModems"]
+                    update_totalmodems(total_modems, node["name"])
+
+                    # offline_modems = []
                     impacted_modems = []
                     stressed_modems = []
-                    chronic_modems = []
+                    # chronic_modems = []
 
                     for i in mydata:
                         scores.append(i["qoeScore"])
@@ -260,10 +278,10 @@ def upload(lima_nodes, ytd, my_date_plus):
                             else:
                                 period.append("MADRUGADA")
                         
-                        offline_modems.append(i["offlineModems"])
+                        # offline_modems.append(i["offlineModems"])
                         impacted_modems.append(i["impactedModems"])
                         stressed_modems.append(i["stressedModems"])
-                        chronic_modems.append(i["chronicModems"])
+                        # chronic_modems.append(i["chronicModems"])
                     
                     value_impacted_modems = max(impacted_modems)
                     value_stressed_modems = stressed_modems[impacted_modems.index(value_impacted_modems)]

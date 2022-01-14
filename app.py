@@ -177,19 +177,24 @@ def my_upload():
             return {"msg": "Especifique la fecha para la carga"}
 
         if action == 'upload':
-            cookie = get_cookie()
-            verify_result = verify_upload(date, cookie)
 
-            if isinstance(verify_result, list):
-                
-                try:
-                    process = upload(verify_result[0], verify_result[1], verify_result[2])
-                    return process
-                except:
-                    return {"msg": "Error en la Conexión con Xpertrak"}
+            try:
+                cookie = get_cookie()
+                verify_result = verify_upload(date, cookie)
 
-            else:
-                return verify_result
+                if isinstance(verify_result, list):
+                    
+                    try:
+                        process = upload(verify_result[0], verify_result[1], verify_result[2])
+                        return process
+                    except:
+                        return {"msg": "Error en la Conexión con Xpertrak"}
+
+                else:
+                    return verify_result
+            
+            except:
+                return {"msg": "Error en la conexión con la Base de Datos. Intentar luego"}
         
         elif action == 'delete':
             pass
