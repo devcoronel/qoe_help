@@ -5,9 +5,9 @@ let route = split[split.length - 1]
 if (route == "analysis") {
     let analysis = document.getElementById("analysis");
     analysis.innerHTML = `<a class="nav-link fw-bold" href="/analysis">Análisis</a>`;
-} else if (route == "info") {
-    let info = document.getElementById("info");
-    info.innerHTML = `<a class="nav-link fw-bold" href="/info">Info</a>`;
+} else if (route == "addnode") {
+    let addnode = document.getElementById("addnode");
+    addnode.innerHTML = `<a class="nav-link fw-bold" href="/addnode">Agregar</a>`;
 } else if (route == "priority") {
     let priority = document.getElementById("priority");
     priority.innerHTML = `<a class="nav-link fw-bold" href="/priority">Seguimiento</a>`;

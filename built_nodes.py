@@ -51,27 +51,6 @@ def get_nodes(cookie):
                     if node["cmts"] == None:
                         node["cmts"] = "-"
                     lima_nodes.append(node)
-
-                # if re.search("^LM", node["name"], re.IGNORECASE):
-                #     normalize(node)
-                #     if node["cmts"] == None:
-                #         node["cmts"] = "-"
-                #     lima_nodes.append(node)
-
-                # elif re.search("^LAMO", node["name"], re.IGNORECASE):
-                #     normalize(node)
-                #     if node["cmts"] == None:
-                #         node["cmts"] = "-"
-                #     lima_nodes.append(node)
-
-                # elif re.search("^5", node["name"], re.IGNORECASE):
-                #     normalize(node)
-                #     if node["cmts"] == None:
-                #         node["cmts"] = "-"
-                #     lima_nodes.append(node)
-
-                # else:
-                #     pass
             
             name_nodes = []
             for node in lima_nodes:
@@ -105,12 +84,6 @@ def get_nodes(cookie):
             file_nodes.close()
 
             return lima_nodes 
-            # SACAR UN ALGORITMO PARA SACAR UNA RESTA DE PLANOS, SACAR LOS PLANOS QUE NO ESTÁN
-            # Y CREAR EN LA BASE DE DATOS LA ENTRADA CON EL NUEVO PLANO
-            # NO HAY PROBLEMA SI MÁS ADELANTE YA NO ESTÁ EL PLANO FUNCIONANDO, PORQUE EN DEFAULT
-            # NO VA A INFLUIR
-            # PARA RESTAR CONJUNTOS CONVERTIR UNA LISTA A SET (PRIMERO CONSTRUIR UNA LISTA DE NOMBRE DE NODOS
-            # Y AHI ITERAR YA QUE NO SE PUEDE ITERAR EN UNA LISTA CON DICCIONARIOS DENTRO)
         
         elif data_nodes.status_code == 500:
             return {"msg":"Cookie incorrecta"}

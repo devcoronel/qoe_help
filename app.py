@@ -1,9 +1,6 @@
-from concurrent import futures
-import concurrent
 from datetime import date
-import re
 from flask import Flask, render_template, request, jsonify, url_for, redirect
-from main import detail, dayly, insert_status, priority, modulation, analysis, status_node, sampling
+from main import detail, dayly, insert_status, priority, modulation, analysis, status_node, sampling, add_node
 from up import upload, verify_upload
 from constants import days_detail, days_modulation
 from xpertrak_login import get_cookie
@@ -11,11 +8,6 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from decorator import when_upload_runs
 
-import threading
-
-from multiprocessing.dummy import Pool
-from multiprocessing.pool import ThreadPool
-import concurrent.futures
 
 app = Flask(__name__)
 limiter = Limiter(app, key_func=get_remote_address)
@@ -239,11 +231,25 @@ def my_post_sampling():
     return {'msg': data}
 
 
-@app.route('/info')
+@app.route('/addnode', methods = ['GET'])
 @limiter.limit("2/second")
 @when_upload_runs
 def my_info():
     return render_template('index.html', route = 6)
+
+
+@app.route('/addnode', methods = ['POST'])
+@limiter.limit("1/second")
+@when_upload_runs
+def my_post_info():
+
+    node = request.form["newnode"]
+    cmts = request.form["cmts"]
+    region = request.form["region"]
+
+    result = add_node(node, cmts, region)
+
+    return result
 
 
 @app.route('/status', methods=['POST'])

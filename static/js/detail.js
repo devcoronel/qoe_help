@@ -30,7 +30,7 @@ myform.addEventListener("submit", function (e) {
 
             if(typeof(mydata) === 'object'){
                 let tablehtml = `
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                     <div class="scrollmenu" style="border-radius:10px;">
                                         <table class="table table-hover" id="hourstable" data-excel-name="Horas_QoE_afectado" >
                                             <thead class="table-dark">

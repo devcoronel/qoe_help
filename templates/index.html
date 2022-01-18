@@ -202,7 +202,7 @@
                 </div>
                 <br>
                 <div class="row">
-                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="scrollmenu" style="border-radius: 10px;">
                                 <table class="table table-hover" id="hourstable" data-excel-name="Horas_QoE_afectado" >
                                     <thead class="table-dark">
@@ -713,6 +713,63 @@
 
 {% elif route == 6 %}
 <!-- INFO -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sumary.css') }}">
+    <div class="container-fluid pb-3" style="padding-top: 4.5rem;">
+        <div class="row">
+            <div class="col-2 col-xl-4 col-lg-3 col-md-3 col-sm-2"></div>
+            <div class="bg-light col-8 col-xl-4 col-lg-6 col-md-6 col-sm-8" style="padding: 2rem; margin-top: 6rem; border-radius: 2rem;" > 
+                <div>
+                    <div>
+                        <h2 class="fw-bold" style="text-align: center;">&nbspAgregar Plano Nuevo&nbsp</h2>
+                    </div>
+                    <br>
+                    <form id="form_addnode" class="needs-validation" novalidate>
+                        <div class="row ">
+                            <div class="col-3">
+                                <label for="exampleFormControlInput1" class="form-label fw-bold fs-5">Plano:</label>
+                            </div>
+                            <div class="col-9">
+                                <input type="text" class="form-control" name="newnode">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row ">
+                            <div class="col-3">
+                                <label for="exampleFormControlInput1" class="form-label fw-bold fs-5">CMTS:</label>
+                            </div>
+                            <div class="col-9">
+                                <input type="text" class="form-control" name="cmts">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row ">
+                            <div class="col-3">
+                                <label for="exampleFormControlInput1" class="form-label fw-bold fs-5">Región:</label>
+                            </div>
+                            <div class="col-9">
+                                <select name="region" id="region" class="form-select">
+                                    <option value="LIMA">LIMA</option>
+                                    <option value="CENTRO">CENTRO</option>
+                                    <option value="NORTE">NORTE</option>
+                                    <option value="SUR">SUR</option>
+                                </select>
+                            </div>
+                        </div>
+                        <br>
+                        <div id="alert"></div>
+                        <div class="row " >
+                            <div class="col-12" style=" display: flex; justify-content: center;" id="load">
+                                <button type="submit" class="btn btn-primary" style="padding-top: 0.2rem;">Agregar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <script src="{{ url_for('static', filename = 'js/order.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/addnode.js') }}"></script>
 
 
 {% elif route == 7 %}

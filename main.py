@@ -594,3 +594,58 @@ def sampling(region):
             return [values_sampling, dates]
     except:
         return "Error en la conexión con la Base de Datos"
+
+
+def add_node(node, cmts, region):
+
+    if node == "":
+        return {'msg': "Especificar un Plano"}
+    elif cmts == "":
+        return {'msg': "Especificar CMTS"}
+    
+    node = str(node).upper()
+
+    query = """
+    SELECT IF (EXISTS (SELECT PLANO FROM NODES WHERE PLANO = '{}'),1,0);
+    """.format(node)
+
+    cursor.execute(query)
+    result = cursor.fetchall()
+
+    if result[0][0] == 0:
+        
+        try:
+            cmts = str(cmts).upper()
+            query1 = """
+            INSERT INTO NODES (PLANO, CMTS, REGION)
+            VALUES ("{0}", "{1}", "{2}");
+            """.format(node, cmts, region)
+            cursor.execute(query1)
+            mydb.commit()
+
+            query2 = """SET SQL_SAFE_UPDATES = 0;"""
+            cursor.execute(query2)
+            mydb.commit()
+            
+            query3 = """SELECT ID FROM NODES WHERE PLANO = "{}";
+            """.format(node)
+            cursor.execute(query3)
+            result3 = cursor.fetchall()
+            
+            result3 = result3[0][0]
+
+            for table in ["NEW_QOE", "NEW_HOURS", "PERIOD", "MODULATION", "IMPACTEDMODEMS", "STRESSEDMODEMS", "TOTALMODEMS", "SAMPLING", "AFECTED_DAYS", "STATUS_NODE"]:
+                
+                query4 = """
+                INSERT INTO {0} (ID_NODE) VALUES ({1});
+                """.format(table, result3)
+                cursor.execute(query4)
+                mydb.commit()
+            
+            return {'msg': "{}: Plano agregado con éxito".format(node)}
+
+        except:
+            return {'msg': "Ocurrió un error inesperado. Intentar más tarde"}
+    
+    else:
+        return {'msg': "{} ya existe en la Base de Datos".format(node)}

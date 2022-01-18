@@ -7,7 +7,7 @@ days_dayly = 8
 umbral_ch_mod = 2
 days_sampling = 7
 
-umbral_night = 16
+umbral_night = 18
 umbral_morning_afternoon = 7
 
 url_int = '10.150.2.110'
