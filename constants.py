@@ -11,8 +11,7 @@ umbral_night = 18
 umbral_morning_afternoon = 7
 
 url_int = '10.150.2.110'
-url_ext = '190.117.108.84:1380'
-# url_ext = '190.117.108.84:1380'
+url_ext = ''
 
 mysql_host = '127.0.0.1'
 mysql_user = 'diego_remote'
